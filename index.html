@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>味全龍 晉級台灣大賽倒數</title>
+<meta name="description" content="味全龍晉級台灣大賽魔術數字、倒數計時與預估晉級隊伍。球迷自製，非官方。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="味全龍 晉級台灣大賽倒數">
+<meta property="og:description" content="魔術數字、倒數計時、預估晉級隊伍與全年度戰績。球迷自製，非官方。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%89%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #dcebff;
+  --surface: #ffffff;
+  --ink: #2a1a1e;
+  --muted: #6c5b62;
+  --line: #e6dde0;
+  --edge: #2a1a1e;
+  --tile: #fff3d6;
+  --hl: #ffd9dc;
+  --red: #d62839;
+  --gold: #ffc93c;
+  --win: #178050;
+  --lose: #c23350;
+  --num-red: #d62839;
+  --round: "Huninn", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --num: "Baloo 2", "Huninn", "Noto Sans TC", system-ui, sans-serif;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #170d1c; --surface: #241630; --ink: #f6eef8; --muted: #b9a8c0; --line: #3b2a46;
+    --edge: #7a5788; --tile: #3a2444; --hl: #5a2a3a; --num-red: #ff8a94;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #170d1c; --surface: #241630; --ink: #f6eef8; --muted: #b9a8c0; --line: #3b2a46;
+  --edge: #7a5788; --tile: #3a2444; --hl: #5a2a3a; --num-red: #ff8a94;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); background: var(--red); }
+*, *::before, *::after { box-sizing: inherit; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--round); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+main { max-width: 720px; margin: 0 auto; }
+b { font-weight: 400; }
+
+/* ---- Team badges (original chibi icons) ---- */
+.badge { flex: none; display: inline-grid; place-items: center; width: var(--s, 40px); height: var(--s, 40px); border-radius: 50%; background: var(--tt); border: 3px solid var(--edge); overflow: hidden; }
+.badge svg { width: 92%; height: 92%; display: block; }
+
+/* ---- Hero ---- */
+.hero { background: var(--red); color: #fff; padding: 22px 20px 40px; border-radius: 0 0 40px 40px; border-bottom: 3px solid var(--edge); position: relative; overflow: hidden; }
+.hero h1 { margin: 0; display: inline-block; padding: 4px 16px; background: rgba(255,255,255,.2); border-radius: 99px; font-family: var(--round); font-weight: 400; font-size: .98rem; }
+.hero-body { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 6px; }
+.magic { display: flex; align-items: baseline; gap: .04em; margin: 0; font-family: var(--num); font-weight: 800; line-height: .95; text-shadow: 0 6px 0 rgba(0,0,0,.22); }
+.magic .m { font-size: clamp(3rem, 13vw, 5rem); color: var(--gold); }
+.magic .n { font-size: clamp(8rem, 40vw, 13rem); letter-spacing: -.02em; }
+.mascot { position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 8px; }
+.mascot .badge { --s: clamp(92px, 26vw, 132px); animation: bob 2.6s ease-in-out infinite; }
+.bubble { position: relative; margin-bottom: 12px; padding: 4px 14px; background: #fff; color: var(--ink); border: 3px solid var(--edge); border-radius: 18px; font-size: .95rem; white-space: nowrap; }
+.bubble::after { content: ""; position: absolute; left: 50%; bottom: -9px; width: 12px; height: 12px; background: #fff; border-right: 3px solid var(--edge); border-bottom: 3px solid var(--edge); transform: translateX(-50%) rotate(45deg); }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.hero .explain { margin: 12px 0 18px; max-width: 30em; font-size: .95rem; }
+.scales { display: flex; gap: 8px; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
+.scales li { width: 40px; height: 46px; }
+.scales svg { display: block; width: 100%; height: 100%; }
+.scale-shape { fill: rgba(255,255,255,.12); stroke: rgba(255,255,255,.7); stroke-width: 3; stroke-linejoin: round; }
+.scale-line { fill: none; stroke: rgba(255,255,255,.45); stroke-width: 2; stroke-linecap: round; }
+.scales li.lit .scale-shape { fill: var(--gold); stroke: #2a1a1e; }
+.scales li.lit .scale-line { stroke: rgba(120,40,0,.5); }
+.scale-caption { margin: 10px 0 0; font-size: .85rem; opacity: .92; }
+.hero.won .n { color: var(--gold); }
+.spark { position: absolute; width: 22px; height: 22px; fill: var(--gold); opacity: .9; }
+
+/* ---- Panels ---- */
+section { margin: 22px 16px 0; padding: 18px 18px 10px; background: var(--surface); border: 3px solid var(--edge); border-radius: 26px; box-shadow: 0 6px 0 var(--edge); }
+h2 { display: inline-block; margin: 0 0 10px -4px; padding: 0 4px; font-family: var(--round); font-weight: 400; font-size: 1.3rem; background: linear-gradient(transparent 58%, var(--hl) 58%); }
+h3 { margin: 18px 0 2px; font-family: var(--round); font-weight: 400; font-size: .95rem; color: var(--muted); }
+.sub { margin: 0 0 12px; color: var(--muted); font-size: .88rem; }
+
+/* Countdown */
+.clock { display: flex; gap: 10px; flex-wrap: wrap; padding-bottom: 10px; }
+.clock .unit { display: flex; flex-direction: column; align-items: center; min-width: 78px; padding: 8px 14px 6px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; box-shadow: 0 4px 0 var(--edge); font-variant-numeric: tabular-nums; }
+.clock .num { font-family: var(--num); font-weight: 800; font-size: 2.6rem; line-height: 1.05; color: var(--num-red); }
+.clock .lbl { font-size: .85rem; color: var(--muted); }
+
+/* Projection */
+.proj-row { padding: 12px 0 14px; border-bottom: 2px dashed var(--line); }
+.proj-tag { display: inline-block; margin-bottom: 8px; padding: 1px 12px; border: 2px solid var(--edge); border-radius: 99px; font-size: .82rem; background: var(--surface); }
+.proj-row.direct .proj-tag { background: var(--red); color: #fff; }
+.side { display: inline-flex; align-items: center; gap: 10px; }
+.side .nm { font-size: 1.2rem; }
+.proj-vs { display: inline-block; vertical-align: middle; margin: 0 10px; font-family: var(--num); font-weight: 800; font-size: 1.05rem; color: var(--muted); }
+.proj-note { display: block; margin-top: 6px; font-size: .86rem; color: var(--muted); line-height: 1.6; }
+.race { margin: 0; padding: 0 0 8px; list-style: none; font-size: .9rem; color: var(--muted); }
+.race li { padding: 3px 0; }
+
+/* Standings */
+.rank-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); }
+.rank-row:last-child { border-bottom: 0; }
+.rk { flex: none; width: 24px; text-align: center; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--muted); }
+.rank-main { flex: 1; min-width: 0; }
+.rank-main .nm { font-size: 1.05rem; }
+.rank-side { text-align: right; font-size: .86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rank-side .pc { display: block; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
+.chip { display: inline-block; margin-left: 6px; padding: 0 8px; border: 2px solid var(--edge); border-radius: 99px; font-size: .72rem; background: var(--gold); color: #2a1a1e; vertical-align: 2px; }
+.chip.blue { background: #a9d0ff; }
+
+/* Timeline */
+.timeline { list-style: none; margin: 4px 0 0; padding: 0 0 0 22px; border-left: 3px solid var(--line); }
+.timeline li { position: relative; padding: 0 0 20px 18px; }
+.timeline li::before { content: ""; position: absolute; left: -33px; top: 6px; width: 15px; height: 15px; border-radius: 50%; background: var(--surface); border: 3px solid var(--edge); }
+.timeline li.now::before { background: var(--red); }
+.timeline li.past::before { background: var(--line); border-color: var(--line); }
+.timeline li.past { color: var(--muted); }
+.t-date { display: block; font-size: .9rem; color: var(--muted); }
+.tag { display: inline-block; margin-left: 8px; padding: 0 8px; border: 2px solid var(--line); border-radius: 99px; font-size: .74rem; color: var(--muted); vertical-align: 1px; }
+
+/* Games */
+.games { list-style: none; margin: 0; padding: 0 0 6px; }
+.games li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); }
+.games li:last-child { border-bottom: 0; }
+.pip { flex: none; width: 34px; height: 34px; border: 3px solid var(--edge); border-radius: 50%; display: grid; place-items: center; font-size: .82rem; color: #fff; }
+.pip.w { background: var(--win); }
+.pip.l { background: var(--lose); }
+.pip.p { background: var(--surface); color: var(--muted); border-style: dashed; }
+.g-main { flex: 1; min-width: 0; }
+.g-main .note { display: block; font-size: .82rem; color: var(--muted); }
+.g-score { font-family: var(--num); font-weight: 800; font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.g-time { font-size: .9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Paths */
+.path { padding: 4px 0 14px; }
+.path .pt { display: block; font-size: 1.02rem; }
+.path p { margin: 2px 0 0; color: var(--muted); font-size: .92rem; }
+
+footer { margin-top: 36px; background: var(--red); color: #fff; padding: 22px 22px 28px; border-radius: 32px 32px 0 0; border-top: 3px solid var(--edge); font-size: .82rem; line-height: 1.7; }
+footer p { margin: 0 auto; max-width: 672px; opacity: .95; }
+footer p + p { margin-top: 6px; }
+
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: -12px; width: 9px; height: 14px; border-radius: 3px; opacity: 0; animation: drop 3.2s ease-in forwards; }
+@keyframes drop { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(560px) rotate(540deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .confetti { display: none; } .mascot .badge { animation: none; } }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Original chibi team icons (not official logos or mascots) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- 味全龍：紅色小龍 -->
+  <symbol id="ico-wc" viewBox="0 0 64 64">
+    <path d="M13 30 L1 22 L3 40Z" fill="#B3121E" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M51 30 L63 22 L61 40Z" fill="#B3121E" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 21 Q8 15 10 3 Q20 6 25 17Z" fill="#FFD166" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M46 21 Q56 15 54 3 Q44 6 39 17Z" fill="#FFD166" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="32" cy="37" r="22" fill="#E5323F" stroke="#2a1a1e" stroke-width="2.5"/>
+    <path d="M26 17 L29 7 L32 15 L35 7 L38 17Z" fill="#FFD166" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M15 47 q-7 -1 -9 5 M49 47 q7 -1 9 5" stroke="#FFD166" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="32" cy="47" rx="12" ry="8.5" fill="#FFE3A8" stroke="#2a1a1e" stroke-width="2"/>
+    <ellipse cx="27.5" cy="45" rx="1.7" ry="2.2" fill="#B3121E"/><ellipse cx="36.5" cy="45" rx="1.7" ry="2.2" fill="#B3121E"/>
+    <path d="M27 51 q5 3.4 10 0" stroke="#B3121E" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M28.5 52 l1.6 3.2 l1.6 -2.6Z M36 52 l-1.6 3.2 l-1.6 -2.6Z" fill="#fff" stroke="#2a1a1e" stroke-width="1" stroke-linejoin="round"/>
+    <circle cx="22.5" cy="31" r="3.7" fill="#2a1a1e"/><circle cx="41.5" cy="31" r="3.7" fill="#2a1a1e"/>
+    <circle cx="23.8" cy="29.7" r="1.3" fill="#fff"/><circle cx="42.8" cy="29.7" r="1.3" fill="#fff"/>
+    <path d="M17 24.5 L27 27 M47 24.5 L37 27" stroke="#8E0E17" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+  <!-- 中信兄弟：黃色小象 -->
+  <symbol id="ico-cb" viewBox="0 0 64 64">
+    <circle cx="11" cy="30" r="11" fill="#E9AE00" stroke="#2a1a1e" stroke-width="2.5"/><circle cx="11" cy="30" r="6" fill="#FFD75A"/>
+    <circle cx="53" cy="30" r="11" fill="#E9AE00" stroke="#2a1a1e" stroke-width="2.5"/><circle cx="53" cy="30" r="6" fill="#FFD75A"/>
+    <path d="M32 40 v11 q0 6 8 4" fill="none" stroke="#2a1a1e" stroke-width="11" stroke-linecap="round"/>
+    <path d="M32 40 v11 q0 6 8 4" fill="none" stroke="#FFCE1F" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="32" cy="32" r="21" fill="#FFCE1F" stroke="#2a1a1e" stroke-width="2.5"/>
+    <path d="M32 40 v11 q0 6 8 4" fill="none" stroke="#FFCE1F" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="24" cy="29" r="3.4" fill="#2a1a1e"/><circle cx="40" cy="29" r="3.4" fill="#2a1a1e"/>
+    <circle cx="25.2" cy="27.8" r="1.2" fill="#fff"/><circle cx="41.2" cy="27.8" r="1.2" fill="#fff"/>
+    <ellipse cx="16" cy="38" rx="4" ry="2.5" fill="#FF9DB0" opacity=".85"/><ellipse cx="48" cy="38" rx="4" ry="2.5" fill="#FF9DB0" opacity=".85"/>
+  </symbol>
+  <!-- 統一獅：橘色小獅 -->
+  <symbol id="ico-uni" viewBox="0 0 64 64">
+    <g fill="#C9540A" stroke="#2a1a1e" stroke-width="2.5">
+      <circle cx="32" cy="34" r="25"/>
+      <circle cx="57" cy="34" r="7"/><circle cx="51" cy="52" r="7"/><circle cx="32" cy="60" r="6"/>
+      <circle cx="13" cy="52" r="7"/><circle cx="7" cy="34" r="7"/>
+      <circle cx="14" cy="15" r="7"/><circle cx="50" cy="15" r="7"/><circle cx="32" cy="8" r="6"/>
+    </g>
+    <circle cx="32" cy="34" r="24" fill="#C9540A"/>
+    <circle cx="14" cy="15" r="3" fill="#FFAA4C"/><circle cx="50" cy="15" r="3" fill="#FFAA4C"/>
+    <circle cx="32" cy="37" r="18" fill="#FFAA4C"/>
+    <ellipse cx="32" cy="45" rx="9" ry="6.5" fill="#FFF0D9"/>
+    <path d="M28.5 41 h7 l-3.5 4z" fill="#7A3B12"/>
+    <path d="M32 45 v2 M32 47 q-3 2.6 -5.5 0 M32 47 q3 2.6 5.5 0" stroke="#7A3B12" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <circle cx="25" cy="34" r="3.3" fill="#2a1a1e"/><circle cx="39" cy="34" r="3.3" fill="#2a1a1e"/>
+    <circle cx="26.1" cy="32.9" r="1.2" fill="#fff"/><circle cx="40.1" cy="32.9" r="1.2" fill="#fff"/>
+    <path d="M20 28 L28 30 M44 28 L36 30" stroke="#7A3B12" stroke-width="2.2" stroke-linecap="round"/>
+  </symbol>
+  <!-- 樂天桃猿：頭上頂著桃子的小猴 -->
+  <symbol id="ico-rak" viewBox="0 0 64 64">
+    <circle cx="10" cy="37" r="9" fill="#B0203D" stroke="#2a1a1e" stroke-width="2.5"/><circle cx="10" cy="37" r="4.6" fill="#FFB9C6"/>
+    <circle cx="54" cy="37" r="9" fill="#B0203D" stroke="#2a1a1e" stroke-width="2.5"/><circle cx="54" cy="37" r="4.6" fill="#FFB9C6"/>
+    <circle cx="32" cy="38" r="22" fill="#B0203D" stroke="#2a1a1e" stroke-width="2.5"/>
+    <path d="M32 29 C26 21 14 25 16 36 C17 45 26 53 32 55 C38 53 47 45 48 36 C50 25 38 21 32 29Z" fill="#FFD8C9"/>
+    <circle cx="25" cy="38" r="3.3" fill="#2a1a1e"/><circle cx="39" cy="38" r="3.3" fill="#2a1a1e"/>
+    <circle cx="26.1" cy="36.9" r="1.2" fill="#fff"/><circle cx="40.1" cy="36.9" r="1.2" fill="#fff"/>
+    <ellipse cx="32" cy="46" rx="4.6" ry="3" fill="#FFB39C"/>
+    <path d="M29.5 50.5 q2.5 2 5 0" stroke="#B0203D" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <circle cx="32" cy="12" r="8" fill="#FF9FB3" stroke="#2a1a1e" stroke-width="2.5"/>
+    <path d="M32 5 C33 8 33 11 32 13" stroke="#E3708A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M33 4 q7 -4 10 1 q-6 4 -10 -1z" fill="#4CAF50" stroke="#2a1a1e" stroke-width="1.6" stroke-linejoin="round"/>
+  </symbol>
+  <!-- 富邦悍將：戴頭盔的小騎士 -->
+  <symbol id="ico-fb" viewBox="0 0 64 64">
+    <circle cx="32" cy="40" r="20" fill="#FFDDB8" stroke="#2a1a1e" stroke-width="2.5"/>
+    <path d="M27 6 L37 6 L35 19 H29Z" fill="#F2B84B" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M10 37 C10 12 54 12 54 37 Z" fill="#1F5FB8" stroke="#2a1a1e" stroke-width="2.5" stroke-linejoin="round"/>
+    <rect x="8" y="32" width="48" height="8" rx="4" fill="#164A94" stroke="#2a1a1e" stroke-width="2.5"/>
+    <circle cx="32" cy="25" r="3.4" fill="#F2B84B"/>
+    <circle cx="24.5" cy="47" r="3.3" fill="#2a1a1e"/><circle cx="39.5" cy="47" r="3.3" fill="#2a1a1e"/>
+    <circle cx="25.6" cy="45.9" r="1.2" fill="#fff"/><circle cx="40.6" cy="45.9" r="1.2" fill="#fff"/>
+    <ellipse cx="17" cy="51" rx="3.6" ry="2.3" fill="#FF9DB0" opacity=".85"/><ellipse cx="47" cy="51" rx="3.6" ry="2.3" fill="#FF9DB0" opacity=".85"/>
+    <path d="M29 54 q3 2.4 6 0" stroke="#8a4a2a" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <!-- 台鋼雄鷹：綠色小鷹 -->
+  <symbol id="ico-tsg" viewBox="0 0 64 64">
+    <path d="M22 17 L25 4 L32 15Z" fill="#0F7A55" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M42 17 L39 4 L32 15Z" fill="#0F7A55" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="32" cy="37" r="23" fill="#0F7A55" stroke="#2a1a1e" stroke-width="2.5"/>
+    <ellipse cx="22.5" cy="34" rx="6.6" ry="6.4" fill="#F4F1E8"/><ellipse cx="41.5" cy="34" rx="6.6" ry="6.4" fill="#F4F1E8"/>
+    <circle cx="23.5" cy="35" r="3.2" fill="#2a1a1e"/><circle cx="40.5" cy="35" r="3.2" fill="#2a1a1e"/>
+    <circle cx="24.6" cy="33.9" r="1.1" fill="#fff"/><circle cx="41.6" cy="33.9" r="1.1" fill="#fff"/>
+    <path d="M14 24 L27 28.5" stroke="#0A4A34" stroke-width="3" stroke-linecap="round"/><path d="M50 24 L37 28.5" stroke="#0A4A34" stroke-width="3" stroke-linecap="round"/>
+    <path d="M26 43 Q32 39 38 43 Q36 54 32 57 Q28 54 26 43Z" fill="#FFC53D" stroke="#2a1a1e" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M27.8 46 Q32 48 36.2 46" stroke="#C98A00" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="12.5" cy="46" rx="3.6" ry="2.3" fill="#7ED6A8" opacity=".85"/><ellipse cx="51.5" cy="46" rx="3.6" ry="2.3" fill="#7ED6A8" opacity=".85"/>
+  </symbol>
+</svg>
+
+<main>
+  <header class="hero" id="hero">
+    <svg class="spark" style="top:22px;right:22px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4Z"/></svg>
+    <svg class="spark" style="top:96px;right:46%;width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4Z"/></svg>
+    <h1>味全龍・年度勝率第一魔術數字</h1>
+    <div class="hero-body">
+      <p class="magic" aria-live="polite"><span class="m">M</span><span class="n" id="mnum">6</span></p>
+      <div class="mascot"><span class="bubble" id="bubble">加油！</span><span id="mascot"></span></div>
+    </div>
+    <p class="explain" id="explain"></p>
+    <ul class="scales" id="scales" aria-hidden="true"></ul>
+    <p class="scale-caption" id="scaleCap"></p>
+  </header>
+
+  <section aria-labelledby="h-count">
+    <h2 id="h-count">距離台灣大賽首戰</h2>
+    <p class="sub">預定 10/17 開打（暫定，以聯盟公告為準）</p>
+    <div class="clock" id="clock" role="timer" aria-live="off">
+      <span class="unit"><span class="num" id="cd">--</span><span class="lbl">天</span></span>
+      <span class="unit"><span class="num" id="ch">--</span><span class="lbl">時</span></span>
+      <span class="unit"><span class="num" id="cm">--</span><span class="lbl">分</span></span>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-proj">
+    <h2 id="h-proj">預估晉級隊伍</h2>
+    <p class="sub">依目前戰績推算，會隨賽況變動，不是官方公布</p>
+    <div id="proj"></div>
+    <h3>仍在爭奪</h3>
+    <ul class="race" id="race"></ul>
+  </section>
+
+  <section aria-labelledby="h-rank">
+    <h2 id="h-rank">全年度戰績</h2>
+    <p class="sub" id="rankSub"></p>
+    <div id="rank"></div>
+  </section>
+
+  <section aria-labelledby="h-games">
+    <h2 id="h-games">戰況</h2>
+    <h3>最近</h3>
+    <ul class="games" id="recent"></ul>
+    <h3>接下來</h3>
+    <ul class="games" id="upcoming"></ul>
+  </section>
+
+  <section aria-labelledby="h-tl">
+    <h2 id="h-tl">賽程時間軸</h2>
+    <ol class="timeline" id="timeline"></ol>
+  </section>
+
+  <section aria-labelledby="h-path">
+    <h2 id="h-path">晉級台灣大賽的路</h2>
+    <p class="sub" id="pathNote"></p>
+    <div class="path">
+      <span class="pt">下半季冠軍是別隊</span>
+      <p>味全若全年勝率較高，直接晉級。另一隊要先和「兩個半季冠軍以外、全年勝率最高的球隊」打五戰三勝的季後挑戰賽。</p>
+    </div>
+    <div class="path">
+      <span class="pt">味全也拿下半季冠軍</span>
+      <p>直接晉級，並在七戰四勝的台灣大賽先取得 1 勝優勢；全年勝率第 2、3 名改打季後挑戰賽。</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p id="updated"></p>
+  <p>比分、戰績與魔術數字依中華職棒官網戰績頁（淘汰指數）整理。季後挑戰賽與台灣大賽日期為暫定，以聯盟公告為準。球隊圖案為本頁原創的 Q 版插畫，並非官方隊徽或吉祥物。本頁為球迷自製，與球團及聯盟無關。</p>
+</footer>
+
+<script>
+/* ===== 每次更新只需要改這一區 ===== */
+const DATA = {
+  updated: "2026/09/20 賽後（依中華職棒官網戰績）",
+  magic: 6,        // 目前魔術數字
+  start: 6,        // 點亮鱗片的起算值（2026/09/20 為 M6）
+  lowerHalf: "下半季由中信兄弟領先（30 勝 21 敗，領先樂天 2.5 場），味全下半季排第 4；全年度味全 62 勝 47 敗（.569）居首，第二名富邦落後 6 場，中信兄弟已被全年第一淘汰。",
+  recent: [
+    { d: "9/20", opp: "中信兄弟", us: 1, them: 2, note: "9 局下被再見" },
+    { d: "9/19", opp: "中信兄弟", us: 3, them: 4, note: "延長 10 局敗" },
+    { d: "9/18", opp: "台鋼雄鷹", us: 3, them: 2, note: "" }
+  ],
+  upcoming: [
+    { d: "9/22", opp: "統一獅", time: "18:35", note: "" },
+    { d: "9/24", opp: "統一獅", time: "18:35", note: "" }
+  ],
+  timeline: [
+    { name: "例行賽結束", range: "9/28（一）", start: "2026-09-28T00:00:00+08:00", end: "2026-09-28T23:59:59+08:00" },
+    { name: "下半季補賽日", range: "9/29 – 10/6", start: "2026-09-29T00:00:00+08:00", end: "2026-10-06T23:59:59+08:00" },
+    { name: "季後挑戰賽", range: "10/9 – 10/13", start: "2026-10-09T00:00:00+08:00", end: "2026-10-13T23:59:59+08:00", tentative: true },
+    { name: "台灣大賽", range: "10/17 – 10/25", start: "2026-10-17T00:00:00+08:00", end: "2026-10-25T23:59:59+08:00", tentative: true }
+  ],
+  target: "2026-10-17T00:00:00+08:00",
+  firstHalfChamp: "味全龍",
+  half2Magic: 9,   // 下半季領先隊封王魔術數字（官網淘汰指數最大值）
+  // 全年度戰績（官網）：w 勝、l 敗、t 和
+  full: [
+    { n: "味全龍", w: 62, l: 47, t: 0 },
+    { n: "富邦悍將", w: 56, l: 53, t: 0 },
+    { n: "統一獅", w: 55, l: 53, t: 1 },
+    { n: "台鋼雄鷹", w: 51, l: 57, t: 1 },
+    { n: "樂天桃猿", w: 50, l: 56, t: 2 },
+    { n: "中信兄弟", w: 50, l: 58, t: 2 }
+  ],
+  // 下半季戰績（官網）
+  half2: [
+    { n: "中信兄弟", w: 30, l: 21, t: 0 },
+    { n: "樂天桃猿", w: 26, l: 22, t: 0 },
+    { n: "統一獅", w: 26, l: 24, t: 0 },
+    { n: "味全龍", w: 23, l: 26, t: 0 },
+    { n: "富邦悍將", w: 22, l: 27, t: 0 },
+    { n: "台鋼雄鷹", w: 21, l: 28, t: 0 }
+  ]
+};
+/* ================================== */
+
+var TEAMS = {
+  "味全龍": { k: "wc", tt: "#ffd9dc" },
+  "中信兄弟": { k: "cb", tt: "#fff0b3" },
+  "統一獅": { k: "uni", tt: "#ffe1c2" },
+  "樂天桃猿": { k: "rak", tt: "#f9d2da" },
+  "富邦悍將": { k: "fb", tt: "#d3e4fa" },
+  "台鋼雄鷹": { k: "tsg", tt: "#cdebdd" }
+};
+function badge(name, size) {
+  var t = TEAMS[name];
+  if (!t) return "";
+  var st = "--tt:" + t.tt + (size ? ";--s:" + size + "px" : "");
+  return '<span class="badge" style="' + st + '"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#ico-' + t.k + '"/></svg></span>';
+}
+
+/* 依晉級規則推算預估晉級隊伍 */
+function computeProjection(D) {
+  function pct(t) { return t.w / (t.w + t.l); }
+  function gb(a, b) { return ((a.w - b.w) + (b.l - a.l)) / 2; }
+  var byFull = D.full.slice().sort(function (a, b) { return pct(b) - pct(a); });
+  var byHalf = D.half2.slice().sort(function (a, b) { return pct(b) - pct(a); });
+  var h1 = D.firstHalfChamp, h2 = byHalf[0].n;
+  function full(n) { return byFull.filter(function (t) { return t.n === n; })[0]; }
+  var r = { h1: h1, h2: h2, byFull: byFull, byHalf: byHalf, full: full, gb: gb, pct: pct };
+  if (h1 === h2) {
+    var rest = byFull.filter(function (t) { return t.n !== h1; });
+    r.same = true; r.direct = h1; r.a = rest[0].n; r.b = rest[1].n;
+  } else {
+    r.same = false;
+    var a = full(h1), b = full(h2);
+    r.direct = pct(a) >= pct(b) ? h1 : h2;
+    r.other = r.direct === h1 ? h2 : h1;
+    var pool = byFull.filter(function (t) { return t.n !== h1 && t.n !== h2; });
+    r.pool = pool;
+    r.opp = pool[0].n;
+  }
+  return r;
+}
+
+(function () {
+  var params = new URLSearchParams(location.search);
+  var p = params.get("preview");
+  var magic = (p !== null && /^\d+$/.test(p)) ? Math.min(parseInt(p, 10), DATA.start) : DATA.magic;
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Hero
+  $("mnum").textContent = magic;
+  $("mascot").innerHTML = badge("味全龍");
+  var lit = Math.max(0, Math.min(DATA.start, DATA.start - magic));
+  var explain = $("explain");
+  if (magic <= 0) {
+    $("hero").classList.add("won");
+    document.title = "味全龍 直接晉級台灣大賽！";
+    $("bubble").textContent = "晉級啦！";
+    explain.textContent = "鎖定年度勝率第一，味全龍直接晉級台灣大賽！";
+    $("scaleCap").textContent = "六片龍鱗全數點亮";
+    startConfetti();
+  } else {
+    explain.textContent = "味全每贏一場、或追趕的球隊每輸一場，數字就減 1。歸零就鎖定年度勝率第一，直接晉級台灣大賽。";
+    $("scaleCap").textContent = "已點亮 " + lit + " / " + DATA.start + " 片龍鱗";
+  }
+  var scales = $("scales");
+  for (var i = 0; i < DATA.start; i++) {
+    var li = document.createElement("li");
+    if (i < lit) li.className = "lit";
+    li.innerHTML = '<svg viewBox="0 0 40 46"><path class="scale-shape" d="M4 4h32v19c0 11-9 19-16 20C13 42 4 34 4 23z"/><path class="scale-line" d="M12 16c4 4 12 4 16 0M12 25c4 4 12 4 16 0"/></svg>';
+    scales.appendChild(li);
+  }
+
+  // Projection
+  var pr = computeProjection(DATA);
+  function fmtPct(n) { return pr.pct(pr.full(n)).toFixed(3).replace(/^0/, ""); }
+  function side(n) { return '<span class="side">' + badge(n, 44) + '<span class="nm">' + n + '</span></span>'; }
+  function addRow(cls, tag, main, note) {
+    var d = document.createElement("div");
+    d.className = "proj-row " + cls;
+    d.innerHTML = '<span class="proj-tag">' + tag + '</span><div class="proj-main">' + main + '<span class="proj-note">' + note + '</span></div>';
+    $("proj").appendChild(d);
+  }
+  var directNote = pr.same
+    ? "上、下半季雙料冠軍，全年勝率 " + fmtPct(pr.direct) + "，七戰四勝先取 1 勝"
+    : (pr.direct === pr.h1 ? "上半季冠軍" : "下半季冠軍") + "，全年勝率 " + fmtPct(pr.direct) + "，兩位半季冠軍中較高";
+  if (pr.direct === DATA.firstHalfChamp && magic > 0) {
+    directNote += "。已取得季後賽門票，全年勝率第一魔術數字 M" + magic;
+  }
+  addRow("direct", "台灣大賽", side(pr.direct), directNote + "（預估直接晉級）");
+  if (pr.same) {
+    addRow("", "季後挑戰賽", side(pr.a) + '<span class="proj-vs">VS</span>' + side(pr.b), "全年勝率第 2、3 名對決，五戰三勝，勝者晉級台灣大賽");
+  } else {
+    addRow("", "季後挑戰賽", side(pr.other) + '<span class="proj-vs">VS</span>' + side(pr.opp),
+      "五戰三勝，勝者晉級台灣大賽。" + pr.other + "為半季冠軍（先取 1 勝），" + pr.opp + "為半季冠軍以外全年勝率最高的球隊");
+  }
+  var race = $("race");
+  function addRace(t) { var li = document.createElement("li"); li.textContent = t; race.appendChild(li); }
+  if (!pr.same) {
+    var lead = pr.byHalf[0], c2 = pr.byHalf[1], c3 = pr.byHalf[2];
+    addRace("下半季冠軍：" + pr.h2 + "暫居第一，" + c2.n + "落後 " + pr.gb(lead, c2) + " 場、" + c3.n + "落後 " + pr.gb(lead, c3) + " 場。" + pr.h2 + "封王魔術數字 M" + DATA.half2Magic + "（依官網淘汰指數）");
+    var p0 = pr.pool[0], p1 = pr.pool[1];
+    addRace("全年勝率最高的半季冠軍以外球隊：" + p0.n + "領先" + p1.n + " " + pr.gb(p0, p1) + " 場，這個名額還沒定");
+  }
+
+  // Standings (full season)
+  $("rankSub").textContent = "官網戰績，每隊全年 120 場";
+  var leaderF = pr.byFull[0];
+  pr.byFull.forEach(function (t, idx) {
+    var row = document.createElement("div");
+    row.className = "rank-row";
+    var chips = "";
+    if (t.n === pr.h1) chips += '<span class="chip">上半季冠軍</span>';
+    if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
+    var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
+    var gbTxt = idx === 0 ? "全年第一" : "落後 " + pr.gb(leaderF, t) + " 場";
+    row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
+      '<div class="rank-main"><span class="nm">' + t.n + '</span>' + chips + '</div>' +
+      '<div class="rank-side"><span class="pc">' + fmtPct(t.n) + '</span>' + rec + '<br>' + gbTxt + '</div>';
+    $("rank").appendChild(row);
+  });
+
+  // Games
+  function gameRow(g, upcoming) {
+    var li = document.createElement("li");
+    var pip = document.createElement("span");
+    var right = document.createElement("span");
+    if (upcoming) {
+      pip.className = "pip p"; pip.textContent = g.d.split("/")[1];
+      right.className = "g-time"; right.textContent = g.time;
+    } else {
+      var w = g.us > g.them;
+      pip.className = "pip " + (w ? "w" : "l"); pip.textContent = w ? "勝" : "敗";
+      right.className = "g-score"; right.textContent = g.us + " : " + g.them;
+    }
+    var main = document.createElement("div");
+    main.className = "g-main";
+    main.innerHTML = '<span class="top"></span><span class="note"></span>';
+    main.querySelector(".top").textContent = g.d + " 對 " + g.opp;
+    var note = main.querySelector(".note");
+    if (g.note) note.textContent = g.note; else note.remove();
+    li.appendChild(pip);
+    li.insertAdjacentHTML("beforeend", badge(g.opp, 38));
+    li.appendChild(main); li.appendChild(right);
+    return li;
+  }
+  DATA.recent.forEach(function (g) { $("recent").appendChild(gameRow(g, false)); });
+  DATA.upcoming.forEach(function (g) { $("upcoming").appendChild(gameRow(g, true)); });
+
+  // Timeline
+  var now = Date.now();
+  DATA.timeline.forEach(function (t) {
+    var li = document.createElement("li");
+    var s = Date.parse(t.start), e = Date.parse(t.end);
+    li.className = now > e ? "past" : (now >= s ? "now" : "");
+    var tag = t.tentative ? '<span class="tag">暫定</span>' : "";
+    li.innerHTML = '<span class="t-name">' + t.name + tag + '</span><span class="t-date">' + t.range + '</span>';
+    $("timeline").appendChild(li);
+  });
+
+  // Notes
+  $("pathNote").textContent = DATA.lowerHalf;
+  $("updated").textContent = "最後更新：" + DATA.updated;
+
+  // Countdown
+  var target = Date.parse(DATA.target);
+  function pad(n) { return n < 10 ? "0" + n : "" + n; }
+  function tick() {
+    var diff = target - Date.now();
+    if (diff <= 0) {
+      $("clock").innerHTML = '<span class="unit"><span class="num" style="font-size:1.6rem">台灣大賽已開打</span></span>';
+      return false;
+    }
+    var m = Math.floor(diff / 60000);
+    $("cd").textContent = Math.floor(m / 1440);
+    $("ch").textContent = pad(Math.floor((m % 1440) / 60));
+    $("cm").textContent = pad(m % 60);
+    return true;
+  }
+  if (tick()) {
+    var timerId = setInterval(function () { if (!tick()) clearInterval(timerId); }, 30000);
+  }
+
+  function startConfetti() {
+    var wrap = document.createElement("div");
+    wrap.className = "confetti";
+    var colors = ["#ffc93c", "#ffffff", "#ffe08a", "#2a1a1e", "#a9d0ff"];
+    for (var i = 0; i < 44; i++) {
+      var s = document.createElement("i");
+      s.style.left = Math.random() * 100 + "%";
+      s.style.background = colors[i % colors.length];
+      s.style.animationDelay = (Math.random() * 1.6) + "s";
+      wrap.appendChild(s);
+    }
+    $("hero").appendChild(wrap);
+  }
+})();
+</script>
+</body>
+</html>
