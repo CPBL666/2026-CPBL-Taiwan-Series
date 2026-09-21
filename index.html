@@ -54,6 +54,7 @@ b { font-weight: 400; }
 /* ---- Team badges (original chibi icons) ---- */
 .badge { flex: none; display: inline-grid; place-items: center; width: var(--s, 40px); height: var(--s, 40px); border-radius: 50%; background: var(--tt); border: 3px solid var(--edge); overflow: hidden; }
 .badge svg { width: 92%; height: 92%; display: block; }
+.nb { white-space: nowrap; }
 
 /* ---- Hero ---- */
 .hero { background: var(--red); color: #fff; padding: 22px 20px 40px; border-radius: 0 0 40px 40px; border-bottom: 3px solid var(--edge); position: relative; overflow: hidden; }
@@ -213,7 +214,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
     <circle cx="25.2" cy="27.8" r="1.2" fill="#fff"/><circle cx="41.2" cy="27.8" r="1.2" fill="#fff"/>
     <ellipse cx="16" cy="38" rx="4" ry="2.5" fill="#FF9DB0" opacity=".85"/><ellipse cx="48" cy="38" rx="4" ry="2.5" fill="#FF9DB0" opacity=".85"/>
   </symbol>
-  <!-- 統一獅：橘色小獅 -->
+  <!-- 統一7-ELEVEn獅：橘色小獅 -->
   <symbol id="ico-uni" viewBox="0 0 64 64">
     <g fill="#C9540A" stroke="#2a1a1e" stroke-width="2.5">
       <circle cx="32" cy="34" r="25"/>
@@ -373,16 +374,16 @@ const DATA = {
     { d: "9/18", opp: "台鋼雄鷹", us: 3, them: 2, note: "" }
   ],
   upcoming: [
-    { d: "9/22", opp: "統一獅", time: "18:35", note: "亞太・例行賽" },
-    { d: "9/24", opp: "統一獅", time: "18:35", note: "亞太・例行賽" },
-    { d: "9/25", opp: "統一獅", time: "16:05", note: "亞太・例行賽" },
+    { d: "9/22", opp: "統一7-ELEVEn獅", time: "18:35", note: "亞太・例行賽" },
+    { d: "9/24", opp: "統一7-ELEVEn獅", time: "18:35", note: "亞太・例行賽" },
+    { d: "9/25", opp: "統一7-ELEVEn獅", time: "16:05", note: "亞太・例行賽" },
     { d: "9/26", opp: "樂天桃猿", time: "17:05", note: "天母・例行賽" },
     { d: "9/27", opp: "樂天桃猿", time: "16:05", note: "天母・例行賽" },
     { d: "9/28", opp: "富邦悍將", time: "17:05", note: "新莊・例行賽最後一天" },
     { d: "9/30", opp: "樂天桃猿", time: "18:35", note: "桃園・補賽", makeup: true },
-    { d: "10/1", opp: "統一獅", time: "待定", note: "天母・補賽（保留）", makeup: true },
+    { d: "10/1", opp: "統一7-ELEVEn獅", time: "待定", note: "天母・補賽（保留）", makeup: true },
     { d: "10/2", opp: "富邦悍將", time: "18:35", note: "新莊・補賽", makeup: true },
-    { d: "10/3", opp: "統一獅", time: "17:05", note: "亞太・補賽", makeup: true },
+    { d: "10/3", opp: "統一7-ELEVEn獅", time: "17:05", note: "亞太・補賽", makeup: true },
     { d: "10/4", opp: "樂天桃猿", time: "17:05", note: "桃園・補賽", makeup: true }
   ],
   timeline: [
@@ -395,25 +396,25 @@ const DATA = {
   firstHalfChamp: "味全龍",
   // 全部剩餘賽程（中華職棒 App，共 33 場）：[日期, 隊伍A, 隊伍B, "fh"=上半季補賽（只計入全年戰績）]
   schedule: [
-    ["9/22","中信兄弟","富邦悍將"], ["9/22","台鋼雄鷹","樂天桃猿"], ["9/22","味全龍","統一獅"],
-    ["9/24","富邦悍將","台鋼雄鷹"], ["9/24","中信兄弟","樂天桃猿"], ["9/24","味全龍","統一獅"],
-    ["9/25","富邦悍將","台鋼雄鷹"], ["9/25","中信兄弟","樂天桃猿"], ["9/25","味全龍","統一獅"],
-    ["9/26","統一獅","台鋼雄鷹"], ["9/26","樂天桃猿","味全龍"], ["9/26","中信兄弟","富邦悍將"],
-    ["9/27","統一獅","台鋼雄鷹"], ["9/27","樂天桃猿","味全龍"], ["9/27","中信兄弟","富邦悍將"],
-    ["9/28","台鋼雄鷹","中信兄弟"], ["9/28","統一獅","樂天桃猿"], ["9/28","味全龍","富邦悍將"],
-    ["9/30","味全龍","樂天桃猿"], ["9/30","統一獅","富邦悍將"], ["9/30","中信兄弟","台鋼雄鷹"],
-    ["10/1","樂天桃猿","台鋼雄鷹"], ["10/1","統一獅","味全龍"],
+    ["9/22","中信兄弟","富邦悍將"], ["9/22","台鋼雄鷹","樂天桃猿"], ["9/22","味全龍","統一7-ELEVEn獅"],
+    ["9/24","富邦悍將","台鋼雄鷹"], ["9/24","中信兄弟","樂天桃猿"], ["9/24","味全龍","統一7-ELEVEn獅"],
+    ["9/25","富邦悍將","台鋼雄鷹"], ["9/25","中信兄弟","樂天桃猿"], ["9/25","味全龍","統一7-ELEVEn獅"],
+    ["9/26","統一7-ELEVEn獅","台鋼雄鷹"], ["9/26","樂天桃猿","味全龍"], ["9/26","中信兄弟","富邦悍將"],
+    ["9/27","統一7-ELEVEn獅","台鋼雄鷹"], ["9/27","樂天桃猿","味全龍"], ["9/27","中信兄弟","富邦悍將"],
+    ["9/28","台鋼雄鷹","中信兄弟"], ["9/28","統一7-ELEVEn獅","樂天桃猿"], ["9/28","味全龍","富邦悍將"],
+    ["9/30","味全龍","樂天桃猿"], ["9/30","統一7-ELEVEn獅","富邦悍將"], ["9/30","中信兄弟","台鋼雄鷹"],
+    ["10/1","樂天桃猿","台鋼雄鷹"], ["10/1","統一7-ELEVEn獅","味全龍"],
     ["10/2","味全龍","富邦悍將"], ["10/2","樂天桃猿","台鋼雄鷹"],
-    ["10/3","味全龍","統一獅"], ["10/3","中信兄弟","富邦悍將"], ["10/3","台鋼雄鷹","樂天桃猿"],
-    ["10/4","味全龍","樂天桃猿"], ["10/4","統一獅","富邦悍將"], ["10/4","台鋼雄鷹","中信兄弟"],
-    ["10/5","統一獅","中信兄弟","fh"], ["10/5","富邦悍將","樂天桃猿"]
+    ["10/3","味全龍","統一7-ELEVEn獅"], ["10/3","中信兄弟","富邦悍將"], ["10/3","台鋼雄鷹","樂天桃猿"],
+    ["10/4","味全龍","樂天桃猿"], ["10/4","統一7-ELEVEn獅","富邦悍將"], ["10/4","台鋼雄鷹","中信兄弟"],
+    ["10/5","統一7-ELEVEn獅","中信兄弟","fh"], ["10/5","富邦悍將","樂天桃猿"]
   ],
   half2Magic: 9,   // 下半季領先隊封王魔術數字（官網淘汰指數最大值）
   // 全年度戰績（官網）：w 勝、l 敗、t 和
   full: [
     { n: "味全龍", w: 62, l: 47, t: 0 },
     { n: "富邦悍將", w: 56, l: 53, t: 0 },
-    { n: "統一獅", w: 55, l: 53, t: 1 },
+    { n: "統一7-ELEVEn獅", w: 55, l: 53, t: 1 },
     { n: "台鋼雄鷹", w: 51, l: 57, t: 1 },
     { n: "樂天桃猿", w: 50, l: 56, t: 2 },
     { n: "中信兄弟", w: 50, l: 58, t: 2 }
@@ -422,7 +423,7 @@ const DATA = {
   half2: [
     { n: "中信兄弟", w: 30, l: 21, t: 0 },
     { n: "樂天桃猿", w: 26, l: 22, t: 0 },
-    { n: "統一獅", w: 26, l: 24, t: 0 },
+    { n: "統一7-ELEVEn獅", w: 26, l: 24, t: 0 },
     { n: "味全龍", w: 23, l: 26, t: 0 },
     { n: "富邦悍將", w: 22, l: 27, t: 0 },
     { n: "台鋼雄鷹", w: 21, l: 28, t: 0 }
@@ -433,11 +434,14 @@ const DATA = {
 var TEAMS = {
   "味全龍": { k: "wc", s: "味全", c: "#e5323f", tt: "#ffd9dc" },
   "中信兄弟": { k: "cb", s: "兄弟", c: "#f5b800", tt: "#fff0b3" },
-  "統一獅": { k: "uni", s: "統一", c: "#e06a12", tt: "#ffe1c2" },
+  "統一7-ELEVEn獅": { k: "uni", s: "統一", c: "#e06a12", tt: "#ffe1c2" },
   "樂天桃猿": { k: "rak", s: "樂天", c: "#b0203d", tt: "#f9d2da" },
   "富邦悍將": { k: "fb", s: "富邦", c: "#1f5fb8", tt: "#d3e4fa" },
   "台鋼雄鷹": { k: "tsg", s: "台鋼", c: "#0f7a55", tt: "#cdebdd" }
 };
+function nameHtml(n) {
+  return n.replace("7-ELEVEn獅", '<wbr><span class="nb">7-ELEVEn獅</span>');
+}
 function badge(name, size) {
   var t = TEAMS[name];
   if (!t) return "";
@@ -577,7 +581,7 @@ function aboutP(p) {
   // Projection
   var pr = computeProjection(DATA);
   function fmtPct(n) { return pr.pct(pr.full(n)).toFixed(3).replace(/^0/, ""); }
-  function side(n) { return '<span class="side">' + badge(n, 44) + '<span class="nm">' + n + '</span></span>'; }
+  function side(n) { return '<span class="side">' + badge(n, 44) + '<span class="nm">' + nameHtml(n) + '</span></span>'; }
   function addRow(cls, tag, main, note) {
     var d = document.createElement("div");
     d.className = "proj-row " + cls;
@@ -640,7 +644,7 @@ function aboutP(p) {
       oc[o] = (oc[o] || 0) + 1; total++;
     });
     var l3 = "剩餘 " + total + " 場：" + Object.keys(oc).sort(function (u, v) { return oc[v] - oc[u]; }).map(function (o) { return "對" + TEAMS[o].s + " " + oc[o]; }).join("、");
-    box.innerHTML = '<div class="mycard-head">' + badge(fav, 56) + '<div class="mycard-name">' + fav + '<small>進季後賽機率</small></div>' + big + '</div><p>' + l1 + '</p><p>' + l2 + '</p><p>' + l3 + '</p>';
+    box.innerHTML = '<div class="mycard-head">' + badge(fav, 56) + '<div class="mycard-name">' + nameHtml(fav) + '<small>進季後賽機率</small></div>' + big + '</div><p>' + l1 + '</p><p>' + l2 + '</p><p>' + l3 + '</p>';
   }
   function renderPicker() {
     var pk = $("picker");
@@ -668,7 +672,7 @@ function aboutP(p) {
     var width = isH1 ? 100 : Math.max(2, Math.round(o.playoff * 100));
     var sub = isH1 ? "上半季冠軍，直接晉級台灣大賽 " + aboutP(o.direct)
       : "下半季封王 " + aboutP(o.half2) + "・以全年勝率擠進 " + aboutP(o.wild);
-    row.innerHTML = '<div class="odds-top">' + badge(n, 36) + '<span class="nm">' + n + '</span>' + val + '</div>' +
+    row.innerHTML = '<div class="odds-top">' + badge(n, 36) + '<span class="nm">' + nameHtml(n) + '</span>' + val + '</div>' +
       '<div class="bar"><i style="--tc:' + TEAMS[n].c + ';width:' + width + '%"></i></div><div class="odds-sub">' + sub + '</div>';
     $("odds").appendChild(row);
   });
@@ -685,7 +689,7 @@ function aboutP(p) {
     var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
     var gbTxt = idx === 0 ? "全年第一" : "落後 " + pr.gb(leaderF, t) + " 場";
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
-      '<div class="rank-main"><span class="nm">' + t.n + '</span>' + chips + '</div>' +
+      '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
       '<div class="rank-side"><span class="pc">' + fmtPct(t.n) + '</span>' + rec + '<br>' + gbTxt + '</div>';
     $("rank").appendChild(row);
   });
