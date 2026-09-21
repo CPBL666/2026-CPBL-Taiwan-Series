@@ -8,6 +8,10 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="味全龍 晉級台灣大賽倒數">
 <meta property="og:description" content="魔術數字、倒數計時、預估晉級隊伍與各隊晉級機率。球迷自製，非官方。">
+<!-- 分享預覽圖：把 og.png 和本檔放在同一個資料夾，並把下面兩行的網址換成你自己的 GitHub Pages 網址 -->
+<meta property="og:url" content="https://YOUR-NAME.github.io/YOUR-REPO/">
+<meta property="og:image" content="https://YOUR-NAME.github.io/YOUR-REPO/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%89%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -127,6 +131,68 @@ h3 { margin: 18px 0 2px; font-family: var(--round); font-weight: 400; font-size:
 details.how { margin: 8px 0 8px; font-size: .86rem; color: var(--muted); }
 details.how summary { cursor: pointer; padding: 4px 0; }
 details.how p { margin: 6px 0; line-height: 1.7; }
+
+/* Hero extras, share, trend, playoffs */
+.asof { margin: 8px 0 0; font-size: .85rem; opacity: .95; }
+.stale { display: inline-block; margin: 8px 0 0; padding: 2px 12px; background: #fff; color: var(--ink); border: 3px solid var(--edge); border-radius: 99px; font-size: .8rem; }
+.stale[hidden] { display: none; }
+.bigbox { text-align: right; }
+.rg { display: block; font-size: .74rem; font-weight: 400; color: var(--muted); font-family: var(--round); line-height: 1.4; }
+.pvbox { text-align: right; line-height: 1.2; }
+.dl { margin-left: 6px; font-family: var(--round); font-size: .76rem; }
+.dl.up { color: var(--win); }
+.dl.dn { color: var(--lose); }
+.share { margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sbtn { padding: 5px 16px; background: var(--gold); color: #2a1a1e; border: 3px solid var(--edge); border-radius: 99px; box-shadow: 0 3px 0 var(--edge); font: inherit; font-size: .86rem; cursor: pointer; }
+.sbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--edge); }
+.smsg { font-size: .8rem; color: var(--muted); word-break: break-all; }
+.trend svg { display: block; width: 100%; height: auto; color: var(--ink); }
+.tr-grid { stroke: var(--line); stroke-width: 1; }
+.tr-t { font-size: 10px; fill: var(--muted); font-family: var(--round); }
+.tr-n { font-size: 11px; fill: var(--ink); font-family: var(--round); }
+.po-only { display: none; }
+body.po .po-only { display: block; }
+body.po .reg-only { display: none; }
+.hero.po .hero-body { justify-content: flex-end; }
+.hero.po .magic, .hero.po .explain, .hero.po .scales, .hero.po .scale-caption { display: none; }
+.series { margin: 0 0 16px; padding: 12px 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
+.series-tag { display: inline-block; margin-bottom: 8px; padding: 0 10px; border: 2px solid var(--edge); border-radius: 99px; background: var(--surface); color: var(--ink); font-size: .78rem; line-height: 1.6; }
+.sb-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+.sb-row .nm { flex: 1; font-size: 1.1rem; }
+.sb-score { font-family: var(--num); font-weight: 800; font-size: 2rem; line-height: 1; min-width: 1.2em; text-align: right; }
+.sb-win { padding: 0 10px; border: 2px solid var(--edge); border-radius: 99px; background: var(--gold); color: #2a1a1e; font-size: .74rem; }
+.series-note { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }
+.hero.po .series { margin: 12px 0 0; background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.7); color: #fff; }
+.hero.po .series-note { color: #fff; opacity: .9; }
+.hero.po .series .games, .hero.po .series .key { display: none; }
+footer a { color: #fff; }
+
+/* Conditions + flow */
+.conds { list-style: none; margin: 8px 0 0; padding: 0; }
+.conds li { margin: 8px 0 0; font-size: .88rem; color: var(--muted); line-height: 1.65; }
+.ct { display: inline-block; margin-right: 8px; padding: 0 10px; border: 2px solid var(--edge); border-radius: 99px; background: var(--surface); color: var(--ink); font-size: .75rem; line-height: 1.6; }
+.cp { display: block; margin-top: 2px; color: var(--ink); font-size: .86rem; }
+.cw { display: block; margin-top: 4px; padding-left: 10px; border-left: 3px solid var(--gold); color: var(--ink); font-size: .84rem; line-height: 1.6; }
+.kh { margin: 16px 0 2px; font-family: var(--round); font-weight: 400; font-size: .92rem; color: var(--ink); }
+.key { list-style: none; margin: 4px 0 0; padding: 0; }
+.key li { padding: 7px 0; border-top: 2px dashed var(--line); font-size: .88rem; }
+.key li:first-child { border-top: 0; }
+.ksub { margin: 8px 0 0; font-size: .78rem; color: var(--muted); }
+.kt { display: block; color: var(--ink); }
+.ks { display: block; color: var(--muted); font-size: .8rem; }
+.flow { margin: 4px 0 10px; }
+.flow-row { padding: 10px 12px 12px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
+.fl-tag { display: inline-block; margin-bottom: 8px; padding: 0 10px; border: 2px solid var(--edge); border-radius: 99px; background: var(--surface); font-size: .78rem; line-height: 1.6; }
+.flow-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.ft { display: inline-flex; align-items: center; gap: 8px; }
+.ft .nm { display: block; font-size: 1rem; line-height: 1.3; }
+.ft small { display: block; font-size: .72rem; color: var(--muted); line-height: 1.3; }
+.flow-vs { font-family: var(--num); font-weight: 800; color: var(--muted); }
+.flow-chips.stack { flex-direction: column; align-items: flex-start; gap: 2px; }
+.flow-chips.stack .flow-vs { padding-left: 10px; font-size: .9rem; }
+.flow-arrow { margin: 6px 4px; text-align: center; font-size: .8rem; color: var(--muted); line-height: 1.5; }
+.flow-arrow::before { content: "▼ "; color: var(--red); }
+.badge.q { background: var(--surface); border-style: dashed; color: var(--muted); font-family: var(--num); font-weight: 800; font-size: 1.2rem; }
 
 /* Standings */
 .rank-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); }
@@ -277,16 +343,51 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
   <header class="hero" id="hero">
     <svg class="spark" style="top:22px;right:22px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4Z"/></svg>
     <svg class="spark" style="top:96px;right:46%;width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4Z"/></svg>
-    <h1>味全龍・年度勝率第一魔術數字</h1>
+    <h1 id="heroTitle">味全龍・年度勝率第一魔術數字</h1>
+    <p class="asof" id="asof"></p>
+    <p class="stale" id="stale" hidden></p>
     <div class="hero-body">
       <p class="magic" aria-live="polite"><span class="m">M</span><span class="n" id="mnum">6</span></p>
       <div class="mascot"><span class="bubble" id="bubble">加油！</span><span id="mascot"></span></div>
     </div>
+    <div id="poHero"></div>
     <p class="explain" id="explain"></p>
     <ul class="scales" id="scales" aria-hidden="true"></ul>
     <p class="scale-caption" id="scaleCap"></p>
   </header>
 
+  <section class="po-only" aria-labelledby="h-po">
+    <h2 id="h-po">季後賽戰況</h2>
+    <div id="poBox"></div>
+  </section>
+  <section class="reg-only" aria-labelledby="h-proj">
+    <h2 id="h-proj">預估晉級隊伍</h2>
+    <p class="sub">依目前戰績推算，會隨賽況變動，不是官方公布</p>
+    <div id="proj"></div>
+    <h3>仍在爭奪</h3>
+    <ul class="race" id="race"></ul>
+  </section>
+  <section class="reg-only" aria-labelledby="h-odds">
+    <h2 id="h-odds">各隊晉級機率</h2>
+    <p class="sub">選你支持的球隊，看進季後賽的機會（估算值，非官方預測）</p>
+    <div class="picker" id="picker" role="group" aria-label="選擇你支持的球隊"></div>
+    <div class="mycard" id="mycard" aria-live="polite"></div>
+    <div id="odds"></div>
+    <details class="how">
+      <summary>機率是怎麼算的？</summary>
+      <p>用電腦把剩下的比賽照真實賽程打 40,000 遍，每遍都依晉級規則決出下半季冠軍與季後賽名單，再統計每隊出現的次數。</p>
+      <p>「關鍵比賽」是把其中某一場固定成 A 隊贏、或 B 隊贏，比較這兩種情況下該隊的晉級機率差多少；「怎麼贏」則假設對手照預期（實力 × 剩餘場數）打完，算出自己至少要贏幾場。這兩項都是估算，對手實際表現不同，門檻就會跟著變。</p>
+      <p>每隊的實力取「全年勝率」與「下半季勝率」各一半，並向 .500 拉近一些（避免一兩場的起伏影響過大）。每場比賽用兩隊實力比較來決定勝負。</p>
+      <p>實力不確定性：每一輪模擬都讓各隊實力小幅浮動，不把目前的勝率當成鐵板一塊，所以接近的競爭不會被算得太篤定。</p>
+      <p>範圍：分別改用「只看全年戰績」「只看下半季戰績」「更向 .500 靠攏」重算，取進季後賽機率的最低與最高值。範圍越寬，代表這隊的機率越取決於你相信哪一種實力評估。</p>
+      <p>賽程：用的是中華職棒 App 上的完整剩餘賽程（共 33 場，每隊剩下的場數都和官網戰績吻合），逐場模擬。10/5 統一對兄弟是上半季補賽，只計入全年戰績。沒有考慮先發投手、傷兵與主客場，勝率相同時的排名（例如對戰成績）也以隨機處理。若有延賽，補賽日期以聯盟公告為準。所以這是估算值，實際結果請以官方為準。</p>
+    </details>
+  </section>
+  <section class="reg-only" aria-labelledby="h-trend">
+    <h2 id="h-trend">機率走勢</h2>
+    <p class="sub">各隊進季後賽機率，每次更新會多一個點</p>
+    <div class="trend" id="trend"></div>
+  </section>
   <section aria-labelledby="h-count">
     <h2 id="h-count">距離台灣大賽首戰</h2>
     <p class="sub">預定 10/17 開打（暫定，以聯盟公告為準）</p>
@@ -296,35 +397,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
       <span class="unit"><span class="num" id="cm">--</span><span class="lbl">分</span></span>
     </div>
   </section>
-
-  <section aria-labelledby="h-proj">
-    <h2 id="h-proj">預估晉級隊伍</h2>
-    <p class="sub">依目前戰績推算，會隨賽況變動，不是官方公布</p>
-    <div id="proj"></div>
-    <h3>仍在爭奪</h3>
-    <ul class="race" id="race"></ul>
-  </section>
-
-  <section aria-labelledby="h-odds">
-    <h2 id="h-odds">各隊晉級機率</h2>
-    <p class="sub">選你支持的球隊，看進季後賽的機會（估算值，非官方預測）</p>
-    <div class="picker" id="picker" role="group" aria-label="選擇你支持的球隊"></div>
-    <div class="mycard" id="mycard" aria-live="polite"></div>
-    <div id="odds"></div>
-    <details class="how">
-      <summary>機率是怎麼算的？</summary>
-      <p>用電腦把剩下的比賽隨機打 20,000 遍，每遍都依晉級規則決出下半季冠軍與季後賽名單，再統計每隊出現的次數。</p>
-      <p>每隊的實力取「全年勝率」與「下半季勝率」各一半，並向 .500 拉近一些（避免一兩場的起伏影響過大）。每場比賽用兩隊實力比較來決定勝負。</p>
-      <p>賽程：用的是中華職棒 App 上的完整剩餘賽程（共 33 場，每隊剩下的場數都和官網戰績吻合），逐場模擬。10/5 統一對兄弟是上半季補賽，只計入全年戰績。沒有考慮先發投手、傷兵與主客場，勝率相同時的排名（例如對戰成績）也以隨機處理。若有延賽，補賽日期以聯盟公告為準。所以這是估算值，實際結果請以官方為準。</p>
-    </details>
-  </section>
-
-  <section aria-labelledby="h-rank">
+  <section class="reg-only" aria-labelledby="h-rank">
     <h2 id="h-rank">全年度戰績</h2>
     <p class="sub" id="rankSub"></p>
     <div id="rank"></div>
   </section>
-
   <section aria-labelledby="h-games">
     <h2 id="h-games">戰況</h2>
     <h3>最近</h3>
@@ -336,34 +413,43 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
       <ul class="games" id="makeup"></ul>
     </details>
   </section>
-
   <section aria-labelledby="h-tl">
     <h2 id="h-tl">賽程時間軸</h2>
     <ol class="timeline" id="timeline"></ol>
   </section>
-
   <section aria-labelledby="h-path">
-    <h2 id="h-path">晉級台灣大賽的路</h2>
+    <h2 id="h-path">賽制一圖看懂</h2>
     <p class="sub" id="pathNote"></p>
-    <div class="path">
-      <span class="pt">下半季冠軍是別隊</span>
-      <p>味全若全年勝率較高，直接晉級。另一隊要先和「兩個半季冠軍以外、全年勝率最高的球隊」打五戰三勝的季後挑戰賽。</p>
-    </div>
-    <div class="path">
-      <span class="pt">味全也拿下半季冠軍</span>
-      <p>直接晉級，並在七戰四勝的台灣大賽先取得 1 勝優勢；全年勝率第 2、3 名改打季後挑戰賽。</p>
-    </div>
+    <div class="flow" id="flow"></div>
+    <details class="how">
+      <summary>其他情況</summary>
+      <p>下半季冠軍是別隊：兩位半季冠軍中，全年勝率較高者直接晉級台灣大賽；另一位半季冠軍和「半季冠軍以外、全年勝率最高的球隊」打季後挑戰賽，半季冠軍先取 1 勝。</p>
+      <p>味全也拿下半季冠軍：直接晉級台灣大賽並先取 1 勝，全年勝率第 2、3 名改打季後挑戰賽。</p>
+      <p>勝率相同時的排名方式，以聯盟規章為準。</p>
+    </details>
   </section>
 </main>
 
 <footer>
   <p id="updated"></p>
+  <p id="report"></p>
   <p>比分、戰績、魔術數字（淘汰指數）與剩餘賽程依中華職棒官網與官方 App 整理。季後挑戰賽與台灣大賽日期為暫定，以聯盟公告為準。各隊晉級機率為簡化模擬的估算值，非官方預測。球隊圖案為本頁原創的 Q 版插畫，並非官方隊徽或吉祥物。本頁為球迷自製，與球團及聯盟無關。</p>
 </footer>
 
 <script>
 /* ===== 每次更新只需要改這一區 ===== */
 const DATA = {
+  asOf: "2026/09/20",   // 「截至 ○○ 賽後結算」的日期
+  reportUrl: "",        // 回報連結（例如 GitHub Issues 或 mailto:...），留空就不顯示
+  playoffs: null,       // 季後賽開打後才填，格式見下方範例
+  // playoffs 範例：
+  // { direct: "味全龍",
+  //   challenge: { teams: ["中信兄弟", "富邦悍將"], first: "中信兄弟", games: [{ d: "10/9", w: "中信兄弟", s: "5:3" }] },
+  //   final: { teams: ["味全龍", "中信兄弟"], first: null, games: [] } }
+  // 走勢圖的歷史資料：每次更新時，把「上一次」的進季後賽機率放進來
+  history: [
+    { d: "9/19", odds: { "味全龍": 1, "富邦悍將": 0.4553, "統一7-ELEVEn獅": 0.636, "台鋼雄鷹": 0.0291, "樂天桃猿": 0.1356, "中信兄弟": 0.744 } }
+  ],
   updated: "2026/09/21 上午（依中華職棒官網戰績與賽程）",
   magic: 6,        // 目前魔術數字
   start: 6,        // 點亮鱗片的起算值（2026/09/20 為 M6）
@@ -409,7 +495,6 @@ const DATA = {
     ["10/4","味全龍","樂天桃猿"], ["10/4","統一7-ELEVEn獅","富邦悍將"], ["10/4","台鋼雄鷹","中信兄弟"],
     ["10/5","統一7-ELEVEn獅","中信兄弟","fh"], ["10/5","富邦悍將","樂天桃猿"]
   ],
-  half2Magic: 9,   // 下半季領先隊封王魔術數字（官網淘汰指數最大值）
   // 全年度戰績（官網）：w 勝、l 敗、t 和
   full: [
     { n: "味全龍", w: 62, l: 47, t: 0 },
@@ -482,33 +567,50 @@ function mulberry32(a) {
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
 }
-function simulateOdds(D, N, seed) {
+function strengthOf(D, n, mode) {
+  var W = 0, L = 0, W2 = 0, L2 = 0;
+  D.full.forEach(function (t) { if (t.n === n) { W = t.w; L = t.l; } });
+  D.half2.forEach(function (t) { if (t.n === n) { W2 = t.w; L2 = t.l; } });
+  var k = mode === "strong" ? 3 : 1;                         // strong：更用力向 .500 靠攏
+  var fs = (W + 20 * k) / (W + L + 40 * k), hs = (W2 + 15 * k) / (W2 + L2 + 30 * k);
+  if (mode === "full") return fs;                             // 只看全年戰績
+  if (mode === "half") return hs;                             // 只看下半季戰績
+  return 0.5 * (fs + hs);                                     // blend / strong：兩者各半
+}
+function simulateOdds(D, N, seed, opts) {
+  opts = opts || {};
+  var mode = opts.mode || "blend", sigma = opts.sigma === undefined ? 0.025 : opts.sigma, record = opts.record !== false;
   var rng = mulberry32(seed);
+  function gauss() { var u = 1 - rng(), v = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
   var names = D.full.map(function (t) { return t.n; });
   var K = names.length, idx = {}, i, m;
   names.forEach(function (n, q) { idx[n] = q; });
   var W = [], L = [], W2 = [], L2 = [], str = [];
   D.full.forEach(function (t) { W[idx[t.n]] = t.w; L[idx[t.n]] = t.l; });
   D.half2.forEach(function (t) { W2[idx[t.n]] = t.w; L2[idx[t.n]] = t.l; });
-  for (i = 0; i < K; i++) {
-    var fs = (W[i] + 20) / (W[i] + L[i] + 40);
-    var hs = (W2[i] + 15) / (W2[i] + L2[i] + 30);
-    str[i] = 0.5 * (fs + hs);
-  }
+  for (i = 0; i < K; i++) str[i] = strengthOf(D, names[i], mode);
   var games = D.schedule.map(function (g) { return [idx[g[1]], idx[g[2]], g[3] === "fh"]; });
+  var G = games.length;
+  var win1 = record ? new Uint8Array(N * G) : null, pl = new Uint8Array(N), dr = new Uint8Array(N);   // 每場勝負、季後賽名單、直接晉級隊伍
+  var sArr = [];
   var h1 = idx[D.firstHalfChamp];
   var direct = [], chall = [], half2 = [], wild = [];
   for (i = 0; i < K; i++) { direct[i] = 0; chall[i] = 0; half2[i] = 0; wild[i] = 0; }
   var fw, fl, hw, hl;
   function play(x, y, firstHalf) {
-    var px = str[x] * (1 - str[y]) / (str[x] * (1 - str[y]) + str[y] * (1 - str[x]));
+    var px = sArr[x] * (1 - sArr[y]) / (sArr[x] * (1 - sArr[y]) + sArr[y] * (1 - sArr[x]));
     var win = rng() < px ? x : y, lose = win === x ? y : x;
     fw[win]++; fl[lose]++;
     if (!firstHalf) { hw[win]++; hl[lose]++; }   // 上半季補賽只計入全年戰績
+    return win;
   }
   for (var s = 0; s < N; s++) {
     fw = W.slice(); fl = L.slice(); hw = W2.slice(); hl = L2.slice();
-    for (m = 0; m < games.length; m++) play(games[m][0], games[m][1], games[m][2]);
+    for (i = 0; i < K; i++) sArr[i] = Math.min(0.7, Math.max(0.3, str[i] + sigma * gauss()));   // 每一輪都讓實力有一點不確定
+    for (m = 0; m < games.length; m++) {
+      var wn = play(games[m][0], games[m][1], games[m][2]);
+      if (record) win1[s * G + m] = wn === games[m][0] ? 1 : 0;
+    }
     var fp = [], hp = [];
     for (i = 0; i < K; i++) {
       fp[i] = fw[i] / (fw[i] + fl[i]) + rng() * 1e-7;
@@ -526,21 +628,25 @@ function simulateOdds(D, N, seed) {
     if (h1 === h2) {
       var rest = order([h1]);
       direct[h1]++; chall[rest[0]]++; chall[rest[1]]++; wild[rest[0]]++; wild[rest[1]]++;
+      pl[s] = (1 << h1) | (1 << rest[0]) | (1 << rest[1]); dr[s] = 1 << h1;
     } else {
       var dir = fp[h1] >= fp[h2] ? h1 : h2, oth = dir === h1 ? h2 : h1;
       var opp = order([h1, h2])[0];
       direct[dir]++; chall[oth]++; chall[opp]++; wild[opp]++;
+      pl[s] = (1 << dir) | (1 << oth) | (1 << opp); dr[s] = 1 << dir;
     }
   }
   var out = {};
   names.forEach(function (nm, q) {
     out[nm] = { direct: direct[q] / N, chall: chall[q] / N, playoff: (direct[q] + chall[q]) / N, half2: half2[q] / N, wild: wild[q] / N };
   });
-  return out;
+  return { odds: out, rec: record ? { names: names, N: N, G: G, win: win1, pl: pl, dr: dr } : null };
 }
 function fmtProb(p) {
-  if (p < 0.005) return "<1%";
-  if (p > 0.995) return ">99%";
+  if (p < 0.0005) return "<0.1%";
+  if (p < 0.01) return (p * 100).toFixed(1) + "%";
+  if (p > 0.9995) return ">99.9%";
+  if (p >= 0.99) return (p * 100).toFixed(1) + "%";
   return Math.round(p * 100) + "%";
 }
 function aboutP(p) {
@@ -553,10 +659,26 @@ function aboutP(p) {
   var p = params.get("preview");
   var magic = (p !== null && /^\d+$/.test(p)) ? Math.min(parseInt(p, 10), DATA.start) : DATA.magic;
   var $ = function (id) { return document.getElementById(id); };
+  var PO = DATA.playoffs;
+  var asOfText = "截至 " + DATA.asOf + " 賽後結算";
 
   // Hero
   $("mnum").textContent = magic;
   $("mascot").innerHTML = badge("味全龍");
+  $("asof").textContent = asOfText;
+  (function () {   // 排定日期已過、但還沒計入的比賽 → 提醒數字可能不是最新
+    var t = new Date(Date.now() + 8 * 3600 * 1000);
+    var today = t.getUTCFullYear() * 10000 + (t.getUTCMonth() + 1) * 100 + t.getUTCDate();
+    var yr = parseInt(DATA.asOf.split("/")[0], 10), late = 0;
+    DATA.schedule.forEach(function (g) {
+      var p = g[0].split("/");
+      if (yr * 10000 + parseInt(p[0], 10) * 100 + parseInt(p[1], 10) < today) late++;
+    });
+    if (late > 0 && !PO) {
+      $("stale").hidden = false;
+      $("stale").textContent = "有 " + late + " 場已排定日期已過的比賽還沒計入，數字可能不是最新";
+    }
+  })();
   var lit = Math.max(0, Math.min(DATA.start, DATA.start - magic));
   var explain = $("explain");
   if (magic <= 0) {
@@ -592,7 +714,7 @@ function aboutP(p) {
     ? "上、下半季雙料冠軍，全年勝率 " + fmtPct(pr.direct) + "，七戰四勝先取 1 勝"
     : (pr.direct === pr.h1 ? "上半季冠軍" : "下半季冠軍") + "，全年勝率 " + fmtPct(pr.direct) + "，兩位半季冠軍中較高";
   if (pr.direct === DATA.firstHalfChamp && magic > 0) {
-    directNote += "。已取得季後賽門票，全年勝率第一魔術數字 M" + magic;
+    directNote += "。全年勝率第一魔術數字 M" + magic;
   }
   addRow("direct", "台灣大賽", side(pr.direct), directNote + "（預估直接晉級）");
   if (pr.same) {
@@ -605,17 +727,265 @@ function aboutP(p) {
   function addRace(t) { var li = document.createElement("li"); li.textContent = t; race.appendChild(li); }
   if (!pr.same) {
     var lead = pr.byHalf[0], c2 = pr.byHalf[1], c3 = pr.byHalf[2];
-    addRace("下半季冠軍：" + pr.h2 + "暫居第一，" + c2.n + "落後 " + pr.gb(lead, c2) + " 場、" + c3.n + "落後 " + pr.gb(lead, c3) + " 場。" + pr.h2 + "封王魔術數字 M" + DATA.half2Magic + "（依官網淘汰指數）");
+    addRace("下半季冠軍：" + pr.h2 + "暫居第一，" + c2.n + "落後 " + pr.gb(lead, c2) + " 場、" + c3.n + "落後 " + pr.gb(lead, c3) + " 場。" + pr.h2 + "封王魔術數字 M" + half2M + "（依官網淘汰指數）");
     var p0 = pr.pool[0], p1 = pr.pool[1];
     addRace("全年勝率最高的半季冠軍以外球隊：" + p0.n + "領先" + p1.n + " " + pr.gb(p0, p1) + " 場，這個名額還沒定");
   }
 
   // Playoff odds + favourite-team picker
-  var ODDS = simulateOdds(DATA, 20000, 20260920);
+  var SIM = simulateOdds(DATA, 40000, 20260920);
+  var ODDS = SIM.odds;
+  // 範圍：換三種實力假設重算，取最低與最高
+  var RANGE = {};
+  (function () {
+    var vs = ["full", "half", "strong"].map(function (m) { return simulateOdds(DATA, 12000, 20260920, { mode: m, record: false }).odds; });
+    Object.keys(ODDS).forEach(function (n) {
+      var lo = ODDS[n].playoff, hi = lo;
+      vs.forEach(function (v) { lo = Math.min(lo, v[n].playoff); hi = Math.max(hi, v[n].playoff); });
+      RANGE[n] = [lo, hi];
+    });
+  })();
+  function rangeText(n) {
+    var r = RANGE[n];
+    if (!r || r[1] - r[0] < 0.01) return "";
+    return "範圍 " + Math.round(r[0] * 100) + "–" + Math.round(r[1] * 100) + "%";
+  }
+  var prevH = DATA.history && DATA.history.length ? DATA.history[DATA.history.length - 1] : null;
+  function deltaOf(n) {
+    if (!prevH || prevH.odds[n] === undefined) return 0;
+    return Math.round(ODDS[n].playoff * 100) - Math.round(prevH.odds[n] * 100);
+  }
+  function deltaHtml(n) {
+    var d = deltaOf(n);
+    return d === 0 ? "" : '<small class="dl ' + (d > 0 ? "up" : "dn") + '">' + (d > 0 ? "▲" : "▼") + Math.abs(d) + '</small>';
+  }
+  // 下半季：每隊剩餘場數（不含上半季補賽）與淘汰指數（算法同官網：領先隊贏球 + 該隊輸球，合計幾場就淘汰）
+  var h2Left = {};
+  DATA.half2.forEach(function (t) { h2Left[t.n] = 0; });
+  DATA.schedule.forEach(function (g) { if (g[3] === "fh") return; h2Left[g[1]]++; h2Left[g[2]]++; });
+  var leadH = pr.byHalf[0], elim = {}, half2M = 0;
+  pr.byHalf.forEach(function (t, q) {
+    if (q === 0) return;
+    var e = t.w + h2Left[t.n] - leadH.w + 1;
+    elim[t.n] = e;
+    if (e > half2M) half2M = e;
+  });
+  var poolAll = pr.same ? pr.byFull.filter(function (t) { return t.n !== pr.h1; }) : pr.pool;
+  var slots = pr.same ? 2 : 1;
+  function rankIn(list, n) { return list.map(function (t) { return t.n; }).indexOf(n) + 1; }
+  // ---- 「怎麼贏」門檻：假設對手照預期打（實力 × 剩餘場數），算出自己至少要贏幾場 ----
+  function short(n) { return TEAMS[n].s; }
+  function winsPhrase(need, m) { return need >= m ? "要 " + m + " 場全勝" : "要贏 " + need + " 場以上"; }
+  function pct3(x) { return x.toFixed(3).replace(/^0/, ""); }
+  function leftFull(n) {
+    var c = 0;
+    DATA.schedule.forEach(function (g) { if (g[1] === n || g[2] === n) c++; });
+    return c;
+  }
+  function half2Rec(n) { return DATA.half2.filter(function (t) { return t.n === n; })[0]; }
+  function minWinsFull(T, R, kR) {
+    var t = pr.full(T), r = pr.full(R), mT = leftFull(T), nR = leftFull(R);
+    var DT = t.w + t.l + mT, DR = r.w + r.l + nR, target = (r.w + kR) / DR;
+    for (var w = 0; w <= mT; w++) if ((t.w + w) / DT > target + 1e-12) return w;
+    return mT + 1;
+  }
+  function howHalf(n) {
+    var T = half2Rec(n), mT = h2Left[n];
+    if (n === leadH.n) {
+      var c2 = pr.byHalf[1], nR = h2Left[c2.n], kR = Math.round(nR * strengthOf(DATA, c2.n));
+      var need = c2.w + kR - T.w + 1, worst = c2.w + nR - T.w + 1;
+      var w1 = need <= 0 ? "就算剩下全輸也守得住第一" : (need > mT ? "就算剩下全勝也守不住" : "剩下 " + mT + " 場" + (need >= mT ? "要 " + mT + " 場全勝才守住第一" : "只要贏 " + need + " 場以上就守住第一"));
+      var w2 = worst > mT ? "" : (worst >= mT ? "；" + short(c2.n) + "若全勝，要 " + mT + " 場全勝" : "；" + short(c2.n) + "若全勝，要贏 " + worst + " 場以上");
+      return "若" + c2.n + "剩下 " + nR + " 場打成 " + kR + " 勝 " + (nR - kR) + " 敗，" + n + w1 + w2 + "。";
+    }
+    var nL = h2Left[leadH.n], kL = Math.round(nL * strengthOf(DATA, leadH.n));
+    var needT = leadH.w + kL - T.w + 1;
+    var head = "若" + leadH.n + "剩下 " + nL + " 場打成 " + kL + " 勝 " + (nL - kL) + " 敗，";
+    if (needT > mT) return head + n + "就算剩下 " + mT + " 場全勝也追不上。";
+    return head + n + "剩下 " + mT + " 場" + winsPhrase(Math.max(needT, 0), mT) + "才能超車；" + short(leadH.n) + "每多輸一場，門檻就少一場。";
+  }
+  function howWild(n, pk) {
+    var rival = pk <= slots ? poolAll[slots] : poolAll[slots - 1];
+    var nR = leftFull(rival.n), kR = Math.round(nR * strengthOf(DATA, rival.n)), mT = leftFull(n);
+    var need = minWinsFull(n, rival.n, kR);
+    var head = "若" + rival.n + "剩下 " + nR + " 場打成 " + kR + " 勝 " + (nR - kR) + " 敗，";
+    if (pk <= slots) {
+      if (need <= 0) return head + n + "就算剩下全輸也守得住。";
+      if (need > mT) return head + n + "就算剩下 " + mT + " 場全勝也守不住。";
+      return head + n + "剩下 " + mT + " 場" + (need >= mT ? "要 " + mT + " 場全勝才守得住" : "至少要贏 " + need + " 場才守得住") + "。";
+    }
+    if (need > mT) return head + n + "就算剩下 " + mT + " 場全勝也追不上。";
+    return head + n + "剩下 " + mT + " 場" + winsPhrase(need, mT) + "才能超車。";
+  }
+  function howDirect(n) {
+    var t = pr.full(n), mT = leftFull(n), DT = t.w + t.l + mT, best = 0, bestName = "";
+    pr.byHalf.forEach(function (h, q) {
+      if (h.n === n) return;
+      if (q !== 0 && !(elim[h.n] > 0)) return;          // 已無緣下半季冠軍的隊伍不用防
+      var f = pr.full(h.n), m = leftFull(h.n), top = (f.w + m) / (f.w + f.l + m);
+      if (top > best) { best = top; bestName = h.n; }
+    });
+    var need = 0;
+    while (need <= mT && (t.w + need) / DT <= best + 1e-12) need++;
+    if (need === 0) return "就算剩下 " + mT + " 場全輸，全年勝率仍高於所有下半季冠軍候選隊的上限。";
+    if (need > mT) return "";
+    return "剩下 " + mT + " 場只要贏 " + need + " 場（全年勝率 " + pct3((t.w + need) / DT) + "），不論誰拿下半季冠軍，全年勝率都高過對方；" + short(bestName) + "每多輸一場，門檻就少一場。";
+  }
+  function condsFor(n) {
+    var o = ODDS[n], out = [], fr = rankIn(pr.byFull, n);
+    if (n === pr.h1) {
+      out.push({ tag: "季後賽", text: "上半季冠軍，依現行賽制保有季後賽席次。", prob: o.playoff });
+      if (pr.same) {
+        out.push({ tag: "直接晉級", text: "上、下半季雙料冠軍，直接晉級台灣大賽並先取 1 勝。", prob: null });
+      } else {
+        var sec = pr.byFull[1];
+        out.push({ tag: "直接晉級", text: "全年勝率要高過下半季冠軍。目前全年第 " + fr + " 名（" + fmtPct(n) + "）" +
+          (fr === 1 ? "，領先第 2 名" + sec.n + " " + pr.gb(pr.byFull[0], sec) + " 場" + (magic > 0 ? "，全年第一魔術數字 M" + magic : "") : "") + "。", prob: o.direct, how: howDirect(n) });
+      }
+      return out;
+    }
+    var hr = rankIn(pr.byHalf, n);
+    if (n === pr.h2 && !pr.same) {
+      var c2 = pr.byHalf[1];
+      out.push({ tag: "下半季冠軍", text: "目前第 1 名，領先第 2 名" + c2.n + " " + pr.gb(leadH, c2) + " 場，封王魔術數字 M" + half2M + "。守住就進季後挑戰賽，並先取 1 勝。", prob: o.half2, how: howHalf(n) });
+      out.push({ tag: "全年外卡", text: "若沒守住下半季第一，全年勝率 " + fmtPct(n) + "（第 " + fr + " 名），靠外卡的機會很小。", prob: o.wild });
+      return out;
+    }
+    var e = elim[n];
+    out.push({ tag: "下半季冠軍", text: "目前第 " + hr + " 名，落後第 1 名" + leadH.n + " " + pr.gb(leadH, pr.byHalf[hr - 1]) + " 場，還剩 " + h2Left[n] + " 場。" +
+      (e > 0 ? "官網淘汰指數 " + e + "：" + leadH.n + "再贏球加上" + TEAMS[n].s + "再輸球，合計 " + e + " 場就無緣。" : "已無緣下半季冠軍。"), prob: o.half2, how: e > 0 ? howHalf(n) : "" });
+    var pk = rankIn(poolAll, n);
+    if (pk > 0) {
+      var me = poolAll[pk - 1], txt;
+      if (pk <= slots) {
+        var nxt = poolAll[slots];
+        txt = "半季冠軍以外全年勝率最高" + (pr.same ? "的前 2 名" : "的球隊") + "。目前排第 " + pk + "（" + fmtPct(n) + "），領先第 " + (slots + 1) + " 名" + nxt.n + " " + pr.gb(me, nxt) + " 場。";
+      } else {
+        var top = poolAll[slots - 1];
+        txt = "半季冠軍以外全年勝率最高" + (pr.same ? "的前 2 名" : "的球隊") + "。目前排第 " + pk + "（" + fmtPct(n) + "），落後第 " + slots + " 名" + top.n + " " + pr.gb(top, me) + " 場。";
+      }
+      if (!pr.same) txt += "（以目前下半季第 1 名" + pr.h2 + "為半季冠軍計算）";
+      out.push({ tag: "全年外卡", text: txt, prob: o.wild, how: howWild(n, pk) });
+    }
+    return out;
+  }
+
+  // ---- 關鍵比賽：把某一場固定成 A 隊贏或 B 隊贏，看這隊的晉級機率差多少 ----
+  var LEVCACHE = {};
+  function leverageFor(n) {
+    if (LEVCACHE[n]) return LEVCACHE[n];
+    var rec = SIM.rec, bit = 1 << rec.names.indexOf(n);
+    var arr = (n === DATA.firstHalfChamp) ? rec.dr : rec.pl, list = [];
+    for (var g = 0; g < rec.G; g++) {
+      var sa = 0, ca = 0, sb = 0, cb = 0;
+      for (var q = 0; q < rec.N; q++) {
+        var v = (arr[q] & bit) ? 1 : 0;
+        if (rec.win[q * rec.G + g]) { sa += v; ca++; } else { sb += v; cb++; }
+      }
+      if (!ca || !cb) continue;
+      list.push({ g: g, pa: sa / ca, pb: sb / cb, d: Math.abs(sa / ca - sb / cb) });
+    }
+    list.sort(function (u, v) { return v.d - u.d; });
+    LEVCACHE[n] = list;
+    return list;
+  }
+  function keyGamesHtml(n) {
+    var isH1 = n === DATA.firstHalfChamp, thr = isH1 ? 0.01 : 0.02;
+    var metric = isH1 ? "直接晉級" : "進季後賽";
+    var all = leverageFor(n).filter(function (x) { return x.d >= thr; });
+    function mine(x) { var g = DATA.schedule[x.g]; return g[1] === n || g[2] === n; }
+    var own = all.filter(mine).slice(0, 3), other = all.filter(function (x) { return !mine(x); }).slice(0, 3);
+    var head = '<h4 class="kh">關鍵比賽（對' + metric + '機率影響最大）</h4>';
+    if (!own.length && !other.length) {
+      return head + '<p>剩下的比賽，每一場對' + metric + '機率的影響都不到 ' + (isH1 ? "1" : "2") + ' 個百分點。</p>';
+    }
+    function items(list) {
+      return '<ul class="key">' + list.map(function (x) {
+        var g = DATA.schedule[x.g], A = g[1], B = g[2], fav = x.pa >= x.pb ? A : B, unf = fav === A ? B : A;
+        var pf = Math.max(x.pa, x.pb), pu = Math.min(x.pa, x.pb), main, sub;
+        if ((A === n || B === n) && fav === n) {
+          main = g[0] + " 對" + short(unf) + "：要贏";
+          sub = "贏了 → " + metric + " " + fmtProb(pf) + "；輸了 → " + fmtProb(pu);
+        } else {
+          main = g[0] + " " + short(A) + " vs " + short(B) + "：希望" + short(fav) + "贏";
+          sub = short(fav) + "贏 → " + fmtProb(pf) + "；" + short(unf) + "贏 → " + fmtProb(pu);
+        }
+        return '<li><span class="kt">' + main + '</span><span class="ks">' + sub + '</span></li>';
+      }).join('') + '</ul>';
+    }
+    return head + (own.length ? '<div class="ksub">自己的比賽</div>' + items(own) : '') +
+      (other.length ? '<div class="ksub">別隊的比賽（看誰贏對你有利）</div>' + items(other) : '');
+  }
+
   var teamNames = Object.keys(TEAMS);
   function keyToName(k) { for (var q = 0; q < teamNames.length; q++) if (TEAMS[teamNames[q]].k === k) return teamNames[q]; return null; }
   var fav = keyToName(params.get("team"));
   if (!fav) { try { fav = keyToName(localStorage.getItem("dragons-fav")); } catch (e) { fav = null; } }
+
+  function shareTeam() {
+    if (!fav) return;
+    var url = location.href.split("#")[0].split("?")[0] + "?team=" + TEAMS[fav].k;
+    var text = fav + " 進季後賽機率 " + fmtProb(ODDS[fav].playoff) + "（" + asOfText + "）";
+    var msg = $("shareMsg");
+    function legacyCopy() {
+      var ta = document.createElement("textarea"), ok = false;
+      ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      msg.textContent = ok ? "已複製連結" : url;      // 複製不了就直接顯示網址，讓對方自己長按複製
+    }
+    function copyIt() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () { msg.textContent = "已複製連結"; }, legacyCopy);
+          return;
+        }
+      } catch (e) {}
+      legacyCopy();
+    }
+    if (navigator.share) {
+      navigator.share({ title: document.title, text: text, url: url }).catch(function (e) { if (!e || e.name !== "AbortError") copyIt(); });
+    } else { copyIt(); }
+  }
+
+  var TREND_LABELS = (DATA.history || []).map(function (h) { return h.d; }).concat([DATA.asOf.split("/").slice(1).map(function (x) { return parseInt(x, 10); }).join("/")]);
+  function renderTrend() {
+    var W = 340, H = 210, L = 34, R = 64, T = 12, B = 30;
+    var n = TREND_LABELS.length, pw = W - L - R, ph = H - T - B;
+    function X(i) { return n === 1 ? L + pw / 2 : L + pw * i / (n - 1); }
+    function Y(p) { return T + ph * (1 - p); }
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="各隊進季後賽機率走勢圖">';
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (g) {
+      svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(g) + '" y2="' + Y(g) + '" class="tr-grid"/>' +
+        '<text x="' + (L - 6) + '" y="' + (Y(g) + 3.5) + '" text-anchor="end" class="tr-t">' + Math.round(g * 100) + '%</text>';
+    });
+    TREND_LABELS.forEach(function (lb, i) {
+      svg += '<text x="' + X(i) + '" y="' + (H - 10) + '" text-anchor="middle" class="tr-t">' + lb + '</text>';
+    });
+    var series = teamNames.map(function (nm) {
+      return { n: nm, v: (DATA.history || []).map(function (h) { return h.odds[nm] === undefined ? 0 : h.odds[nm]; }).concat([ODDS[nm].playoff]) };
+    }).sort(function (a, b) { return (a.n === fav) - (b.n === fav); });
+    series.forEach(function (sr) {
+      var on = !fav || sr.n === fav, c = TEAMS[sr.n].c, op = on ? 1 : 0.28;
+      if (n > 1) {
+        svg += '<polyline points="' + sr.v.map(function (p, i) { return X(i) + "," + Y(p); }).join(" ") + '" fill="none" stroke="' + c +
+          '" stroke-width="' + (sr.n === fav ? 4 : 2.5) + '" stroke-linecap="round" stroke-linejoin="round" opacity="' + op + '"/>';
+      }
+      sr.v.forEach(function (p, i) {
+        svg += '<circle cx="' + X(i) + '" cy="' + Y(p) + '" r="' + (sr.n === fav ? 4.6 : 3.6) + '" fill="' + c + '" stroke="#2a1a1e" stroke-width="1.4" opacity="' + op + '"/>';
+      });
+    });
+    var ends = series.map(function (sr) { return { n: sr.n, y: Y(sr.v[sr.v.length - 1]) }; }).sort(function (a, b) { return a.y - b.y; });
+    for (var q = 1; q < ends.length; q++) if (ends[q].y - ends[q - 1].y < 13) ends[q].y = ends[q - 1].y + 13;
+    ends.forEach(function (e) {
+      var on = !fav || e.n === fav;
+      svg += '<circle cx="' + (W - R + 9) + '" cy="' + e.y + '" r="3.5" fill="' + TEAMS[e.n].c + '" stroke="#2a1a1e" stroke-width="1" opacity="' + (on ? 1 : 0.3) + '"/>' +
+        '<text x="' + (W - R + 16) + '" y="' + (e.y + 3.8) + '" class="tr-n" opacity="' + (on ? 1 : 0.35) + '">' + TEAMS[e.n].s + '</text>';
+    });
+    svg += '</svg>';
+    $("trend").innerHTML = svg + (n === 1 ? '<p class="sub">目前只有一筆資料，下次更新後就會出現走勢。</p>' : '');
+  }
 
   function renderMyCard() {
     var box = $("mycard");
@@ -626,17 +996,10 @@ function aboutP(p) {
     var o = ODDS[fav];
     var fr = pr.byFull.map(function (t) { return t.n; }).indexOf(fav) + 1;
     var hr = pr.byHalf.map(function (t) { return t.n; }).indexOf(fav) + 1;
-    var isH1 = fav === DATA.firstHalfChamp;
-    var big = isH1 ? '<div class="big-pct word">已取得<br>季後賽資格</div>' : '<div class="big-pct">' + fmtProb(o.playoff) + '</div>';
+    var rg = rangeText(fav), dd = deltaOf(fav);
+    var big = '<div class="bigbox"><div class="big-pct">' + fmtProb(o.playoff) + '</div>' + (rg ? '<small class="rg">' + rg + '</small>' : '') +
+      (prevH && dd !== 0 ? '<small class="rg">較 ' + prevH.d + ' ' + (dd > 0 ? '▲' : '▼') + Math.abs(dd) + '</small>' : '') + '</div>';
     var l1 = "全年第 " + fr + " 名（勝率 " + fmtPct(fav) + "）・下半季第 " + hr + " 名（" + (hr === 1 ? "領先中" : "落後第 1 名 " + pr.gb(pr.byHalf[0], pr.byHalf[hr - 1]) + " 場") + "）";
-    var l2;
-    if (isH1) {
-      l2 = "上半季冠軍。直接晉級台灣大賽的機率 " + aboutP(o.direct) + "。";
-    } else if (o.playoff < 0.005) {
-      l2 = "在 20,000 次模擬中，幾乎沒有出現晉級的情況。";
-    } else {
-      l2 = "有兩條路：奪下半季冠軍（" + aboutP(o.half2) + "），或成為半季冠軍以外全年勝率最高的球隊（" + aboutP(o.wild) + "）。";
-    }
     var oc = {}, total = 0;
     DATA.schedule.forEach(function (g) {
       if (g[1] !== fav && g[2] !== fav) return;
@@ -644,7 +1007,12 @@ function aboutP(p) {
       oc[o] = (oc[o] || 0) + 1; total++;
     });
     var l3 = "剩餘 " + total + " 場：" + Object.keys(oc).sort(function (u, v) { return oc[v] - oc[u]; }).map(function (o) { return "對" + TEAMS[o].s + " " + oc[o]; }).join("、");
-    box.innerHTML = '<div class="mycard-head">' + badge(fav, 56) + '<div class="mycard-name">' + nameHtml(fav) + '<small>進季後賽機率</small></div>' + big + '</div><p>' + l1 + '</p><p>' + l2 + '</p><p>' + l3 + '</p>';
+    box.innerHTML = '<div class="mycard-head">' + badge(fav, 56) + '<div class="mycard-name">' + nameHtml(fav) + '<small>進季後賽機率</small></div>' + big + '</div><p>' + l1 + '</p><ul class="conds">' + condsFor(fav).map(function (c) {
+      return '<li><span class="ct">' + c.tag + '</span>' + c.text + (c.prob === null ? '' : '<span class="cp">機率' + aboutP(c.prob) + '</span>') + (c.how ? '<span class="cw">怎麼贏：' + c.how + '</span>' : '') + '</li>';
+    }).join('') + '</ul>' + keyGamesHtml(fav) + '<p>' + l3 + '</p>' +
+      '<div class="share"><button type="button" class="sbtn" id="shareBtn">分享這隊給朋友</button><span class="smsg" id="shareMsg" role="status"></span></div>';
+    var sb = $("shareBtn");
+    if (sb) sb.addEventListener("click", shareTeam);
   }
   function renderPicker() {
     var pk = $("picker");
@@ -658,24 +1026,55 @@ function aboutP(p) {
       b.addEventListener("click", function () {
         fav = (fav === n) ? null : n;
         try { if (fav) localStorage.setItem("dragons-fav", TEAMS[fav].k); else localStorage.removeItem("dragons-fav"); } catch (e) {}
-        renderPicker(); renderMyCard();
+        renderPicker(); renderMyCard(); renderTrend();
       });
       pk.appendChild(b);
     });
   }
-  renderPicker(); renderMyCard();
+  renderPicker(); renderMyCard(); renderTrend();
   teamNames.slice().sort(function (u, v) { return (ODDS[v].playoff - ODDS[u].playoff) || (ODDS[v].direct - ODDS[u].direct); }).forEach(function (n) {
     var o = ODDS[n], row = document.createElement("div");
     row.className = "odds-row";
     var isH1 = n === DATA.firstHalfChamp;
-    var val = isH1 ? '<span class="pv word">已確定</span>' : '<span class="pv">' + fmtProb(o.playoff) + '</span>';
-    var width = isH1 ? 100 : Math.max(2, Math.round(o.playoff * 100));
+    var rg = rangeText(n);
+    var val = '<span class="pvbox"><span class="pv">' + fmtProb(o.playoff) + '</span>' + deltaHtml(n) + (rg ? '<small class="rg">' + rg + '</small>' : '') + '</span>';
+    var width = Math.max(2, Math.round(o.playoff * 100));
     var sub = isH1 ? "上半季冠軍，直接晉級台灣大賽 " + aboutP(o.direct)
       : "下半季封王 " + aboutP(o.half2) + "・以全年勝率擠進 " + aboutP(o.wild);
     row.innerHTML = '<div class="odds-top">' + badge(n, 36) + '<span class="nm">' + nameHtml(n) + '</span>' + val + '</div>' +
       '<div class="bar"><i style="--tc:' + TEAMS[n].c + ';width:' + width + '%"></i></div><div class="odds-sub">' + sub + '</div>';
     $("odds").appendChild(row);
   });
+
+  // 賽制流程圖（依目前戰績自動帶入預估隊伍）
+  (function () {
+    function ft(n, tag) {
+      return '<span class="ft">' + badge(n, 38) + '<span><span class="nm">' + nameHtml(n) + '</span><small>' + tag + '</small></span></span>';
+    }
+    function qt(text) {
+      return '<span class="ft"><span class="badge q" style="--s:38px">?</span><span><span class="nm">' + text + '</span></span></span>';
+    }
+    function row(tag, inner, cls) {
+      return '<div class="flow-row"><span class="fl-tag">' + tag + '</span><div class="flow-chips' + (cls ? ' ' + cls : '') + '">' + inner + '</div></div>';
+    }
+    var vs = '<span class="flow-vs">VS</span>', html;
+    if (!pr.same) {
+      html = row("① 季後賽三個名額（目前預估）",
+          ft(pr.h1, "上半季冠軍") + ft(pr.h2, "下半季冠軍（目前領先）") + ft(pr.opp, "外卡：半季冠軍以外全年勝率最高")) +
+        '<div class="flow-arrow">兩位半季冠軍中，全年勝率較高者直接晉級台灣大賽；另一位進季後挑戰賽</div>' +
+        row("② 季後挑戰賽・五戰三勝", ft(pr.other, "半季冠軍，先取 1 勝") + vs + ft(pr.opp, "外卡"), "stack") +
+        '<div class="flow-arrow">勝者晉級台灣大賽</div>' +
+        row("③ 台灣大賽・七戰四勝", ft(pr.direct, "直接晉級") + vs + qt("挑戰賽勝者"));
+    } else {
+      html = row("① 季後賽三個名額（目前預估）",
+          ft(pr.h1, "上、下半季雙料冠軍") + ft(pr.a, "全年勝率第 2 名") + ft(pr.b, "全年勝率第 3 名")) +
+        '<div class="flow-arrow">雙料冠軍直接晉級台灣大賽；全年勝率第 2、3 名打季後挑戰賽</div>' +
+        row("② 季後挑戰賽・五戰三勝", ft(pr.a, "全年第 2 名") + vs + ft(pr.b, "全年第 3 名"), "stack") +
+        '<div class="flow-arrow">勝者晉級台灣大賽</div>' +
+        row("③ 台灣大賽・七戰四勝", ft(pr.direct, "直接晉級，先取 1 勝") + vs + qt("挑戰賽勝者"));
+    }
+    $("flow").innerHTML = html;
+  })();
 
   // Standings (full season)
   $("rankSub").textContent = "官網戰績，每隊全年 120 場";
@@ -744,6 +1143,52 @@ function aboutP(p) {
   // Notes
   $("pathNote").textContent = DATA.lowerHalf;
   $("updated").textContent = "最後更新：" + DATA.updated;
+
+  // 季後賽模式：DATA.playoffs 有資料時，頁面改顯示系列賽戰況
+  function seriesState(teams, first, games, bestOf) {
+    var need = Math.ceil(bestOf / 2), wins = {}, winner = null;
+    teams.forEach(function (t) { if (t) wins[t] = 0; });
+    if (first && wins[first] !== undefined) wins[first] = 1;
+    (games || []).forEach(function (g) { if (g.w && wins[g.w] !== undefined) wins[g.w]++; });
+    teams.forEach(function (t) { if (t && wins[t] >= need) winner = t; });
+    return { wins: wins, need: need, winner: winner };
+  }
+  function seriesHtml(title, teams, first, games, bestOf) {
+    var st = seriesState(teams, first, games, bestOf);
+    var rows = teams.map(function (t) {
+      if (!t) return '<div class="sb-row"><span class="badge q" style="--s:40px">?</span><span class="nm">' + (title.indexOf("台灣大賽") === 0 ? "挑戰賽勝者" : "待定") + '</span><span class="sb-score">-</span></div>';
+      return '<div class="sb-row">' + badge(t, 40) + '<span class="nm">' + nameHtml(t) + '</span>' + (st.winner === t ? '<span class="sb-win">' + (title.indexOf("台灣大賽") === 0 ? "冠軍" : "晉級") + '</span>' : '') +
+        '<span class="sb-score">' + st.wins[t] + '</span></div>';
+    }).join('');
+    var note = "先拿 " + st.need + " 勝晉級" + (first ? "；" + short(first) + "先取 1 勝" : "");
+    var list = (games || []).length ? '<ul class="key">' + games.map(function (g) {
+      return '<li><span class="kt">' + g.d + "　" + (g.w ? short(g.w) + "勝" : "") + '</span>' + (g.s ? '<span class="ks">' + g.s + '</span>' : '') + '</li>';
+    }).join('') + '</ul>' : '';
+    return '<div class="series"><span class="series-tag">' + title + '</span>' + rows + '<p class="series-note">' + note + '</p>' + list + '</div>';
+  }
+  if (PO) {
+    document.body.classList.add("po"); $("hero").classList.add("po");
+    var ch = PO.challenge, fin = PO.final;
+    var chS = ch ? seriesState(ch.teams, ch.first, ch.games, 5) : null;
+    var finTeams = fin ? fin.teams : [PO.direct, chS && chS.winner ? chS.winner : null];
+    var finS = seriesState(finTeams, fin ? fin.first : null, fin ? fin.games : [], 7);
+    var chHtml = ch ? seriesHtml("季後挑戰賽・五戰三勝", ch.teams, ch.first, ch.games, 5) : "";
+    var finHtml = seriesHtml("台灣大賽・七戰四勝", finTeams, fin ? fin.first : null, fin ? fin.games : [], 7);
+    $("poBox").innerHTML = finHtml + chHtml;
+    var showFinal = !!fin || (chS && chS.winner);
+    $("poHero").innerHTML = showFinal ? finHtml : (ch ? chHtml : finHtml);
+    $("heroTitle").textContent = "季後賽戰況";
+    $("bubble").textContent = "加油！";
+    if (finS.winner) {
+      $("heroTitle").textContent = "台灣大賽冠軍：" + finS.winner;
+      $("bubble").textContent = "冠軍！";
+      document.title = finS.winner + " 台灣大賽冠軍！";
+      startConfetti();
+    }
+  }
+  if (DATA.reportUrl) {
+    $("report").innerHTML = '<a href="' + DATA.reportUrl + '" target="_blank" rel="noopener">數字有誤？回報給我</a>';
+  } else { $("report").remove(); }
 
   // Countdown
   var target = Date.parse(DATA.target);
