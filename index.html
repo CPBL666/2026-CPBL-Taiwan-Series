@@ -215,10 +215,10 @@ footer a { color: #fff; }
 .games { display: flex; gap: 6px; flex-wrap: wrap; }
 .g { display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .glbl { font-size: .68rem; color: var(--muted); }
-.chip { width: 38px; height: 38px; border-radius: 10px; border: 3px solid var(--edge); display: grid; place-items: center; font-family: var(--num); font-weight: 800; font-size: .95rem; }
+.mchip { width: 38px; height: 38px; border-radius: 10px; border: 3px solid var(--edge); display: grid; place-items: center; font-family: var(--num); font-weight: 800; font-size: .95rem; }
 .ghome { font-size: .62rem; color: var(--muted); }
-.chip.ca { background: #F2495A; color: #fff; } .chip.cb { background: #1F5FB8; color: #fff; } .chip.cc { background: #0F7A55; color: #fff; } .chip.cq { background: var(--surface); color: var(--muted); }
-.g0 .chip { background: var(--surface); border-style: dashed; color: var(--muted); font-size: .6rem; font-weight: 400; font-family: var(--round); text-align: center; line-height: 1.15; }
+.mchip.ca { background: #F2495A; color: #fff; } .mchip.cb { background: #1F5FB8; color: #fff; } .mchip.cc { background: #0F7A55; color: #fff; } .mchip.cq { background: var(--surface); color: var(--muted); }
+.g0 .mchip { background: var(--surface); border-style: dashed; color: var(--muted); font-size: .6rem; font-weight: 400; font-family: var(--round); text-align: center; line-height: 1.15; }
 
 /* Timeline */
 .timeline { list-style: none; margin: 4px 0 0; padding: 0 0 0 22px; border-left: 3px solid var(--line); }
@@ -231,9 +231,9 @@ footer a { color: #fff; }
 .tag { display: inline-block; margin-left: 8px; padding: 0 8px; border: 2px solid var(--line); border-radius: 99px; font-size: .74rem; color: var(--muted); vertical-align: 1px; }
 
 /* Games */
-.games { list-style: none; margin: 0; padding: 0 0 6px; }
-.games li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); }
-.games li:last-child { border-bottom: 0; }
+.sched { list-style: none; margin: 0; padding: 0 0 6px; }
+.sched li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); }
+.sched li:last-child { border-bottom: 0; }
 .pip { flex: none; width: 34px; height: 34px; border: 3px solid var(--edge); border-radius: 50%; display: grid; place-items: center; font-size: .82rem; color: #fff; }
 .pip.w { background: var(--win); }
 .pip.l { background: var(--lose); }
@@ -420,12 +420,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
   <section aria-labelledby="h-games">
     <h2 id="h-games">戰況</h2>
     <h3>最近</h3>
-    <ul class="games" id="recent"></ul>
+    <ul class="sched" id="recent"></ul>
     <h3>接下來</h3>
-    <ul class="games" id="upcoming"></ul>
+    <ul class="sched" id="upcoming"></ul>
     <details class="how" id="mkBox">
       <summary id="mkSum"></summary>
-      <ul class="games" id="makeup"></ul>
+      <ul class="sched" id="makeup"></ul>
     </details>
   </section>
   <section aria-labelledby="h-explain">
@@ -438,11 +438,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
       <div class="teams"><span class="badge2 ea"><svg><use href="#ico-A"/></svg></span><span class="tn">A 隊<small>半季冠軍</small></span><span class="vs2">VS</span><span class="badge2 eb"><svg><use href="#ico-B"/></svg></span><span class="tn">B 隊<small>外卡</small></span></div>
       <p class="scn-note"><b>A 隊</b>先取 1 勝，主場採 1-1-2 形式（主・客・主・主）</p>
       <div class="games">
-        <div class="g g0"><span class="chip">先取<br>1勝</span></div>
-        <div class="g"><span class="glbl">G1</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G2</span><span class="chip cb">B</span><span class="ghome">B 主場</span></div>
-        <div class="g"><span class="glbl">G3</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G4</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g g0"><span class="mchip">先取<br>1勝</span></div>
+        <div class="g"><span class="glbl">G1</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G2</span><span class="mchip cb">B</span><span class="ghome">B 主場</span></div>
+        <div class="g"><span class="glbl">G3</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G4</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
       </div>
     </div>
     <div class="scn">
@@ -450,11 +450,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
       <div class="teams"><span class="badge2 eb"><svg><use href="#ico-B"/></svg></span><span class="tn">B 隊<small>全年第 2 名</small></span><span class="vs2">VS</span><span class="badge2 ec"><svg><use href="#ico-C"/></svg></span><span class="tn">C 隊<small>全年第 3 名</small></span></div>
       <p class="scn-note">沒有保送勝，<b>B 隊</b>主場採 2-2-1 形式（主・主・客・客・主）</p>
       <div class="games">
-        <div class="g"><span class="glbl">G1</span><span class="chip cb">B</span><span class="ghome">B 主場</span></div>
-        <div class="g"><span class="glbl">G2</span><span class="chip cb">B</span><span class="ghome">B 主場</span></div>
-        <div class="g"><span class="glbl">G3</span><span class="chip cc">C</span><span class="ghome">C 主場</span></div>
-        <div class="g"><span class="glbl">G4</span><span class="chip cc">C</span><span class="ghome">C 主場</span></div>
-        <div class="g"><span class="glbl">G5</span><span class="chip cb">B</span><span class="ghome">B 主場</span></div>
+        <div class="g"><span class="glbl">G1</span><span class="mchip cb">B</span><span class="ghome">B 主場</span></div>
+        <div class="g"><span class="glbl">G2</span><span class="mchip cb">B</span><span class="ghome">B 主場</span></div>
+        <div class="g"><span class="glbl">G3</span><span class="mchip cc">C</span><span class="ghome">C 主場</span></div>
+        <div class="g"><span class="glbl">G4</span><span class="mchip cc">C</span><span class="ghome">C 主場</span></div>
+        <div class="g"><span class="glbl">G5</span><span class="mchip cb">B</span><span class="ghome">B 主場</span></div>
       </div>
     </div>
 
@@ -464,13 +464,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
       <div class="teams"><span class="badge2 ea"><svg><use href="#ico-A"/></svg></span><span class="tn">A 隊<small>直接晉級</small></span><span class="vs2">VS</span><span class="badge2 eq"><svg><use href="#ico-Q"/></svg></span><span class="tn">挑戰賽勝隊</span></div>
       <p class="scn-note">沒有保送勝，<b>A 隊</b>主場採 2-2-3 形式（主・主・客・客・客・主・主）</p>
       <div class="games">
-        <div class="g"><span class="glbl">G1</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G2</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G3</span><span class="chip cq">?</span><span class="ghome">對方主場</span></div>
-        <div class="g"><span class="glbl">G4</span><span class="chip cq">?</span><span class="ghome">對方主場</span></div>
-        <div class="g"><span class="glbl">G5</span><span class="chip cq">?</span><span class="ghome">對方主場</span></div>
-        <div class="g"><span class="glbl">G6</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G7</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G1</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G2</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G3</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
+        <div class="g"><span class="glbl">G4</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
+        <div class="g"><span class="glbl">G5</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
+        <div class="g"><span class="glbl">G6</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G7</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
       </div>
     </div>
     <div class="scn">
@@ -478,13 +478,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
       <div class="teams"><span class="badge2 ea"><svg><use href="#ico-A"/></svg></span><span class="tn">A 隊<small>雙料冠軍</small></span><span class="vs2">VS</span><span class="badge2 eq"><svg><use href="#ico-Q"/></svg></span><span class="tn">挑戰賽勝隊</span></div>
       <p class="scn-note"><b>A 隊</b>先取 1 勝，因此只排 6 場，主場採 2-2-2 形式（主・主・客・客・主・主）</p>
       <div class="games">
-        <div class="g g0"><span class="chip">先取<br>1勝</span></div>
-        <div class="g"><span class="glbl">G1</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G2</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G3</span><span class="chip cq">?</span><span class="ghome">對方主場</span></div>
-        <div class="g"><span class="glbl">G4</span><span class="chip cq">?</span><span class="ghome">對方主場</span></div>
-        <div class="g"><span class="glbl">G5</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
-        <div class="g"><span class="glbl">G6</span><span class="chip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g g0"><span class="mchip">先取<br>1勝</span></div>
+        <div class="g"><span class="glbl">G1</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G2</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G3</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
+        <div class="g"><span class="glbl">G4</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
+        <div class="g"><span class="glbl">G5</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
+        <div class="g"><span class="glbl">G6</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
       </div>
     </div>
     <p class="sub" style="margin-top:14px">整理自媒體報導與維基百科「中華職棒季後挑戰賽」條目，實際場次安排與規則請以聯盟最新公告為準。</p>
