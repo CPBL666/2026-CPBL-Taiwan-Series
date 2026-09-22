@@ -796,6 +796,19 @@ function aboutP(p) {
     addRow("", "季後挑戰賽", side(pr.other) + '<span class="proj-vs">VS</span>' + side(pr.opp),
       "五戰三勝，勝者晉級台灣大賽。" + pr.other + "為半季冠軍（先取 1 勝），" + pr.opp + "為半季冠軍以外全年勝率最高的球隊");
   }
+  // 下半季：每隊剩餘場數（不含上半季補賽）與淘汰指數（算法同官網：領先隊贏球 + 該隊輸球，合計幾場就淘汰）
+  // 這段要先算出 half2M，才能給下面「仍在爭奪」區塊使用，順序不能顛倒
+  var h2Left = {};
+  DATA.half2.forEach(function (t) { h2Left[t.n] = 0; });
+  DATA.schedule.forEach(function (g) { if (g[3] === "fh") return; h2Left[g[1]]++; h2Left[g[2]]++; });
+  var leadH = pr.byHalf[0], elim = {}, half2M = 0;
+  pr.byHalf.forEach(function (t, q) {
+    if (q === 0) return;
+    var e = t.w + h2Left[t.n] - leadH.w + 1;
+    elim[t.n] = e;
+    if (e > half2M) half2M = e;
+  });
+
   var race = $("race");
   function addRace(t) { var li = document.createElement("li"); li.textContent = t; race.appendChild(li); }
   if (!pr.same) {
@@ -808,17 +821,6 @@ function aboutP(p) {
   // Playoff odds + favourite-team picker
   var SIM = simulateOdds(DATA, 40000, 20260920);
   var ODDS = SIM.odds;
-  // 下半季：每隊剩餘場數（不含上半季補賽）與淘汰指數（算法同官網：領先隊贏球 + 該隊輸球，合計幾場就淘汰）
-  var h2Left = {};
-  DATA.half2.forEach(function (t) { h2Left[t.n] = 0; });
-  DATA.schedule.forEach(function (g) { if (g[3] === "fh") return; h2Left[g[1]]++; h2Left[g[2]]++; });
-  var leadH = pr.byHalf[0], elim = {}, half2M = 0;
-  pr.byHalf.forEach(function (t, q) {
-    if (q === 0) return;
-    var e = t.w + h2Left[t.n] - leadH.w + 1;
-    elim[t.n] = e;
-    if (e > half2M) half2M = e;
-  });
   var poolAll = pr.same ? pr.byFull.filter(function (t) { return t.n !== pr.h1; }) : pr.pool;
   var slots = pr.same ? 2 : 1;
   function rankIn(list, n) { return list.map(function (t) { return t.n; }).indexOf(n) + 1; }
@@ -943,7 +945,8 @@ function aboutP(p) {
     var metric = isH1 ? "直接晉級" : "進季後賽";
     var all = leverageFor(n).filter(function (x) { return x.d >= thr; });
     function mine(x) { var g = DATA.schedule[x.g]; return g[1] === n || g[2] === n; }
-    var own = all.filter(mine).slice(0, 3), other = all.filter(function (x) { return !mine(x); }).slice(0, 3);
+    var own = all.filter(mine).sort(function (u, v) { return u.g - v.g; });
+    var other = all.filter(function (x) { return !mine(x); }).slice(0, 3).sort(function (u, v) { return u.g - v.g; });
     var head = '<h4 class="kh">關鍵比賽（對' + metric + '機率影響最大）</h4>';
     if (!own.length && !other.length) {
       return head + '<p>剩下的比賽，每一場對' + metric + '機率的影響都不到 ' + (isH1 ? "1" : "2") + ' 個百分點。</p>';
@@ -1077,7 +1080,7 @@ function aboutP(p) {
           "<b>" + short(pr.other) + "</b>先拿 1 勝，主場採 1-1-2 形式（實際最多打 4 場）" + hg("HAHH") + "，先到 3 勝晉級。") +
         '<div class="flow-arrow">勝者晉級台灣大賽</div>' +
         row("③ 台灣大賽・七戰四勝", ft(pr.direct, "直接晉級") + vs + qt("挑戰賽勝者"), "",
-          "沒有保送勝，全年勝率較高的<b>" + short(pr.direct) + "</b>拿 5 場主場" + hg("HHAAAHH") + "，先到 4 勝奪冠。");
+          "沒有保送勝，全年勝率較高的<b>" + short(pr.direct) + "</b>拿 4 場主場" + hg("HHAAAHH") + "，先到 4 勝奪冠。");
     } else {
       html = row("① 季後賽三個名額（目前預估）",
           ft(pr.h1, "上、下半季雙料冠軍") + ft(pr.a, "全年勝率第 2 名") + ft(pr.b, "全年勝率第 3 名")) +
