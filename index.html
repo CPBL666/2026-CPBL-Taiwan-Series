@@ -218,7 +218,10 @@ footer a { color: #fff; }
 .rank-side .pc, .rank-side .pc2 { display: block; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
 .chip { display: inline-block; margin-left: 6px; padding: 0 8px; border: 2px solid var(--edge); border-radius: 99px; font-size: .72rem; background: var(--gold); color: #2a1a1e; vertical-align: 2px; }
 .chip.blue { background: #a9d0ff; }
+.chip.wild { background: #ffd9a8; }
 .chip.elim { background: var(--surface); color: var(--muted); }
+.chip-info { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; margin-left: 2px; padding: 0; border: none; border-radius: 50%; background: rgba(0,0,0,.15); color: inherit; font-size: .62rem; font-weight: 700; font-style: italic; line-height: 1; cursor: pointer; vertical-align: 2px; }
+.chip-tip { display: block; width: 100%; margin: 4px 0 0; font-size: .78rem; font-weight: 400; color: var(--muted); }
 
 /* Series explainer */
 .scn { margin-top: 12px; padding: 12px 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
@@ -1179,7 +1182,7 @@ function aboutP(p) {
       b.type = "button";
       b.className = "pick";
       b.setAttribute("aria-pressed", n === fav ? "true" : "false");
-      var outTxt = ODDS[n].playoff < 0.001 ? '<small class="pick-elim">已淘汰</small>' : "";
+      var outTxt = ODDS[n].playoff < 0.001 ? '<small class="pick-elim">季後賽已淘汰</small>' : "";
       b.innerHTML = badge(n) + '<span>' + TEAMS[n].s + '</span>' + outTxt;
       b.addEventListener("click", function () {
         fav = (fav === n) ? null : n;
@@ -1245,6 +1248,22 @@ function aboutP(p) {
   })();
 
   // Standings (full season)
+  var tipCounter = 0;
+  function chipInfo(cls, label, tip) {
+    var id = "tip-" + (tipCounter++);
+    return '<span class="chip ' + cls + '">' + label +
+      '<button type="button" class="chip-info" data-tip-for="' + id + '" aria-expanded="false" aria-label="說明">ⓘ</button></span>' +
+      '<span class="chip-tip" id="' + id + '" hidden>' + tip + '</span>';
+  }
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest(".chip-info") : null;
+    if (!btn) return;
+    e.stopPropagation();
+    var tip = $(btn.getAttribute("data-tip-for"));
+    if (!tip) return;
+    tip.hidden = !tip.hidden;
+    btn.setAttribute("aria-expanded", tip.hidden ? "false" : "true");
+  }, true);
   function oppBreakdown(n) {
     var oc = {}, total = 0;
     DATA.schedule.forEach(function (g) {
@@ -1263,9 +1282,10 @@ function aboutP(p) {
     row.setAttribute("tabindex", "0");
     row.setAttribute("aria-expanded", "false");
     var chips = "";
-    if (t.n === pr.h1) chips += '<span class="chip">上半季冠軍</span>';
+    if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
     if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
-    if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) chips += '<span class="chip elim">已淘汰</span>';
+    if (!pr.same && t.n === pr.opp) chips += chipInfo("wild", "目前外卡", "半季冠軍以外，全年勝率最高的球隊，會打季後挑戰賽爭取晉級台灣大賽。");
+    if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) chips += '<span class="chip elim">全年度已淘汰</span>';
     var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
     var gbTxt = idx === 0 ? "全年第一" : '落後 <span class="cup-gb"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
@@ -1308,9 +1328,15 @@ function aboutP(p) {
     row.setAttribute("tabindex", "0");
     row.setAttribute("aria-expanded", "false");
     var chips = "";
-    if (idx === 0) chips += '<span class="chip blue">下半季領先</span>';
-    if (t.n === pr.h1) chips += '<span class="chip">上半季冠軍</span>';
-    if (idx > 0 && elim[t.n] <= 0) chips += '<span class="chip elim">已淘汰</span>';
+    if (idx === 0) {
+      var h2Dest = pr.same ? "直接晉級" : (pr.direct === t.n ? "直接晉級" : "季後挑戰賽");
+      var destTip = h2Dest === "直接晉級"
+        ? "全年勝率也是最高，兩位半季冠軍中較高者直接晉級台灣大賽。"
+        : "全年勝率不如另一位半季冠軍，要先打季後挑戰賽贏了才能晉級台灣大賽。";
+      chips += chipInfo("blue", "下半季領先→" + h2Dest, destTip);
+    }
+    if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
+    if (idx > 0 && elim[t.n] <= 0) chips += '<span class="chip elim">下半季已淘汰</span>';
     var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
     var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
