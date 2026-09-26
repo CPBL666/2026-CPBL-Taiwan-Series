@@ -38,6 +38,7 @@
   --win: #178050;
   --lose: #c23350;
   --num-red: #d62839;
+  --accent: var(--num-red);
   --round: "Huninn", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
   --num: "Baloo 2", "Huninn", "Noto Sans TC", system-ui, sans-serif;
   box-sizing: border-box;
@@ -116,12 +117,12 @@ h3 { margin: 18px 0 2px; font-family: var(--round); font-weight: 400; font-size:
 .picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin: 2px -4px 12px; }
 .pick { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px 4px; background: transparent; border: 3px solid transparent; border-radius: 16px; font: inherit; font-size: .78rem; color: var(--ink); cursor: pointer; }
 .pick .badge { --s: 40px; }
-.pick[aria-pressed="true"] { background: var(--tile); border-color: var(--edge); box-shadow: 0 3px 0 var(--edge); }
-.mycard { margin: 0 0 14px; padding: 14px 14px 12px; background: var(--tile); border: 3px solid var(--edge); border-radius: 20px; }
+.pick[aria-pressed="true"] { background: var(--tile); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent); }
+.mycard { margin: 0 0 14px; padding: 14px 14px 12px; background: var(--tile); border: 3px solid var(--edge); border-left-width: 7px; border-left-color: var(--accent); border-radius: 20px; transition: border-left-color .3s ease; }
 .mycard-head { display: flex; align-items: center; gap: 12px; }
 .mycard-name { flex: 1; font-size: 1.15rem; line-height: 1.3; }
 .mycard-name small { display: block; font-size: .78rem; color: var(--muted); }
-.big-pct { font-family: var(--num); font-weight: 800; font-size: 2.3rem; line-height: 1; color: var(--num-red); text-align: right; }
+.big-pct { font-family: var(--num); font-weight: 800; font-size: 2.3rem; line-height: 1; color: var(--accent); text-align: right; transition: color .3s ease; }
 .big-pct.word { font-family: var(--round); font-weight: 400; font-size: 1.4rem; }
 .mycard p { margin: 8px 0 0; font-size: .9rem; color: var(--muted); }
 .odds-row { padding: 8px 0 10px; border-bottom: 2px dashed var(--line); }
@@ -196,13 +197,19 @@ footer a { color: #fff; }
 .badge.q { background: var(--surface); border-style: dashed; color: var(--muted); font-family: var(--num); font-weight: 800; font-size: 1.2rem; }
 
 /* Standings */
-.rank-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); }
+.rank-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); cursor: pointer; }
 .rank-row:last-child { border-bottom: 0; }
+.rank-row:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 10px; }
+.rank-row::after { content: "▾"; color: var(--muted); font-size: .8rem; transition: transform .25s ease; margin-left: 2px; }
+.rank-row[aria-expanded="true"]::after { transform: rotate(180deg); }
+.rank-detail { padding: 2px 0 12px 66px; font-size: .84rem; color: var(--muted); border-bottom: 2px dashed var(--line); }
+.rank-detail p { margin: 3px 0; }
+.rank-detail:last-child { border-bottom: 0; }
 .rk { flex: none; width: 24px; text-align: center; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--muted); }
 .rank-main { flex: 1; min-width: 0; }
 .rank-main .nm { font-size: 1.05rem; }
 .rank-side { text-align: right; font-size: .86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.rank-side .pc { display: block; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
+.rank-side .pc, .rank-side .pc2 { display: block; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
 .chip { display: inline-block; margin-left: 6px; padding: 0 8px; border: 2px solid var(--edge); border-radius: 99px; font-size: .72rem; background: var(--gold); color: #2a1a1e; vertical-align: 2px; }
 .chip.blue { background: #a9d0ff; }
 
@@ -249,6 +256,28 @@ footer a { color: #fff; }
 .g-main .note { display: block; font-size: .82rem; color: var(--muted); }
 .g-score { font-family: var(--num); font-weight: 800; font-size: 1.3rem; font-variant-numeric: tabular-nums; }
 .g-time { font-size: .9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- 如果...會怎樣 模擬器 ---- */
+.wi-list { list-style: none; margin: 0; padding: 0; }
+.wi-row { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-bottom: 2px dashed var(--line); }
+.wi-row:last-child { border-bottom: 0; }
+.wi-date { font-size: .74rem; color: var(--muted); width: 40px; text-align: center; flex-shrink: 0; }
+.wi-team { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; min-width: 0; padding: 6px 2px 5px; border: 3px solid transparent; border-radius: 14px; background: transparent; font: inherit; font-size: .72rem; color: var(--ink); cursor: pointer; }
+.wi-team .badge { --s: 32px; }
+.wi-team span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.wi-team[aria-pressed="true"] { background: var(--tile); border-color: var(--edge); box-shadow: 0 2px 0 var(--edge); }
+.wi-vs { font-size: .68rem; color: var(--muted); flex-shrink: 0; }
+.wi-summary { margin-top: 12px; padding: 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
+.wi-summary h4 { margin: 0 0 6px; font-size: .95rem; }
+.wi-summary .wi-magic { font-family: var(--num); font-weight: 800; font-size: 1.6rem; color: var(--accent); }
+.wi-summary table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .82rem; }
+.wi-summary td { padding: 3px 4px; }
+.wi-summary td.wi-rk { color: var(--muted); width: 1.6em; }
+.wi-summary td.wi-rec { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wi-note { margin: 8px 0 0; font-size: .78rem; color: var(--muted); }
+.wi-reset { margin-top: 10px; padding: 8px 16px; border: 3px solid var(--edge); border-radius: 99px; background: var(--surface); font: inherit; font-size: .82rem; cursor: pointer; }
+.wi-reset:active { background: var(--tile); }
+.wi-empty { margin: 0; font-size: .88rem; color: var(--muted); }
 
 /* Paths */
 .path { padding: 4px 0 14px; }
@@ -427,12 +456,18 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
     <div id="odds"></div>
     <details class="how">
       <summary>機率是怎麼算的？</summary>
-      <p>用電腦把剩下的比賽照真實賽程打 40,000 遍，每遍都依晉級規則決出下半季冠軍與季後賽名單，再統計每隊出現的次數。</p>
+      <p>用電腦把剩下的比賽照真實賽程打 20,000 遍，每遍都依晉級規則決出下半季冠軍與季後賽名單，再統計每隊出現的次數。</p>
       <p>「關鍵比賽」是把其中某一場固定成 A 隊贏、或 B 隊贏，比較這兩種情況下該隊的晉級機率差多少；「怎麼贏」則假設對手照預期（實力 × 剩餘場數）打完，算出自己至少要贏幾場。這兩項都是估算，對手實際表現不同，門檻就會跟著變。</p>
       <p>每隊的實力取「全年勝率」與「下半季勝率」各一半，並向 .500 拉近一些（避免一兩場的起伏影響過大）。每場比賽用兩隊實力比較來決定勝負。</p>
       <p>實力不確定性：每一輪模擬都讓各隊實力小幅浮動，不把目前的勝率當成鐵板一塊，所以接近的競爭不會被算得太篤定。</p>
-      <p>賽程：用的是中華職棒 App 上的完整剩餘賽程（共 33 場，每隊剩下的場數都和官網戰績吻合），逐場模擬。10/5 統一對兄弟是上半季補賽，只計入全年戰績。沒有考慮先發投手、傷兵與主客場，勝率相同時的排名（例如對戰成績）也以隨機處理。若有延賽，補賽日期以聯盟公告為準。所以這是估算值，實際結果請以官方為準。</p>
+      <p>賽程：用的是中華職棒 App 上的完整剩餘賽程，逐場模擬，每隊剩下的場數都和官網戰績吻合。上半季補賽只計入全年戰績。沒有考慮先發投手、傷兵與主客場，勝率相同時的排名（例如對戰成績）也以隨機處理。若有延賽，補賽日期以聯盟公告為準。所以這是估算值，實際結果請以官方為準。</p>
     </details>
+  </section>
+  <section class="reg-only" aria-labelledby="h-whatif">
+    <h2 id="h-whatif">如果接下來這樣打...</h2>
+    <p class="sub">點下面每場比賽你猜贏的球隊，下面的魔術數字、排名跟機率就會跟著重算一次（純假設，不會影響上面的正式資料）</p>
+    <ul class="wi-list" id="wiList"></ul>
+    <div id="wiSummary"></div>
   </section>
   <section aria-labelledby="h-count">
     <h2 id="h-count">距離台灣大賽首戰</h2>
@@ -447,6 +482,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
     <h2 id="h-rank">全年度戰績</h2>
     <p class="sub" id="rankSub"></p>
     <div id="rank"></div>
+  </section>
+  <section class="reg-only" aria-labelledby="h-rank2">
+    <h2 id="h-rank2">下半季戰績</h2>
+    <p class="sub" id="rank2Sub"></p>
+    <div id="rank2"></div>
   </section>
   <section aria-labelledby="h-games">
     <h2 id="h-games">戰況</h2>
@@ -681,6 +721,20 @@ function computeProjection(D) {
     r.opp = pool[0].n;
   }
   return r;
+}
+
+/* 全年度勝率第一魔術數字：領先隊每贏一場、追趕隊每輸一場都算一場，共通算法見每日更新時的手動驗算 */
+function computeMagicNumber(D) {
+  var byFull = D.full.slice().sort(function (a, b) { return (b.w / (b.w + b.l)) - (a.w / (a.w + a.l)); });
+  var lead = byFull[0];
+  var remain = {};
+  D.full.forEach(function (t) { remain[t.n] = 120 - (t.w + t.l + t.t); });
+  var magic = 0;
+  byFull.slice(1).forEach(function (t) {
+    var e = (t.w + remain[t.n]) - lead.w + 1;
+    if (e > magic) magic = e;
+  });
+  return magic;
 }
 
 /* 模擬剩餘賽事，估算各隊進入季後賽的機率（固定亂數種子，所有人看到的數字相同） */
@@ -1135,8 +1189,10 @@ function aboutP(p) {
     var box = $("mycard");
     if (!fav) {
       box.innerHTML = '<p style="margin:0">點上面的球隊，看晉級的機會。</p>';
+      document.documentElement.style.removeProperty("--accent");
       return;
     }
+    document.documentElement.style.setProperty("--accent", TEAMS[fav].c);
     var o = ODDS[fav];
     var fr = pr.byFull.map(function (t) { return t.n; }).indexOf(fav) + 1;
     var hr = pr.byHalf.map(function (t) { return t.n; }).indexOf(fav) + 1;
@@ -1239,11 +1295,23 @@ function aboutP(p) {
   })();
 
   // Standings (full season)
-  $("rankSub").textContent = "官網戰績，每隊全年 120 場";
+  function oppBreakdown(n) {
+    var oc = {}, total = 0;
+    DATA.schedule.forEach(function (g) {
+      if (g[1] !== n && g[2] !== n) return;
+      var o = g[1] === n ? g[2] : g[1];
+      oc[o] = (oc[o] || 0) + 1; total++;
+    });
+    return total ? ("剩餘 " + total + " 場：" + Object.keys(oc).sort(function (u, v) { return oc[v] - oc[u]; }).map(function (o) { return "對" + TEAMS[o].s + " " + oc[o]; }).join("、")) : "例行賽剩餘場次已打完";
+  }
+  $("rankSub").textContent = "官網戰績，每隊全年 120 場・點一隊看下半季戰績與剩餘對手";
   var leaderF = pr.byFull[0];
   pr.byFull.forEach(function (t, idx) {
     var row = document.createElement("div");
     row.className = "rank-row";
+    row.setAttribute("role", "button");
+    row.setAttribute("tabindex", "0");
+    row.setAttribute("aria-expanded", "false");
     var chips = "";
     if (t.n === pr.h1) chips += '<span class="chip">上半季冠軍</span>';
     if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
@@ -1256,8 +1324,151 @@ function aboutP(p) {
     $("rank").appendChild(row);
     animatePct3El(row.querySelector(".pc"), pr.pct(t), 800);
     if (idx > 0) animateGbEl(row.querySelector(".cup-gb"), pr.gb(leaderF, t), 800);
+
+    var detail = document.createElement("div");
+    detail.className = "rank-detail reveal in";
+    detail.hidden = true;
+    var built = false;
+    function buildDetail() {
+      var h2rec = pr.byHalf.filter(function (x) { return x.n === t.n; })[0];
+      var h2Rank = pr.byHalf.map(function (x) { return x.n; }).indexOf(t.n) + 1;
+      detail.innerHTML = "<p>下半季第 " + h2Rank + " 名：" + h2rec.w + " 勝 " + h2rec.l + " 敗" + (h2rec.t ? " " + h2rec.t + " 和" : "") + "</p><p>" + oppBreakdown(t.n) + "</p>";
+      built = true;
+    }
+    function toggle() {
+      var open = row.getAttribute("aria-expanded") === "true";
+      if (!open && !built) buildDetail();
+      row.setAttribute("aria-expanded", open ? "false" : "true");
+      detail.hidden = open;
+    }
+    row.addEventListener("click", toggle);
+    row.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+    });
+    $("rank").appendChild(detail);
   });
 
+  // Standings (second half)
+  $("rank2Sub").textContent = "官網戰績・下半季封王魔術數字 M" + half2M + "・點一隊看全年戰績與剩餘對手";
+  pr.byHalf.forEach(function (t, idx) {
+    var row = document.createElement("div");
+    row.className = "rank-row";
+    row.setAttribute("role", "button");
+    row.setAttribute("tabindex", "0");
+    row.setAttribute("aria-expanded", "false");
+    var chips = "";
+    if (idx === 0) chips += '<span class="chip blue">下半季領先</span>';
+    if (t.n === pr.h1) chips += '<span class="chip">上半季冠軍</span>';
+    var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
+    var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
+    row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
+      '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
+      '<div class="rank-side"><span class="pc2"></span>' + rec + '<br>' + gbTxt + '</div>';
+    markReveal(row);
+    $("rank2").appendChild(row);
+    animatePct3El(row.querySelector(".pc2"), pr.pct(t), 800);
+    if (idx > 0) animateGbEl(row.querySelector(".cup-gb2"), pr.gb(leadH, t), 800);
+
+    var detail2 = document.createElement("div");
+    detail2.className = "rank-detail reveal in";
+    detail2.hidden = true;
+    var built2 = false;
+    function buildDetail2() {
+      var fRec = pr.full(t.n);
+      var fRank = pr.byFull.map(function (x) { return x.n; }).indexOf(t.n) + 1;
+      detail2.innerHTML = "<p>全年度第 " + fRank + " 名：" + fRec.w + " 勝 " + fRec.l + " 敗" + (fRec.t ? " " + fRec.t + " 和" : "") + "</p><p>" + oppBreakdown(t.n) + "</p>";
+      built2 = true;
+    }
+    function toggle2() {
+      var open = row.getAttribute("aria-expanded") === "true";
+      if (!open && !built2) buildDetail2();
+      row.setAttribute("aria-expanded", open ? "false" : "true");
+      detail2.hidden = open;
+    }
+    row.addEventListener("click", toggle2);
+    row.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle2(); }
+    });
+    $("rank2").appendChild(detail2);
+  });
+
+
+  // 如果...會怎樣模擬器：點選比賽結果，用比較少次的模擬即時重算魔術數字、排名與機率（純假設，不影響上面正式資料）
+  (function () {
+    var wiListEl = $("wiList"), wiSummaryEl = $("wiSummary");
+    if (!wiListEl || !wiSummaryEl) return;
+    var picks = {};   // gameIndex -> 贏隊名稱
+    DATA.schedule.forEach(function (g, gi) {
+      var li = document.createElement("li");
+      li.className = "wi-row";
+      var dateEl = document.createElement("span");
+      dateEl.className = "wi-date"; dateEl.textContent = g[0];
+      var btnA = document.createElement("button");
+      btnA.type = "button"; btnA.className = "wi-team"; btnA.setAttribute("aria-pressed", "false");
+      btnA.innerHTML = badge(g[1], 32) + "<span>" + TEAMS[g[1]].s + "</span>";
+      var vs = document.createElement("span");
+      vs.className = "wi-vs"; vs.textContent = "vs";
+      var btnB = document.createElement("button");
+      btnB.type = "button"; btnB.className = "wi-team"; btnB.setAttribute("aria-pressed", "false");
+      btnB.innerHTML = badge(g[2], 32) + "<span>" + TEAMS[g[2]].s + "</span>";
+      function pick(team) {
+        if (picks[gi] === team) delete picks[gi]; else picks[gi] = team;
+        btnA.setAttribute("aria-pressed", picks[gi] === g[1] ? "true" : "false");
+        btnB.setAttribute("aria-pressed", picks[gi] === g[2] ? "true" : "false");
+        recompute();
+      }
+      btnA.addEventListener("click", function () { pick(g[1]); });
+      btnB.addEventListener("click", function () { pick(g[2]); });
+      li.appendChild(dateEl); li.appendChild(btnA); li.appendChild(vs); li.appendChild(btnB);
+      wiListEl.appendChild(li);
+    });
+
+    var recomputeTimer = null;
+    function recompute() {
+      if (!Object.keys(picks).length) {
+        clearTimeout(recomputeTimer);
+        wiSummaryEl.innerHTML = '<p class="wi-empty">點上面的比賽，看看戰況會怎麼變。</p>';
+        return;
+      }
+      wiSummaryEl.innerHTML = '<p class="wi-empty">計算中…</p>';
+      clearTimeout(recomputeTimer);
+      recomputeTimer = setTimeout(doRecompute, 30);
+    }
+    function doRecompute() {
+      function cloneRec(arr) { return arr.map(function (t) { return { n: t.n, w: t.w, l: t.l, t: t.t }; }); }
+      function findT(arr, n) { for (var i = 0; i < arr.length; i++) if (arr[i].n === n) return arr[i]; return null; }
+      var wiFull = cloneRec(DATA.full), wiHalf2 = cloneRec(DATA.half2), wiSchedule = [];
+      DATA.schedule.forEach(function (g, gi) {
+        var winner = picks[gi];
+        if (!winner) { wiSchedule.push(g); return; }
+        var loser = winner === g[1] ? g[2] : g[1];
+        findT(wiFull, winner).w++; findT(wiFull, loser).l++;
+        if (g[3] !== "fh") { findT(wiHalf2, winner).w++; findT(wiHalf2, loser).l++; }
+      });
+      var wiData = { full: wiFull, half2: wiHalf2, schedule: wiSchedule, firstHalfChamp: DATA.firstHalfChamp };
+      var wiPr = computeProjection(wiData);
+      var wiMagic = computeMagicNumber(wiData);
+      var wiOdds = simulateOdds(wiData, 4000, 20260920, { record: false }).odds;
+      var n = Object.keys(picks).length;
+      var html = "<h4>假設這 " + n + " 場都照你選的打</h4>";
+      html += '<p>全年勝率第一魔術數字：<span class="wi-magic">' + (wiMagic <= 0 ? "已鎖定" : "M" + wiMagic) + "</span>" +
+        (wiMagic === DATA.magic ? "（跟目前一樣）" : "（目前是 M" + DATA.magic + "）") + "</p>";
+      html += "<table><tbody>" + wiPr.byFull.map(function (t, idx) {
+        return '<tr><td class="wi-rk">' + (idx + 1) + "</td><td>" + TEAMS[t.n].s + '</td><td class="wi-rec">' +
+          t.w + "-" + t.l + (t.t ? "-" + t.t : "") + "　" + fmtProb(wiOdds[t.n].playoff) + "</td></tr>";
+      }).join("") + "</tbody></table>";
+      html += '<p class="wi-note">純假設情境，用比較少次模擬（4,000 次）換取即時反應，跟上面正式數字（20,000 次）會有點誤差，也不會影響上面任何正式資料。</p>';
+      html += '<button type="button" class="wi-reset" id="wiReset">清空重來</button>';
+      wiSummaryEl.innerHTML = html;
+      var rb = $("wiReset");
+      if (rb) rb.addEventListener("click", function () {
+        picks = {};
+        Array.prototype.forEach.call(wiListEl.querySelectorAll(".wi-team"), function (b) { b.setAttribute("aria-pressed", "false"); });
+        recompute();
+      });
+    }
+    recompute();
+  })();
 
   // Games
   function gameRow(g, upcoming) {
