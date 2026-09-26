@@ -117,6 +117,7 @@ h3 { margin: 18px 0 2px; font-family: var(--round); font-weight: 400; font-size:
 /* Odds */
 .picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin: 2px -4px 12px; }
 .pick { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px 4px; background: transparent; border: 3px solid transparent; border-radius: 16px; font: inherit; font-size: .78rem; color: var(--ink); cursor: pointer; }
+.pick-elim { font-size: .64rem; color: var(--muted); }
 .pick .badge { --s: 40px; }
 .pick[aria-pressed="true"] { background: var(--tile); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent); }
 .mycard { margin: 0 0 14px; padding: 14px 14px 12px; background: var(--tile); border: 3px solid var(--edge); border-left-width: 7px; border-left-color: var(--accent); border-radius: 20px; transition: border-left-color .3s ease; }
@@ -217,6 +218,7 @@ footer a { color: #fff; }
 .rank-side .pc, .rank-side .pc2 { display: block; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
 .chip { display: inline-block; margin-left: 6px; padding: 0 8px; border: 2px solid var(--edge); border-radius: 99px; font-size: .72rem; background: var(--gold); color: #2a1a1e; vertical-align: 2px; }
 .chip.blue { background: #a9d0ff; }
+.chip.elim { background: var(--surface); color: var(--muted); }
 
 /* Series explainer */
 .scn { margin-top: 12px; padding: 12px 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
@@ -1177,7 +1179,8 @@ function aboutP(p) {
       b.type = "button";
       b.className = "pick";
       b.setAttribute("aria-pressed", n === fav ? "true" : "false");
-      b.innerHTML = badge(n) + '<span>' + TEAMS[n].s + '</span>';
+      var outTxt = ODDS[n].playoff < 0.001 ? '<small class="pick-elim">已淘汰</small>' : "";
+      b.innerHTML = badge(n) + '<span>' + TEAMS[n].s + '</span>' + outTxt;
       b.addEventListener("click", function () {
         fav = (fav === n) ? null : n;
         try { if (fav) localStorage.setItem("dragons-fav", TEAMS[fav].k); else localStorage.removeItem("dragons-fav"); } catch (e) {}
@@ -1262,6 +1265,7 @@ function aboutP(p) {
     var chips = "";
     if (t.n === pr.h1) chips += '<span class="chip">上半季冠軍</span>';
     if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
+    if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) chips += '<span class="chip elim">已淘汰</span>';
     var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
     var gbTxt = idx === 0 ? "全年第一" : '落後 <span class="cup-gb"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
@@ -1306,6 +1310,7 @@ function aboutP(p) {
     var chips = "";
     if (idx === 0) chips += '<span class="chip blue">下半季領先</span>';
     if (t.n === pr.h1) chips += '<span class="chip">上半季冠軍</span>';
+    if (idx > 0 && elim[t.n] <= 0) chips += '<span class="chip elim">已淘汰</span>';
     var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
     var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
