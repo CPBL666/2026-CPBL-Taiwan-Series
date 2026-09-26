@@ -279,6 +279,7 @@ footer a { color: #fff; }
 .wi-summary td { padding: 3px 4px; }
 .wi-summary td.wi-rk { color: var(--muted); width: 1.6em; }
 .wi-summary td.wi-rec { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wi-summary .wi-sub { display: block; font-size: .74rem; opacity: .85; }
 .wi-note { margin: 8px 0 0; font-size: .78rem; color: var(--muted); }
 .wi-reset { margin-top: 10px; padding: 8px 16px; border: 3px solid var(--edge); border-radius: 99px; background: var(--surface); font: inherit; font-size: .82rem; cursor: pointer; }
 .wi-reset:active { background: var(--tile); }
@@ -1402,8 +1403,10 @@ function aboutP(p) {
       html += '<p>全年勝率第一魔術數字：<span class="wi-magic">' + (wiMagic <= 0 ? "已鎖定" : "M" + wiMagic) + "</span>" +
         (wiMagic === DATA.magic ? "（跟目前一樣）" : "（目前是 M" + DATA.magic + "）") + "</p>";
       html += "<table><tbody>" + wiPr.byFull.map(function (t, idx) {
+        var o = wiOdds[t.n];
+        var sub = "直接 " + fmtProb(o.direct) + "・挑戰賽 " + fmtProb(o.chall);
         return '<tr><td class="wi-rk">' + (idx + 1) + "</td><td>" + TEAMS[t.n].s + '</td><td class="wi-rec">' +
-          t.w + "-" + t.l + (t.t ? "-" + t.t : "") + "　" + fmtProb(wiOdds[t.n].playoff) + "</td></tr>";
+          t.w + "-" + t.l + (t.t ? "-" + t.t : "") + "　" + fmtProb(o.playoff) + '<span class="wi-sub">' + sub + '</span></td></tr>';
       }).join("") + "</tbody></table>";
       html += '<p class="wi-note">純假設情境，用比較少次模擬（4,000 次）換取即時反應，跟上面正式數字（20,000 次）會有點誤差，也不會影響上面任何正式資料。</p>';
       html += '<button type="button" class="wi-reset" id="wiReset">清空重來</button>';
