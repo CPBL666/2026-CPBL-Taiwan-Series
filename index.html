@@ -116,8 +116,8 @@ h3 { margin: 18px 0 2px; font-family: var(--round); font-weight: 400; font-size:
 
 /* Odds */
 .picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin: 2px -4px 12px; }
-.pick { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px 4px; background: transparent; border: 3px solid transparent; border-radius: 16px; font: inherit; font-size: .78rem; color: var(--ink); cursor: pointer; }
-.pick-elim { font-size: .64rem; color: var(--muted); }
+.pick { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px 4px; background: transparent; border: 3px solid transparent; border-radius: 16px; font: inherit; font-size: .78rem; color: var(--ink); cursor: pointer; min-width: 0; overflow: hidden; }
+.pick-elim { font-size: .64rem; color: var(--muted); white-space: nowrap; }
 .pick .badge { --s: 40px; }
 .pick[aria-pressed="true"] { background: var(--tile); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent); }
 .mycard { margin: 0 0 14px; padding: 14px 14px 12px; background: var(--tile); border: 3px solid var(--edge); border-left-width: 7px; border-left-color: var(--accent); border-radius: 20px; transition: border-left-color .3s ease; }
@@ -216,10 +216,11 @@ footer a { color: #fff; }
 .rank-main .nm { font-size: 1.05rem; }
 .rank-side { text-align: right; font-size: .86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .rank-side .pc, .rank-side .pc2 { display: block; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
-.chip { display: inline-block; margin-left: 6px; padding: 0 8px; border: 2px solid var(--edge); border-radius: 99px; font-size: .72rem; background: var(--gold); color: #2a1a1e; vertical-align: 2px; }
+.chip { display: inline-block; margin-left: 6px; margin-top: 3px; padding: 0 8px; border: 2px solid var(--edge); border-radius: 99px; font-size: .72rem; background: var(--gold); color: #2a1a1e; vertical-align: 2px; white-space: nowrap; max-width: 100%; }
 .chip.blue { background: #a9d0ff; }
 .chip.wild { background: #ffd9a8; }
 .chip.elim { background: var(--surface); color: var(--muted); }
+.chip-dest { display: inline-block; margin: 3px 0 0 6px; font-size: .78rem; color: var(--muted); white-space: nowrap; }
 .chip-info { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 3px; padding: 0; border: none; border-radius: 50%; background: rgba(0,0,0,.15); color: inherit; font-size: .68rem; font-weight: 700; line-height: 1; cursor: pointer; vertical-align: -3px; }
 .chip-tip[hidden] { display: none; }
 .chip-tip { display: block; width: 100%; margin: 4px 0 0; font-size: .78rem; font-weight: 400; color: var(--muted); }
@@ -1183,7 +1184,7 @@ function aboutP(p) {
       b.type = "button";
       b.className = "pick";
       b.setAttribute("aria-pressed", n === fav ? "true" : "false");
-      var outTxt = ODDS[n].playoff < 0.001 ? '<small class="pick-elim">季後賽已淘汰</small>' : "";
+      var outTxt = ODDS[n].playoff < 0.001 ? '<small class="pick-elim">已淘汰</small>' : "";
       b.innerHTML = badge(n) + '<span>' + TEAMS[n].s + '</span>' + outTxt;
       b.addEventListener("click", function () {
         fav = (fav === n) ? null : n;
@@ -1286,7 +1287,7 @@ function aboutP(p) {
     if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
     if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
     if (!pr.same && t.n === pr.opp) chips += chipInfo("wild", "目前外卡", "半季冠軍以外，全年勝率最高的球隊，會打季後挑戰賽爭取晉級台灣大賽。");
-    if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) chips += '<span class="chip elim">全年度已淘汰</span>';
+    if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) chips += '<span class="chip elim">已淘汰</span>';
     var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
     var gbTxt = idx === 0 ? "全年第一" : '落後 <span class="cup-gb"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
@@ -1334,10 +1335,10 @@ function aboutP(p) {
       var destTip = h2Dest === "直接晉級"
         ? "全年勝率也是最高，兩位半季冠軍中較高者直接晉級台灣大賽。"
         : "全年勝率不如另一位半季冠軍，要先打季後挑戰賽贏了才能晉級台灣大賽。";
-      chips += chipInfo("blue", "下半季領先→" + h2Dest, destTip);
+      chips += chipInfo("blue", "下半季領先", destTip) + '<small class="chip-dest">→' + h2Dest + '</small>';
     }
     if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
-    if (idx > 0 && elim[t.n] <= 0) chips += '<span class="chip elim">下半季已淘汰</span>';
+    if (idx > 0 && elim[t.n] <= 0) chips += '<span class="chip elim">已淘汰</span>';
     var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
     var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
