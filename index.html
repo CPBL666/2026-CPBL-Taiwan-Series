@@ -223,18 +223,19 @@ footer a { color: #fff; }
 .hist-snap { padding: 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
 .hist-snap h4 { margin: 0 0 10px; font-size: .95rem; }
 .hist-snap .hist-game { display: inline-block; margin: 0 0 12px; padding: 5px 12px; font-size: .82rem; background: var(--surface); border: 2px solid var(--line); border-radius: 99px; }
-.hist-cols { display: flex; gap: 12px; }
-.hist-col { flex: 1; min-width: 0; }
+.hist-cols { display: block; }
+.hist-col { margin-top: 12px; }
+.hist-col:first-child { margin-top: 0; }
 .hist-col h5 { margin: 0 0 6px; font-size: .78rem; color: var(--muted); font-weight: 700; }
 .hist-col ol { list-style: none; margin: 0; padding: 0; }
-.hist-col li { display: flex; align-items: center; gap: 5px; padding: 5px 0; font-size: .76rem; border-bottom: 1px dashed var(--line); }
+.hist-col li { display: flex; align-items: center; gap: 7px; padding: 6px 0; font-size: .84rem; border-bottom: 1px dashed var(--line); }
 .hist-col li:last-child { border-bottom: 0; }
 .hist-col li.me { background: var(--gold); margin: 0 -6px; padding: 5px 6px; border-radius: 10px; border-bottom: 0; }
-.hist-col .hist-rk { color: var(--muted); width: 1.1em; flex-shrink: 0; font-size: .68rem; }
-.hist-col .badge { --s: 22px; flex-shrink: 0; }
+.hist-col .hist-rk { color: var(--muted); width: 1.1em; flex-shrink: 0; font-size: .74rem; }
+.hist-col .badge { --s: 28px; flex-shrink: 0; }
 .hist-col .hist-nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hist-col b { font-variant-numeric: tabular-nums; flex-shrink: 0; }
-.hist-col .hist-extra { flex-shrink: 0; font-size: .66rem; color: var(--muted); white-space: nowrap; }
+.hist-col .hist-extra { flex-shrink: 0; font-size: .74rem; color: var(--muted); white-space: nowrap; }
 .hist-col li.me .hist-extra { color: #2a1a1e; }
 .hist-note { margin: 12px 0 0; font-size: .74rem; color: var(--muted); }
 .rk { flex: none; width: 24px; text-align: center; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--muted); }
@@ -1429,18 +1430,24 @@ function aboutP(p) {
       return o;
     }
     function pct(t) { return t.w / (t.w + t.l); }
-    function listHtml(arr, opts) {
+    function standingsHtml(arr, opts) {
       opts = opts || {};
       var sorted = arr.slice().sort(function (a, b) { return pct(b) - pct(a); });
       var leader = sorted[0];
       function gb(t) { return ((leader.w - t.w) + (t.l - leader.l)) / 2; }
       return "<ol>" + sorted.map(function (t, idx) {
-        var extra = "";
-        if (opts.odds) extra = aboutP(opts.odds[t.n].playoff);
-        else if (opts.gb) extra = idx === 0 ? "領先" : "落後 " + gb(t) + " 場";
+        var extra = opts.gb ? (idx === 0 ? "領先" : "落後 " + gb(t) + " 場") : "";
         return '<li class="' + (t.n === "味全龍" ? "me" : "") + '"><span class="hist-rk">' + (idx + 1) + "</span>" +
           badge(t.n) + '<span class="hist-nm">' + TEAMS[t.n].s + "</span><b>" + t.w + "-" + t.l + (t.t ? "-" + t.t : "") + "</b>" +
           '<span class="hist-extra">' + extra + "</span></li>";
+      }).join("") + "</ol>";
+    }
+    function oddsHtml(full, odds) {
+      var sorted = full.map(function (t) { return t.n; }).sort(function (a, b) { return odds[b].playoff - odds[a].playoff; });
+      return "<ol>" + sorted.map(function (n, idx) {
+        return '<li class="' + (n === "味全龍" ? "me" : "") + '"><span class="hist-rk">' + (idx + 1) + "</span>" +
+          badge(n) + '<span class="hist-nm">' + TEAMS[n].s + "</span>" +
+          '<span class="hist-extra">' + aboutP(odds[n].playoff) + "</span></li>";
       }).join("") + "</ol>";
     }
     function renderSnap(h, i) {
@@ -1450,8 +1457,11 @@ function aboutP(p) {
         var gameHtml = h.game ? ('<p class="hist-game">當天：對 ' + h.game.opp + " " + h.game.us + ":" + h.game.them +
           (h.game.note ? "（" + h.game.note + "）" : "") + "</p>") : "";
         histBox.innerHTML = '<div class="hist-snap"><h4>' + h.d + "賽後結算・魔術數字 M" + h.magic + "</h4>" + gameHtml +
-          '<div class="hist-cols"><div class="hist-col"><h5>全年度・進季後賽機率</h5>' + listHtml(h.full, { odds: odds }) + "</div>" +
-          '<div class="hist-col"><h5>下半季・勝差</h5>' + listHtml(h.half2, { gb: true }) + "</div></div>" +
+          '<div class="hist-cols">' +
+          '<div class="hist-col"><h5>全年度戰績</h5>' + standingsHtml(h.full) + "</div>" +
+          '<div class="hist-col"><h5>下半季戰績</h5>' + standingsHtml(h.half2, { gb: true }) + "</div>" +
+          '<div class="hist-col"><h5>進季後賽機率</h5>' + oddsHtml(h.full, odds) + "</div>" +
+          "</div>" +
           '<p class="hist-note">機率是拿當天的戰績、用當天剩餘賽程重算一次，跟正式頁面同一套估算方法。</p></div>';
       }, 20);
     }
