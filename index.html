@@ -556,7 +556,7 @@ const DATA = {
   updated: "2026/09/27 晚間（依中華職棒官網戰績與賽程）",
   magic: 2,        // 目前魔術數字
   start: 6,        // 點亮鱗片的起算值（2026/09/20 為 M6）
-  lowerHalf: "下半季由樂天桃猿領先（31 勝 22 敗，領先中信兄弟 0.5 場），味全下半季排第 4；全年度味全 63 勝 51 敗（.553）居首，第二名統一落後 4.5 場，中信兄弟已被全年第一淘汰。",
+  lowerHalf: "下半季由樂天桃猿領先（31 勝 22 敗，領先中信兄弟 0.5 場），味全下半季排第 4；全年度味全 63 勝 51 敗（.553）居首，第二名統一落後 4.5 場。",
   recent: [
     { d: "9/27", opp: "樂天桃猿", us: 2, them: 4, note: "天母" },
     { d: "9/26", opp: "樂天桃猿", us: 3, them: 5, note: "天母" },
@@ -939,7 +939,7 @@ function aboutP(p) {
   }
   var directNote = pr.same
     ? "上、下半季雙料冠軍，全年勝率 " + fmtPct(pr.direct) + "，七戰四勝先取 1 勝"
-    : (pr.direct === pr.h1 ? "上半季冠軍" : "下半季冠軍") + "，全年勝率 " + fmtPct(pr.direct) + "，兩位半季冠軍中較高";
+    : (pr.direct === pr.h1 ? "上半季冠軍" : "下半季冠軍") + "，全年勝率 " + fmtPct(pr.direct) + "，兩位半季冠軍中較高者";
   if (pr.direct === DATA.firstHalfChamp && magic > 0) {
     directNote += "。全年勝率第一魔術數字 M" + magic;
   }
@@ -967,7 +967,7 @@ function aboutP(p) {
   function addRace(t) { var li = document.createElement("li"); li.textContent = t; race.appendChild(li); }
   if (!pr.same) {
     var lead = pr.byHalf[0], c2 = pr.byHalf[1], c3 = pr.byHalf[2];
-    addRace("下半季冠軍：" + pr.h2 + "暫居第一，" + c2.n + "落後 " + pr.gb(lead, c2) + " 場、" + c3.n + "落後 " + pr.gb(lead, c3) + " 場。" + pr.h2 + "封王魔術數字 M" + half2M + "（依官網淘汰指數）");
+    addRace("下半季冠軍：" + pr.h2 + "暫居第一，" + c2.n + "落後 " + pr.gb(lead, c2) + " 場、" + c3.n + "落後 " + pr.gb(lead, c3) + " 場。" + pr.h2 + "封王魔術數字 M" + half2M + "（算法比照官網淘汰指數）");
     var p0 = pr.pool[0], p1 = pr.pool[1];
     addRace("全年勝率最高的半季冠軍以外球隊：" + p0.n + "領先" + p1.n + " " + pr.gb(p0, p1) + " 場，這個名額還沒定");
   }
@@ -1058,7 +1058,7 @@ function aboutP(p) {
     }
     var e = elim[n];
     out.push({ tag: "下半季冠軍", text: "目前第 " + hr + " 名，落後第 1 名" + leadH.n + " " + pr.gb(leadH, pr.byHalf[hr - 1]) + " 場，還剩 " + h2Left[n] + " 場。" +
-      (e > 0 ? "官網淘汰指數 " + e + "：" + leadH.n + "再贏球加上" + TEAMS[n].s + "再輸球，合計 " + e + " 場就無緣。" : "已無緣下半季冠軍。"), prob: o.half2, how: e > 0 ? howHalf(n) : "" });
+      (e > 0 ? "淘汰指數 " + e + "（算法比照官網）：" + leadH.n + "再贏球加上" + TEAMS[n].s + "再輸球，合計 " + e + " 場就無緣。" : "已無緣下半季冠軍。"), prob: o.half2, how: e > 0 ? howHalf(n) : "" });
     var pk = rankIn(poolAll, n);
     if (pk > 0) {
       var me = poolAll[pk - 1], txt;
