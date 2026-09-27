@@ -223,6 +223,9 @@ footer a { color: #fff; }
 .hist-snap { padding: 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
 .hist-snap h4 { margin: 0 0 10px; font-size: .95rem; }
 .hist-snap .hist-game { display: inline-block; margin: 0 0 12px; padding: 5px 12px; font-size: .82rem; background: var(--surface); border: 2px solid var(--line); border-radius: 99px; }
+.hist-day-results { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 12px; }
+.hist-dr { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: .68rem; color: var(--muted); }
+.hist-dr .badge { --s: 26px; }
 .hist-cols { display: block; }
 .hist-col { margin-top: 12px; }
 .hist-col:first-child { margin-top: 0; }
@@ -290,6 +293,7 @@ footer a { color: #fff; }
 .pip.w { background: var(--win); }
 .pip.l { background: var(--lose); }
 .pip.p { background: var(--surface); color: var(--muted); border-style: dashed; }
+.pip.sm { width: 22px; height: 22px; border-width: 2px; font-size: .62rem; }
 .pip.sm { font-size: .68rem; letter-spacing: -.02em; }
 .g-main { flex: 1; min-width: 0; }
 .g-main .note { display: block; font-size: .82rem; color: var(--muted); }
@@ -605,7 +609,8 @@ const DATA = {
   // 歷史戰績快照：每天賽後結算的全年度/下半季戰績與魔術數字，供「歷史戰績」區塊回顧用
   // game 是當天味全自己的比賽（跟 recent 同格式）；9/20 是開始每日記錄前的起始點，沒有對應單場賽事
   history: [
-    { d: "9/20", magic: 6,
+    { d: "9/20", magic: 6, game: { opp: "中信兄弟", us: 1, them: 2, note: "大巨蛋・9 局下被再見" },
+      results: { "中信兄弟": "win", "味全龍": "loss", "富邦悍將": "win", "統一7-ELEVEn獅": "loss", "樂天桃猿": "win", "台鋼雄鷹": "loss" },
       full: [{ n: "味全龍", w: 62, l: 47, t: 0 }, { n: "富邦悍將", w: 56, l: 53, t: 0 }, { n: "統一7-ELEVEn獅", w: 55, l: 53, t: 1 }, { n: "台鋼雄鷹", w: 51, l: 57, t: 1 }, { n: "樂天桃猿", w: 50, l: 56, t: 2 }, { n: "中信兄弟", w: 50, l: 58, t: 2 }],
       half2: [{ n: "中信兄弟", w: 30, l: 21, t: 0 }, { n: "樂天桃猿", w: 26, l: 22, t: 0 }, { n: "統一7-ELEVEn獅", w: 26, l: 24, t: 0 }, { n: "味全龍", w: 23, l: 26, t: 0 }, { n: "富邦悍將", w: 22, l: 27, t: 0 }, { n: "台鋼雄鷹", w: 21, l: 28, t: 0 }] },
     { d: "9/22", magic: 4, game: { opp: "統一7-ELEVEn獅", us: 13, them: 1, note: "亞太" },
@@ -1450,13 +1455,32 @@ function aboutP(p) {
           '<span class="hist-extra">' + aboutP(odds[n].playoff) + "</span></li>";
       }).join("") + "</ol>";
     }
+    function dayResultsHtml(i) {
+      var h = DATA.history[i], results = h.results;
+      if (!results) {
+        if (i === 0) return "";   // 沒有明確結果、也沒有前一天可以比較
+        var prevFull = DATA.history[i - 1].full, currFull = h.full;
+        results = {};
+        currFull.forEach(function (t) {
+          var p = prevFull.filter(function (x) { return x.n === t.n; })[0];
+          if (t.w > p.w) results[t.n] = "win"; else if (t.l > p.l) results[t.n] = "loss";
+        });
+      }
+      var rows = h.full.map(function (t) {
+        var r = results[t.n], cls = "p", label = "－";
+        if (r === "win") { cls = "w"; label = "勝"; } else if (r === "loss") { cls = "l"; label = "敗"; }
+        return '<div class="hist-dr">' + badge(t.n) + '<span class="pip sm ' + cls + '">' + label + "</span></div>";
+      }).join("");
+      return '<div class="hist-day-results">' + rows + "</div>";
+    }
     function renderSnap(h, i) {
       histBox.innerHTML = '<div class="hist-snap"><p class="hist-game">計算中…</p></div>';
       setTimeout(function () {
         var odds = oddsAsOf(h, i);
-        var gameHtml = h.game ? ('<p class="hist-game">當天：對 ' + h.game.opp + " " + h.game.us + ":" + h.game.them +
+        var gameHtml = h.game ? ('<p class="hist-game">味全：對 ' + h.game.opp + " " + h.game.us + ":" + h.game.them +
           (h.game.note ? "（" + h.game.note + "）" : "") + "</p>") : "";
-        histBox.innerHTML = '<div class="hist-snap"><h4>' + h.d + "賽後結算・魔術數字 M" + h.magic + "</h4>" + gameHtml +
+        histBox.innerHTML = '<div class="hist-snap"><h4>' + h.d + "賽後結算・魔術數字 M" + h.magic + "</h4>" +
+          dayResultsHtml(i) + gameHtml +
           '<div class="hist-cols">' +
           '<div class="hist-col"><h5>全年度戰績</h5>' + standingsHtml(h.full) + "</div>" +
           '<div class="hist-col"><h5>下半季戰績</h5>' + standingsHtml(h.half2, { gb: true }) + "</div>" +
