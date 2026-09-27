@@ -246,6 +246,7 @@ footer a { color: #fff; }
 .rank-main .nm { font-size: 1.05rem; }
 .rank-side { text-align: right; font-size: .86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .rank-side .pc, .rank-side .pc2 { display: block; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
+.rank-side .pc-lbl { display: block; font-size: .6rem; font-weight: 400; color: var(--muted); line-height: 1.3; }
 .chip { display: inline-block; margin-left: 6px; margin-top: 3px; padding: 0 8px; border: 2px solid var(--edge); border-radius: 99px; font-size: .72rem; background: var(--gold); color: #2a1a1e; vertical-align: 2px; white-space: nowrap; max-width: 100%; }
 .chip.blue { background: #a9d0ff; }
 .chip.wild { background: #ffd9a8; }
@@ -1308,7 +1309,7 @@ function aboutP(p) {
     var gbTxt = idx === 0 ? "全年第一" : '落後 <span class="cup-gb"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
       '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
-      '<div class="rank-side"><span class="pc"></span>' + rec + '<br>' + gbTxt + '</div>';
+      '<div class="rank-side"><small class="pc-lbl">全年度勝率</small><span class="pc"></span>' + rec + '<br>' + gbTxt + '</div>';
     markReveal(row);
     $("rank").appendChild(row);
     animatePct3El(row.querySelector(".pc"), pr.pct(t), 800);
@@ -1359,7 +1360,7 @@ function aboutP(p) {
     var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
       '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
-      '<div class="rank-side"><span class="pc2"></span>' + rec + '<br>' + gbTxt + '</div>';
+      '<div class="rank-side"><small class="pc-lbl">下半季勝率</small><span class="pc2"></span>' + rec + '<br>' + gbTxt + '</div>';
     markReveal(row);
     $("rank2").appendChild(row);
     animatePct3El(row.querySelector(".pc2"), pr.pct(t), 800);
