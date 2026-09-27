@@ -211,6 +211,32 @@ footer a { color: #fff; }
 .rank-detail { padding: 2px 0 12px 66px; font-size: .84rem; color: var(--muted); border-bottom: 2px dashed var(--line); }
 .rank-detail p { margin: 3px 0; }
 .rank-detail:last-child { border-bottom: 0; }
+#histPick { display: block; width: 100%; margin: 8px 0 12px; padding: 10px 12px; font: inherit; font-size: .9rem; color: var(--ink); background: var(--surface); border: 3px solid var(--edge); border-radius: 14px; }
+.hist-trend { display: flex; gap: 6px; overflow-x: auto; padding: 4px 2px 10px; -webkit-overflow-scrolling: touch; }
+.hist-trend-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 11px; background: var(--surface); border: 2px solid var(--line); border-radius: 12px; font-size: .66rem; color: var(--muted); white-space: nowrap; }
+.hist-trend-item b { font-family: var(--num); font-size: .84rem; color: var(--ink); }
+.hist-days { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 12px; -webkit-overflow-scrolling: touch; }
+.hist-day { flex-shrink: 0; padding: 7px 15px; font: inherit; font-size: .82rem; font-weight: 700; color: var(--ink); background: var(--surface); border: 3px solid var(--edge); border-radius: 99px; cursor: pointer; box-shadow: 0 3px 0 var(--edge); }
+.hist-day:active { box-shadow: none; transform: translateY(3px); }
+.hist-day[aria-pressed="true"] { background: var(--gold); }
+.hist-empty { margin: 0; font-size: .88rem; color: var(--muted); }
+.hist-snap { padding: 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
+.hist-snap h4 { margin: 0 0 10px; font-size: .95rem; }
+.hist-snap .hist-game { display: inline-block; margin: 0 0 12px; padding: 5px 12px; font-size: .82rem; background: var(--surface); border: 2px solid var(--line); border-radius: 99px; }
+.hist-cols { display: flex; gap: 12px; }
+.hist-col { flex: 1; min-width: 0; }
+.hist-col h5 { margin: 0 0 6px; font-size: .78rem; color: var(--muted); font-weight: 700; }
+.hist-col ol { list-style: none; margin: 0; padding: 0; }
+.hist-col li { display: flex; align-items: center; gap: 5px; padding: 5px 0; font-size: .76rem; border-bottom: 1px dashed var(--line); }
+.hist-col li:last-child { border-bottom: 0; }
+.hist-col li.me { background: var(--gold); margin: 0 -6px; padding: 5px 6px; border-radius: 10px; border-bottom: 0; }
+.hist-col .hist-rk { color: var(--muted); width: 1.1em; flex-shrink: 0; font-size: .68rem; }
+.hist-col .badge { --s: 22px; flex-shrink: 0; }
+.hist-col .hist-nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist-col b { font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.hist-col .hist-extra { flex-shrink: 0; font-size: .66rem; color: var(--muted); white-space: nowrap; }
+.hist-col li.me .hist-extra { color: #2a1a1e; }
+.hist-note { margin: 12px 0 0; font-size: .74rem; color: var(--muted); }
 .rk { flex: none; width: 24px; text-align: center; font-family: var(--num); font-weight: 800; font-size: 1.15rem; color: var(--muted); }
 .rank-main { flex: 1; min-width: 0; }
 .rank-main .nm { font-size: 1.05rem; }
@@ -383,6 +409,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
     <h2 id="h-rank2">下半季戰績</h2>
     <p class="sub" id="rank2Sub"></p>
     <div id="rank2"></div>
+  </section>
+  <section class="reg-only" aria-labelledby="h-hist">
+    <h2 id="h-hist">歷史戰績</h2>
+    <p class="sub">回顧每天賽後結算的排名與魔術數字</p>
+    <div class="hist-trend" id="histTrend"></div>
+    <div class="hist-days" id="histPick" role="tablist" aria-label="選擇日期"></div>
+    <div id="histBox"><p class="hist-empty">點上面的日期，看那天的戰況快照。</p></div>
   </section>
   <section class="reg-only" aria-labelledby="h-proj">
     <h2 id="h-proj">預估晉級隊伍</h2>
@@ -567,6 +600,28 @@ const DATA = {
     { n: "味全龍", w: 24, l: 30, t: 0 },
     { n: "富邦悍將", w: 24, l: 30, t: 0 },
     { n: "台鋼雄鷹", w: 23, l: 31, t: 0 }
+  ],
+  // 歷史戰績快照：每天賽後結算的全年度/下半季戰績與魔術數字，供「歷史戰績」區塊回顧用
+  // game 是當天味全自己的比賽（跟 recent 同格式）；9/20 是開始每日記錄前的起始點，沒有對應單場賽事
+  history: [
+    { d: "9/20", magic: 6,
+      full: [{ n: "味全龍", w: 62, l: 47, t: 0 }, { n: "富邦悍將", w: 56, l: 53, t: 0 }, { n: "統一7-ELEVEn獅", w: 55, l: 53, t: 1 }, { n: "台鋼雄鷹", w: 51, l: 57, t: 1 }, { n: "樂天桃猿", w: 50, l: 56, t: 2 }, { n: "中信兄弟", w: 50, l: 58, t: 2 }],
+      half2: [{ n: "中信兄弟", w: 30, l: 21, t: 0 }, { n: "樂天桃猿", w: 26, l: 22, t: 0 }, { n: "統一7-ELEVEn獅", w: 26, l: 24, t: 0 }, { n: "味全龍", w: 23, l: 26, t: 0 }, { n: "富邦悍將", w: 22, l: 27, t: 0 }, { n: "台鋼雄鷹", w: 21, l: 28, t: 0 }] },
+    { d: "9/22", magic: 4, game: { opp: "統一7-ELEVEn獅", us: 13, them: 1, note: "亞太" },
+      full: [{ n: "味全龍", w: 63, l: 47, t: 0 }, { n: "富邦悍將", w: 56, l: 54, t: 0 }, { n: "統一7-ELEVEn獅", w: 55, l: 54, t: 1 }, { n: "樂天桃猿", w: 51, l: 56, t: 2 }, { n: "台鋼雄鷹", w: 51, l: 58, t: 1 }, { n: "中信兄弟", w: 51, l: 58, t: 2 }],
+      half2: [{ n: "中信兄弟", w: 31, l: 21, t: 0 }, { n: "樂天桃猿", w: 27, l: 22, t: 0 }, { n: "統一7-ELEVEn獅", w: 26, l: 25, t: 0 }, { n: "味全龍", w: 24, l: 26, t: 0 }, { n: "富邦悍將", w: 22, l: 28, t: 0 }, { n: "台鋼雄鷹", w: 21, l: 29, t: 0 }] },
+    { d: "9/24", magic: 4, game: { opp: "統一7-ELEVEn獅", us: 2, them: 4, note: "亞太" },
+      full: [{ n: "味全龍", w: 63, l: 48, t: 0 }, { n: "富邦悍將", w: 57, l: 54, t: 0 }, { n: "統一7-ELEVEn獅", w: 56, l: 54, t: 1 }, { n: "樂天桃猿", w: 52, l: 56, t: 2 }, { n: "台鋼雄鷹", w: 51, l: 59, t: 1 }, { n: "中信兄弟", w: 51, l: 59, t: 2 }],
+      half2: [{ n: "中信兄弟", w: 31, l: 22, t: 0 }, { n: "樂天桃猿", w: 28, l: 22, t: 0 }, { n: "統一7-ELEVEn獅", w: 27, l: 25, t: 0 }, { n: "味全龍", w: 24, l: 27, t: 0 }, { n: "富邦悍將", w: 23, l: 28, t: 0 }, { n: "台鋼雄鷹", w: 21, l: 30, t: 0 }] },
+    { d: "9/25", magic: 3, game: { opp: "統一7-ELEVEn獅", us: 2, them: 3, note: "亞太" },
+      full: [{ n: "味全龍", w: 63, l: 49, t: 0 }, { n: "統一7-ELEVEn獅", w: 57, l: 54, t: 1 }, { n: "富邦悍將", w: 57, l: 55, t: 0 }, { n: "樂天桃猿", w: 53, l: 56, t: 2 }, { n: "台鋼雄鷹", w: 52, l: 59, t: 1 }, { n: "中信兄弟", w: 51, l: 60, t: 2 }],
+      half2: [{ n: "中信兄弟", w: 31, l: 23, t: 0 }, { n: "樂天桃猿", w: 29, l: 22, t: 0 }, { n: "統一7-ELEVEn獅", w: 28, l: 25, t: 0 }, { n: "味全龍", w: 24, l: 28, t: 0 }, { n: "富邦悍將", w: 23, l: 29, t: 0 }, { n: "台鋼雄鷹", w: 22, l: 30, t: 0 }] },
+    { d: "9/26", magic: 3, game: { opp: "樂天桃猿", us: 3, them: 5, note: "天母" },
+      full: [{ n: "味全龍", w: 63, l: 50, t: 0 }, { n: "統一7-ELEVEn獅", w: 58, l: 54, t: 1 }, { n: "富邦悍將", w: 57, l: 56, t: 0 }, { n: "樂天桃猿", w: 54, l: 56, t: 2 }, { n: "台鋼雄鷹", w: 52, l: 60, t: 1 }, { n: "中信兄弟", w: 52, l: 60, t: 2 }],
+      half2: [{ n: "中信兄弟", w: 32, l: 23, t: 0 }, { n: "樂天桃猿", w: 30, l: 22, t: 0 }, { n: "統一7-ELEVEn獅", w: 29, l: 25, t: 0 }, { n: "味全龍", w: 24, l: 29, t: 0 }, { n: "富邦悍將", w: 23, l: 30, t: 0 }, { n: "台鋼雄鷹", w: 22, l: 31, t: 0 }] },
+    { d: "9/27", magic: 2, game: { opp: "樂天桃猿", us: 2, them: 4, note: "天母" },
+      full: [{ n: "味全龍", w: 63, l: 51, t: 0 }, { n: "統一7-ELEVEn獅", w: 58, l: 55, t: 1 }, { n: "富邦悍將", w: 58, l: 56, t: 0 }, { n: "樂天桃猿", w: 55, l: 56, t: 2 }, { n: "台鋼雄鷹", w: 53, l: 60, t: 1 }, { n: "中信兄弟", w: 52, l: 61, t: 2 }],
+      half2: [{ n: "樂天桃猿", w: 31, l: 22, t: 0 }, { n: "中信兄弟", w: 32, l: 24, t: 0 }, { n: "統一7-ELEVEn獅", w: 29, l: 26, t: 0 }, { n: "味全龍", w: 24, l: 30, t: 0 }, { n: "富邦悍將", w: 24, l: 30, t: 0 }, { n: "台鋼雄鷹", w: 23, l: 31, t: 0 }] }
   ]
 };
 /* ================================== */
@@ -1326,6 +1381,85 @@ function aboutP(p) {
     });
     $("rank2").appendChild(detail2);
   });
+
+  // 歷史戰績：回顧每天賽後結算的排名、魔術數字與晉級機率
+  (function () {
+    var histPickEl = $("histPick"), histBox = $("histBox"), histTrend = $("histTrend");
+    if (!histPickEl || !DATA.history || !DATA.history.length) return;
+    histTrend.innerHTML = DATA.history.map(function (h) {
+      return '<span class="hist-trend-item">' + h.d + "<b>M" + h.magic + "</b></span>";
+    }).join("");
+    var dayBtns = [];
+    DATA.history.forEach(function (h, i) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hist-day";
+      btn.setAttribute("aria-pressed", "false");
+      btn.textContent = h.d;
+      btn.addEventListener("click", function () { selectDay(i); });
+      histPickEl.appendChild(btn);
+      dayBtns.push(btn);
+    });
+    // 整季完整賽程（33 場，9/22–10/5），不會隨每日更新被移除，只用來反推「當天賽後還剩幾場」以重算歷史機率
+    var SEASON_DAYS = ["9/20", "9/22", "9/24", "9/25", "9/26", "9/27", "9/28", "9/30", "10/1", "10/2", "10/3", "10/4", "10/5"];
+    var FULL_SCHEDULE_ALL = [
+      ["9/22", "中信兄弟", "富邦悍將"], ["9/22", "台鋼雄鷹", "樂天桃猿"], ["9/22", "味全龍", "統一7-ELEVEn獅"],
+      ["9/24", "富邦悍將", "台鋼雄鷹"], ["9/24", "中信兄弟", "樂天桃猿"], ["9/24", "味全龍", "統一7-ELEVEn獅"],
+      ["9/25", "富邦悍將", "台鋼雄鷹"], ["9/25", "中信兄弟", "樂天桃猿"], ["9/25", "味全龍", "統一7-ELEVEn獅"],
+      ["9/26", "統一7-ELEVEn獅", "台鋼雄鷹"], ["9/26", "樂天桃猿", "味全龍"], ["9/26", "中信兄弟", "富邦悍將"],
+      ["9/27", "統一7-ELEVEn獅", "台鋼雄鷹"], ["9/27", "樂天桃猿", "味全龍"], ["9/27", "中信兄弟", "富邦悍將"],
+      ["9/28", "台鋼雄鷹", "中信兄弟"], ["9/28", "統一7-ELEVEn獅", "樂天桃猿"], ["9/28", "味全龍", "富邦悍將"],
+      ["9/30", "味全龍", "樂天桃猿"], ["9/30", "統一7-ELEVEn獅", "富邦悍將"], ["9/30", "中信兄弟", "台鋼雄鷹"],
+      ["10/1", "樂天桃猿", "台鋼雄鷹"], ["10/1", "統一7-ELEVEn獅", "味全龍"],
+      ["10/2", "味全龍", "富邦悍將"], ["10/2", "樂天桃猿", "台鋼雄鷹"],
+      ["10/3", "味全龍", "統一7-ELEVEn獅"], ["10/3", "中信兄弟", "富邦悍將"], ["10/3", "台鋼雄鷹", "樂天桃猿"],
+      ["10/4", "味全龍", "樂天桃猿"], ["10/4", "統一7-ELEVEn獅", "富邦悍將"], ["10/4", "台鋼雄鷹", "中信兄弟"],
+      ["10/5", "統一7-ELEVEn獅", "中信兄弟", "fh"], ["10/5", "富邦悍將", "樂天桃猿"]
+    ];
+    function scheduleAsOf(d) {
+      var idx = SEASON_DAYS.indexOf(d);
+      return FULL_SCHEDULE_ALL.filter(function (g) { return SEASON_DAYS.indexOf(g[0]) > idx; });
+    }
+    var histOddsCache = {};
+    function oddsAsOf(h, i) {
+      if (histOddsCache[i]) return histOddsCache[i];
+      var hd = { full: h.full, half2: h.half2, schedule: scheduleAsOf(h.d), firstHalfChamp: DATA.firstHalfChamp };
+      var o = simulateOdds(hd, 8000, 20260920 + i, { record: false }).odds;
+      histOddsCache[i] = o;
+      return o;
+    }
+    function pct(t) { return t.w / (t.w + t.l); }
+    function listHtml(arr, opts) {
+      opts = opts || {};
+      var sorted = arr.slice().sort(function (a, b) { return pct(b) - pct(a); });
+      var leader = sorted[0];
+      function gb(t) { return ((leader.w - t.w) + (t.l - leader.l)) / 2; }
+      return "<ol>" + sorted.map(function (t, idx) {
+        var extra = "";
+        if (opts.odds) extra = aboutP(opts.odds[t.n].playoff);
+        else if (opts.gb) extra = idx === 0 ? "領先" : "落後 " + gb(t) + " 場";
+        return '<li class="' + (t.n === "味全龍" ? "me" : "") + '"><span class="hist-rk">' + (idx + 1) + "</span>" +
+          badge(t.n) + '<span class="hist-nm">' + TEAMS[t.n].s + "</span><b>" + t.w + "-" + t.l + (t.t ? "-" + t.t : "") + "</b>" +
+          '<span class="hist-extra">' + extra + "</span></li>";
+      }).join("") + "</ol>";
+    }
+    function renderSnap(h, i) {
+      histBox.innerHTML = '<div class="hist-snap"><p class="hist-game">計算中…</p></div>';
+      setTimeout(function () {
+        var odds = oddsAsOf(h, i);
+        var gameHtml = h.game ? ('<p class="hist-game">當天：對 ' + h.game.opp + " " + h.game.us + ":" + h.game.them +
+          (h.game.note ? "（" + h.game.note + "）" : "") + "</p>") : "";
+        histBox.innerHTML = '<div class="hist-snap"><h4>' + h.d + "賽後結算・魔術數字 M" + h.magic + "</h4>" + gameHtml +
+          '<div class="hist-cols"><div class="hist-col"><h5>全年度・進季後賽機率</h5>' + listHtml(h.full, { odds: odds }) + "</div>" +
+          '<div class="hist-col"><h5>下半季・勝差</h5>' + listHtml(h.half2, { gb: true }) + "</div></div>" +
+          '<p class="hist-note">機率是拿當天的戰績、用當天剩餘賽程重算一次，跟正式頁面同一套估算方法。</p></div>';
+      }, 20);
+    }
+    function selectDay(i) {
+      dayBtns.forEach(function (b, bi) { b.setAttribute("aria-pressed", bi === i ? "true" : "false"); });
+      renderSnap(DATA.history[i], i);
+    }
+  })();
 
   // Games
   function gameRow(g, upcoming) {
