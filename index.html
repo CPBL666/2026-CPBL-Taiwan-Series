@@ -304,7 +304,7 @@ footer a { color: #fff; }
 .pip.w { background: var(--win); }
 .pip.l { background: var(--lose); }
 .pip.p { background: var(--surface); color: var(--muted); border-style: dashed; }
-.pip.sm { width: 22px; height: 22px; border-width: 2px; font-size: .62rem; }
+.pip.tiny { width: 22px; height: 22px; border-width: 2px; font-size: .62rem; }
 .pip.sm { font-size: .68rem; letter-spacing: -.02em; }
 .g-main { flex: 1; min-width: 0; }
 .g-main .note { display: block; font-size: .82rem; color: var(--muted); }
@@ -1563,7 +1563,7 @@ function aboutP(p) {
       var rows = h.full.map(function (t) {
         var r = results[t.n], cls = "p", label = "－";
         if (r === "win") { cls = "w"; label = "勝"; } else if (r === "loss") { cls = "l"; label = "敗"; }
-        return '<div class="hist-dr">' + badge(t.n) + '<span class="pip sm ' + cls + '">' + label + "</span></div>";
+        return '<div class="hist-dr">' + badge(t.n) + '<span class="pip tiny ' + cls + '">' + label + "</span></div>";
       }).join("");
       return '<div class="hist-day-results">' + rows + "</div>";
     }
