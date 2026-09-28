@@ -182,6 +182,16 @@ footer a { color: #fff; }
 .ksub { margin: 8px 0 0; font-size: .78rem; color: var(--muted); }
 .kt { display: block; color: var(--ink); }
 .ks { display: block; color: var(--muted); font-size: .8rem; }
+.safe-badge { display: inline-block; margin: 6px 0 10px; padding: 4px 12px; border-radius: 99px; font-size: .82rem; font-weight: 700; }
+.safe-badge.ok { background: var(--win); color: #fff; }
+.safe-badge.warn { background: var(--gold); color: #2a1a1e; }
+.safe-badge.risky { background: var(--surface); color: var(--muted); border: 2px solid var(--edge); }
+.cheer-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 2px dashed var(--line); font-size: .85rem; }
+.cheer-item:first-child { border-top: 0; }
+.cheer-item .cg-game { flex: 1; min-width: 0; }
+.cheer-tag { flex-shrink: 0; font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.cheer-tag.win { background: var(--win); color: #fff; }
+.cheer-tag.root { background: var(--hl); color: var(--ink); }
 .flow { margin: 4px 0 10px; }
 .flow-row { padding: 10px 12px 12px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
 .fl-tag { display: inline-block; margin-bottom: 8px; padding: 0 10px; border: 2px solid var(--edge); border-radius: 99px; background: var(--surface); font-size: .78rem; line-height: 1.6; }
@@ -1124,6 +1134,89 @@ function aboutP(p) {
       (other.length ? '<div class="ksub">別隊的比賽（看誰贏對你有利）</div>' + items(other) : '');
   }
 
+  // 加油攻略：贏幾場就穩了？不穩的時候該幫誰加油？(直接沿用同一批模擬資料重新分桶統計，不用再跑一次模擬)
+  function ownGameIdx(n) {
+    var idx = [];
+    DATA.schedule.forEach(function (g, gi) { if (g[1] === n || g[2] === n) idx.push(gi); });
+    return idx;
+  }
+  var TIERCACHE = {};
+  function winTierAnalysis(n) {
+    if (TIERCACHE[n]) return TIERCACHE[n];
+    var rec = SIM.rec, bit = 1 << rec.names.indexOf(n);
+    var own = ownGameIdx(n), isH1 = n === DATA.firstHalfChamp, arr = isH1 ? rec.dr : rec.pl;
+    var buckets = {};
+    for (var q = 0; q < rec.N; q++) {
+      var w = 0;
+      for (var i = 0; i < own.length; i++) {
+        var gi = own[i], g = DATA.schedule[gi], homeWon = rec.win[q * rec.G + gi], teamIsHome = g[1] === n;
+        if ((teamIsHome && homeWon) || (!teamIsHome && !homeWon)) w++;
+      }
+      if (!buckets[w]) buckets[w] = { made: 0, total: 0, trialIdx: [] };
+      buckets[w].total++;
+      if (arr[q] & bit) buckets[w].made++;
+      buckets[w].trialIdx.push(q);
+    }
+    var remain = own.length, tiers = [];
+    for (var ww = 0; ww <= remain; ww++) {
+      var b = buckets[ww];
+      tiers.push({ w: ww, prob: b ? b.made / b.total : null, n: b ? b.total : 0, trialIdx: b ? b.trialIdx : [] });
+    }
+    var res = { remain: remain, tiers: tiers };
+    TIERCACHE[n] = res;
+    return res;
+  }
+  function leverageForTier(n, trialIdx) {
+    var rec = SIM.rec, bit = 1 << rec.names.indexOf(n), isH1 = n === DATA.firstHalfChamp, arr = isH1 ? rec.dr : rec.pl;
+    var ownSet = {}; ownGameIdx(n).forEach(function (gi) { ownSet[gi] = 1; });
+    var list = [];
+    for (var g = 0; g < rec.G; g++) {
+      if (ownSet[g]) continue;
+      var sa = 0, ca = 0, sb = 0, cb = 0;
+      for (var ti = 0; ti < trialIdx.length; ti++) {
+        var q = trialIdx[ti], v = (arr[q] & bit) ? 1 : 0;
+        if (rec.win[q * rec.G + g]) { sa += v; ca++; } else { sb += v; cb++; }
+      }
+      if (!ca || !cb) continue;
+      list.push({ g: g, pa: sa / ca, pb: sb / cb, d: Math.abs(sa / ca - sb / cb) });
+    }
+    list.sort(function (u, v) { return v.d - u.d; });
+    return list;
+  }
+  function cheerGuideHtml(n) {
+    var isH1 = n === DATA.firstHalfChamp;
+    var ta = winTierAnalysis(n);
+    if (!ta.remain) return "";   // 沒有剩餘賽程可分析
+    var safeIdx = -1;
+    for (var i = ta.remain; i >= 0; i--) {
+      if (ta.tiers[i].prob !== null && ta.tiers[i].prob >= 0.99) safeIdx = i; else break;
+    }
+    var html = '<h4 class="kh">加油攻略</h4>';
+    var bestProb = ta.tiers[ta.remain].prob;
+    if (isH1) {
+      html += '<span class="safe-badge ok">保送晉級台灣大賽 100%</span>';
+      html += '<p class="ks">但「直接晉級」還是「先打季後挑戰賽」還有一點變數：贏 ' + Math.max(1, safeIdx) + ' 場（含）以上，直接晉級篤定；萬一 ' + ta.remain + ' 場全輸，直接晉級仍有 ' + fmtProb(bestProb === null ? 1 : ta.tiers[0].prob) + '，只有極端情況才會被迫改打挑戰賽。</p>';
+      return html;
+    }
+    if (bestProb !== null && bestProb < 0.05) {
+      html += '<span class="safe-badge risky">機會非常小</span>';
+      html += '<p class="ks">數學上還沒被淘汰，但就算剩下 ' + ta.remain + ' 場全部拿下，晉級機率也只有' + fmtProb(bestProb) + '，需要好幾隊同時掉漆才有機會。棒球打到最後一刻都有意外，這幾場全力拚，一樣值得進場加油。</p>';
+      return html;
+    }
+    var riskIdx;
+    if (safeIdx <= 0) { riskIdx = ta.remain; html += '<span class="safe-badge risky">沒有絕對安全線</span><p class="ks">就算剩下 ' + ta.remain + ' 場全部拿下，晉級機率也只有 ' + fmtProb(bestProb) + '，得從現在開始就緊盯別隊比賽：</p>'; }
+    else { html += '<span class="safe-badge ok">贏 ' + safeIdx + ' 場（含）以上就穩</span>'; riskIdx = safeIdx - 1; html += '<p class="ks">只贏 ' + riskIdx + ' 場：機率降到約 ' + fmtProb(ta.tiers[riskIdx].prob) + '，這時候要看：</p>'; }
+    var tier = ta.tiers[riskIdx];
+    if (!tier || tier.n < 200) return html;
+    var lev = leverageForTier(n, tier.trialIdx).filter(function (x) { return x.d >= 0.03; }).slice(0, 5).sort(function (u, v) { return u.g - v.g; });
+    if (!lev.length) { html += '<p class="ks">沒有單場影響特別大的比賽，比較看整體戰績累積。</p>'; return html; }
+    html += '<ul class="key">' + lev.map(function (x) {
+      var g = DATA.schedule[x.g], root = x.pa >= x.pb ? g[1] : g[2];
+      return '<li class="cheer-item"><span class="cg-game">' + g[0] + '　' + short(g[1]) + ' vs ' + short(g[2]) + '</span><span class="cheer-tag root">挺' + short(root) + '</span></li>';
+    }).join('') + '</ul>';
+    return html;
+  }
+
   var teamNames = Object.keys(TEAMS);
   function keyToName(k) { for (var q = 0; q < teamNames.length; q++) if (TEAMS[teamNames[q]].k === k) return teamNames[q]; return null; }
   var fav = keyToName(params.get("team"));
@@ -1178,7 +1271,7 @@ function aboutP(p) {
     var l3 = "剩餘 " + total + " 場：" + Object.keys(oc).sort(function (u, v) { return oc[v] - oc[u]; }).map(function (o) { return "對" + TEAMS[o].s + " " + oc[o]; }).join("、");
     box.innerHTML = '<div class="mycard-head">' + badge(fav, 56) + '<div class="mycard-name">' + nameHtml(fav) + '<small>進季後賽機率</small></div>' + big + '</div><p>' + l1 + '</p><ul class="conds">' + condsFor(fav).map(function (c) {
       return '<li><span class="ct">' + c.tag + '</span>' + c.text + (c.prob === null ? '' : '<span class="cp">機率<span class="cup-p" data-p="' + c.prob + '" aria-hidden="true"></span><span class="sr-only cup-p-sr" data-p="' + c.prob + '"></span></span>') + (c.how ? '<span class="cw">怎麼贏：' + c.how + '</span>' : '') + '</li>';
-    }).join('') + '</ul>' + keyGamesHtml(fav) + '<p>' + l3 + '</p>' +
+    }).join('') + '</ul>' + keyGamesHtml(fav) + cheerGuideHtml(fav) + '<p>' + l3 + '</p>' +
       '<div class="share"><button type="button" class="sbtn" id="shareBtn">分享這隊給朋友</button><span class="smsg" id="shareMsg" role="status"></span></div>';
     animatePercentEl(box.querySelector(".big-pct"), o.playoff, 750);
     box.querySelector(".big-pct-sr").textContent = fmtProb(o.playoff);
