@@ -1530,7 +1530,7 @@ function aboutP(p) {
       return "<ol>" + sorted.map(function (t, idx) {
         var extra = opts.gb ? (idx === 0 ? "領先" : "落後 " + gb(t) + " 場") : "";
         return '<li class="' + (t.n === "味全龍" ? "me" : "") + '"><span class="hist-rk">' + (idx + 1) + "</span>" +
-          badge(t.n) + '<span class="hist-nm">' + TEAMS[t.n].s + "</span><b>" + t.w + "-" + t.l + (t.t ? "-" + t.t : "") + "</b>" +
+          badge(t.n) + '<span class="hist-nm">' + TEAMS[t.n].s + "</span><b>" + t.w + "-" + t.t + "-" + t.l + "</b>" +
           '<span class="hist-extra">' + extra + "</span></li>";
       }).join("") + "</ol>";
     }
@@ -1569,8 +1569,8 @@ function aboutP(p) {
         histBox.innerHTML = '<div class="hist-snap"><h4>' + h.d + "賽後結算・魔術數字 M" + h.magic + "</h4>" +
           dayResultsHtml(i) + gameHtml +
           '<div class="hist-cols">' +
-          '<div class="hist-col"><h5>全年度戰績</h5>' + standingsHtml(h.full) + "</div>" +
-          '<div class="hist-col"><h5>下半季戰績</h5>' + standingsHtml(h.half2, { gb: true }) + "</div>" +
+          '<div class="hist-col"><h5>全年度戰績（勝-和-敗）</h5>' + standingsHtml(h.full) + "</div>" +
+          '<div class="hist-col"><h5>下半季戰績（勝-和-敗）</h5>' + standingsHtml(h.half2, { gb: true }) + "</div>" +
           '<div class="hist-col"><h5>進季後賽機率</h5>' + oddsHtml(h.full, odds) + "</div>" +
           "</div>" +
           '<p class="hist-note">機率是拿當天的戰績、用當天剩餘賽程重算一次，跟正式頁面同一套估算方法。</p></div>';
