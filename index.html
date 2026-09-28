@@ -213,7 +213,7 @@ footer a { color: #fff; }
 .badge.q { background: var(--surface); border-style: dashed; color: var(--muted); font-family: var(--num); font-weight: 800; font-size: 1.2rem; }
 
 /* Standings */
-.rank-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); cursor: pointer; }
+.rank-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 2px dashed var(--line); cursor: pointer; }
 .rank-row:last-child { border-bottom: 0; }
 .rank-row:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 10px; }
 .rank-row::after { content: "▾"; color: var(--muted); font-size: .8rem; transition: transform .25s ease; margin-left: 2px; }
@@ -262,9 +262,7 @@ footer a { color: #fff; }
 .chip.wild { background: #ffd9a8; }
 .chip.elim { background: var(--surface); color: var(--muted); }
 .chip-dest { display: inline-block; margin: 3px 0 0 6px; font-size: .78rem; color: var(--muted); white-space: nowrap; }
-.chip-info { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 3px; padding: 0; border: none; border-radius: 50%; background: rgba(0,0,0,.15); color: inherit; font-size: .68rem; font-weight: 700; line-height: 1; cursor: pointer; vertical-align: -3px; }
-.chip-tip[hidden] { display: none; }
-.chip-tip { display: block; width: 100%; margin: 4px 0 0; font-size: .78rem; font-weight: 400; color: var(--muted); }
+.chip-tip { flex: 1 0 100%; display: block; width: 100%; margin: 6px 0 0; padding-top: 6px; border-top: 2px dashed var(--line); font-size: .78rem; font-weight: 400; color: var(--muted); }
 
 /* Series explainer */
 .scn { margin-top: 12px; padding: 12px 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
@@ -1361,22 +1359,11 @@ function aboutP(p) {
   })();
 
   // Standings (full season)
-  var tipCounter = 0;
+  var rowTips;
   function chipInfo(cls, label, tip) {
-    var id = "tip-" + (tipCounter++);
-    return '<span class="chip ' + cls + '">' + label +
-      '<button type="button" class="chip-info" data-tip-for="' + id + '" aria-expanded="false" aria-label="說明">ⓘ</button></span>' +
-      '<span class="chip-tip" id="' + id + '" hidden>' + tip + '</span>';
+    rowTips.push('<span class="chip-tip">' + tip + '</span>');
+    return '<span class="chip ' + cls + '">' + label + '</span>';
   }
-  document.addEventListener("click", function (e) {
-    var btn = e.target.closest ? e.target.closest(".chip-info") : null;
-    if (!btn) return;
-    e.stopPropagation();
-    var tip = $(btn.getAttribute("data-tip-for"));
-    if (!tip) return;
-    tip.hidden = !tip.hidden;
-    btn.setAttribute("aria-expanded", tip.hidden ? "false" : "true");
-  }, true);
   function oppBreakdown(n) {
     var oc = {}, total = 0;
     DATA.schedule.forEach(function (g) {
@@ -1395,6 +1382,7 @@ function aboutP(p) {
     row.setAttribute("tabindex", "0");
     row.setAttribute("aria-expanded", "false");
     var chips = "";
+    rowTips = [];
     if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
     if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
     if (!pr.same && t.n === pr.opp) chips += chipInfo("wild", "目前外卡", "半季冠軍以外，全年勝率最高的球隊，會打季後挑戰賽爭取晉級台灣大賽。");
@@ -1403,7 +1391,8 @@ function aboutP(p) {
     var gbTxt = idx === 0 ? "全年第一" : '落後 <span class="cup-gb"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
       '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
-      '<div class="rank-side"><small class="pc-lbl">全年度勝率</small><span class="pc"></span>' + rec + '<br>' + gbTxt + '</div>';
+      '<div class="rank-side"><small class="pc-lbl">全年度勝率</small><span class="pc"></span>' + rec + '<br>' + gbTxt + '</div>' +
+      rowTips.join("");
     markReveal(row);
     $("rank").appendChild(row);
     animatePct3El(row.querySelector(".pc"), pr.pct(t), 800);
@@ -1441,6 +1430,7 @@ function aboutP(p) {
     row.setAttribute("tabindex", "0");
     row.setAttribute("aria-expanded", "false");
     var chips = "";
+    rowTips = [];
     if (idx === 0) {
       var h2Dest = pr.same ? "直接晉級" : (pr.direct === t.n ? "直接晉級" : "季後挑戰賽");
       var destTip = h2Dest === "直接晉級"
@@ -1454,7 +1444,8 @@ function aboutP(p) {
     var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
       '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
-      '<div class="rank-side"><small class="pc-lbl">下半季勝率</small><span class="pc2"></span>' + rec + '<br>' + gbTxt + '</div>';
+      '<div class="rank-side"><small class="pc-lbl">下半季勝率</small><span class="pc2"></span>' + rec + '<br>' + gbTxt + '</div>' +
+      rowTips.join("");
     markReveal(row);
     $("rank2").appendChild(row);
     animatePct3El(row.querySelector(".pc2"), pr.pct(t), 800);
