@@ -127,6 +127,11 @@ h3 { margin: 18px 0 2px; font-family: var(--round); font-weight: 400; font-size:
 .big-pct { font-family: var(--num); font-weight: 800; font-size: 2.3rem; line-height: 1; color: var(--accent); text-align: right; transition: color .3s ease; }
 .big-pct.word { font-family: var(--round); font-weight: 400; font-size: 1.4rem; }
 .mycard p { margin: 8px 0 0; font-size: .9rem; color: var(--muted); }
+.guide-card { margin: 0 0 12px; padding: 12px 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
+.guide-card .gc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+.guide-card .gc-head .badge { --s: 34px; }
+.guide-card .gc-head span { font-size: 1rem; font-weight: 700; }
+.guide-card .kh { margin: 8px 0 2px; font-size: .82rem; font-weight: 400; color: var(--muted); }
 .odds-row { padding: 8px 0 10px; border-bottom: 2px dashed var(--line); }
 .odds-row:last-child { border-bottom: 0; }
 .odds-top { display: flex; align-items: center; gap: 10px; }
@@ -444,11 +449,14 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
     <div class="picker" id="picker" role="group" aria-label="選擇你支持的球隊"></div>
     <div class="mycard" id="mycard" aria-live="polite"></div>
     <div id="odds"></div>
+    <h4 class="kh">六隊晉級攻略總覽</h4>
+    <p class="ks">不用切換，六隊的安全線跟該幫誰加油都列在這裡</p>
+    <div id="allGuides"></div>
     <details class="how">
       <summary>機率是怎麼算的？</summary>
       <p>用電腦把剩下的比賽照真實賽程打 20,000 遍，每遍都依晉級規則決出下半季冠軍與季後賽名單，再統計每隊出現的次數。</p>
       <p>「關鍵比賽」是把其中某一場固定成 A 隊贏、或 B 隊贏，比較這兩種情況下該隊的晉級機率差多少；「怎麼贏」則假設對手照預期（實力 × 剩餘場數）打完，算出自己至少要贏幾場。這兩項都是估算，對手實際表現不同，門檻就會跟著變。</p>
-      <p>「安全線」與「加油攻略」則是把 20,000 次模擬結果，依該隊自己剩餘比賽贏了幾場分組，統計每一組最後晉級的比例；分組樣本數太少時不會列出。組內「該幫誰加油」的算法跟「關鍵比賽」一樣，只是只看那一組的模擬結果，所以場次不多的分組，數字會抖動大一點。</p>
+      <p>「安全線」與「晉級攻略」則是把 20,000 次模擬結果，依該隊自己剩餘比賽贏了幾場分組，統計每一組最後晉級的比例；分組樣本數太少時不會列出。組內「該幫誰加油」的算法跟「關鍵比賽」一樣，只是只看那一組的模擬結果，所以場次不多的分組，數字會抖動大一點。</p>
       <p>每隊的實力取「全年勝率」與「下半季勝率」各一半，並向 .500 拉近一些（避免一兩場的起伏影響過大）。每場比賽用兩隊實力比較來決定勝負。</p>
       <p>實力不確定性：每一輪模擬都讓各隊實力小幅浮動，不把目前的勝率當成鐵板一塊，所以接近的競爭不會被算得太篤定。</p>
       <p>賽程：用的是中華職棒 App 上的完整剩餘賽程，逐場模擬，每隊剩下的場數都和官網戰績吻合。上半季補賽只計入全年戰績。沒有考慮先發投手、傷兵與主客場，勝率相同時的排名（例如對戰成績）也以隨機處理。若有延賽，補賽日期以聯盟公告為準。所以這是估算值，實際結果請以官方為準。</p>
@@ -1130,11 +1138,11 @@ function aboutP(p) {
         return '<li><span class="kt">' + main + '</span><span class="ks">' + sub + '</span></li>';
       }).join('') + '</ul>';
     }
-    return head + (own.length ? '<div class="ksub">自己的比賽</div>' + items(own) : '') +
+    return head + (own.length ? '<div class="ksub">自己的比賽（只列影響較大的場次，不是全部剩餘賽程）</div>' + items(own) : '') +
       (other.length ? '<div class="ksub">別隊的比賽（看誰贏對你有利）</div>' + items(other) : '');
   }
 
-  // 加油攻略：贏幾場就穩了？不穩的時候該幫誰加油？(直接沿用同一批模擬資料重新分桶統計，不用再跑一次模擬)
+  // 晉級攻略：贏幾場就穩了？不穩的時候該幫誰加油？(直接沿用同一批模擬資料重新分桶統計，不用再跑一次模擬)
   function ownGameIdx(n) {
     var idx = [];
     DATA.schedule.forEach(function (g, gi) { if (g[1] === n || g[2] === n) idx.push(gi); });
@@ -1191,8 +1199,21 @@ function aboutP(p) {
     for (var i = ta.remain; i >= 0; i--) {
       if (ta.tiers[i].prob !== null && ta.tiers[i].prob >= 0.99) safeIdx = i; else break;
     }
-    var html = '<h4 class="kh">加油攻略</h4>';
+    var deadIdx = -1;
+    for (var j = 0; j <= ta.remain; j++) {
+      if (ta.tiers[j].prob !== null && ta.tiers[j].prob <= 0.01) deadIdx = j; else break;
+    }
+    var html = '<h4 class="kh">晉級攻略</h4>';
     var bestProb = ta.tiers[ta.remain].prob;
+    var pathTxt = "";
+    if (!isH1) {
+      var h2p = ODDS[n].half2, wp = ODDS[n].wild;
+      if (h2p >= 0.02 || wp >= 0.02) {
+        if (h2p >= wp * 2) pathTxt = '<p class="ks">晉級的機會主要靠：<b>下半季冠軍</b>。</p>';
+        else if (wp >= h2p * 2) pathTxt = '<p class="ks">晉級的機會主要靠：<b>全年勝率擠進外卡</b>。</p>';
+        else pathTxt = '<p class="ks">晉級的機會：<b>下半季冠軍</b>、<b>全年外卡</b>都有可能，兩條路都要顧。</p>';
+      }
+    }
     if (isH1) {
       html += '<span class="safe-badge ok">保送晉級台灣大賽 100%</span>';
       html += '<p class="ks">但「直接晉級」還是「先打季後挑戰賽」還有一點變數：贏 ' + Math.max(1, safeIdx) + ' 場（含）以上，直接晉級篤定；萬一 ' + ta.remain + ' 場全輸，直接晉級仍有 ' + fmtProb(bestProb === null ? 1 : ta.tiers[0].prob) + '，只有極端情況才會被迫改打挑戰賽。</p>';
@@ -1200,17 +1221,21 @@ function aboutP(p) {
     }
     if (bestProb !== null && bestProb < 0.05) {
       html += '<span class="safe-badge risky">機會非常小</span>';
-      html += '<p class="ks">數學上還沒被淘汰，但就算剩下 ' + ta.remain + ' 場全部拿下，晉級機率也只有' + fmtProb(bestProb) + '，需要好幾隊同時掉漆才有機會。棒球打到最後一刻都有意外，這幾場全力拚，一樣值得進場加油。</p>';
+      html += '<p class="ks">數學上還沒被淘汰，但就算剩下 ' + ta.remain + ' 場全部拿下，晉級機率也只有' + fmtProb(bestProb) + '，需要好幾隊同時掉漆才有機會。棒球打到最後一刻都有意外，這幾場全力拚，一樣值得進場加油。</p>' + pathTxt;
       return html;
     }
     var riskIdx;
-    if (safeIdx <= 0) { riskIdx = ta.remain; html += '<span class="safe-badge risky">沒有絕對安全線</span><p class="ks">就算剩下 ' + ta.remain + ' 場全部拿下，晉級機率也只有 ' + fmtProb(bestProb) + '，得從現在開始就緊盯別隊比賽：</p>'; }
-    else { html += '<span class="safe-badge ok">贏 ' + safeIdx + ' 場（含）以上就穩</span>'; riskIdx = safeIdx - 1; html += '<p class="ks">只贏 ' + riskIdx + ' 場：機率降到約 ' + fmtProb(ta.tiers[riskIdx].prob) + '，這時候要看：</p>'; }
+    if (safeIdx <= 0) { riskIdx = ta.remain; html += '<span class="safe-badge risky">全勝也不算穩</span><p class="ks">即使剩下 ' + ta.remain + ' 場全部拿下，機率也只有 ' + fmtProb(bestProb) + '——因為晉級名額要看跟其他隊的戰績比較，不是自己打完就篤定。</p>' + pathTxt; }
+    else { html += '<span class="safe-badge ok">贏 ' + safeIdx + ' 場（含）以上就穩</span>'; riskIdx = safeIdx - 1; html += '<p class="ks">只贏 ' + riskIdx + ' 場：機率降到約 ' + fmtProb(ta.tiers[riskIdx].prob) + '。</p>' + pathTxt; }
+    if (deadIdx >= 0) {
+      var loseLimit = ta.remain - deadIdx;
+      html += '<p class="ks"><b>最多只能再輸 ' + (loseLimit - 1) + ' 場</b>——接下來輸滿 ' + loseLimit + ' 場（也就是贏不到 ' + (deadIdx + 1) + ' 場），基本上就出局了。</p>';
+    }
     var tier = ta.tiers[riskIdx];
     if (!tier || tier.n < 200) return html;
     var lev = leverageForTier(n, tier.trialIdx).filter(function (x) { return x.d >= 0.03; }).slice(0, 5).sort(function (u, v) { return u.g - v.g; });
-    if (!lev.length) { html += '<p class="ks">沒有單場影響特別大的比賽，比較看整體戰績累積。</p>'; return html; }
-    html += '<ul class="key">' + lev.map(function (x) {
+    if (!lev.length) { html += '<p class="ks">接下來沒有單場影響特別大的比賽，差距平均分散在好幾場，比較看整體戰績累積。</p>'; return html; }
+    html += '<p class="ks">這幾場要看：</p><ul class="key">' + lev.map(function (x) {
       var g = DATA.schedule[x.g], root = x.pa >= x.pb ? g[1] : g[2];
       return '<li class="cheer-item"><span class="cg-game">' + g[0] + '　' + short(g[1]) + ' vs ' + short(g[2]) + '</span><span class="cheer-tag root">挺' + short(root) + '</span></li>';
     }).join('') + '</ul>';
@@ -1249,6 +1274,13 @@ function aboutP(p) {
     } else { copyIt(); }
   }
 
+  function renderAllGuides() {
+    var box = $("allGuides");
+    if (!box) return;
+    box.innerHTML = teamNames.map(function (n) {
+      return '<div class="guide-card"><div class="gc-head">' + badge(n, 34) + '<span>' + TEAMS[n].s + '</span></div><p class="ks">' + oppBreakdown(n) + '</p>' + cheerGuideHtml(n) + '</div>';
+    }).join('');
+  }
   function renderMyCard() {
     var box = $("mycard");
     if (!fav) {
@@ -1271,7 +1303,7 @@ function aboutP(p) {
     var l3 = "剩餘 " + total + " 場：" + Object.keys(oc).sort(function (u, v) { return oc[v] - oc[u]; }).map(function (o) { return "對" + TEAMS[o].s + " " + oc[o]; }).join("、");
     box.innerHTML = '<div class="mycard-head">' + badge(fav, 56) + '<div class="mycard-name">' + nameHtml(fav) + '<small>進季後賽機率</small></div>' + big + '</div><p>' + l1 + '</p><ul class="conds">' + condsFor(fav).map(function (c) {
       return '<li><span class="ct">' + c.tag + '</span>' + c.text + (c.prob === null ? '' : '<span class="cp">機率<span class="cup-p" data-p="' + c.prob + '" aria-hidden="true"></span><span class="sr-only cup-p-sr" data-p="' + c.prob + '"></span></span>') + (c.how ? '<span class="cw">怎麼贏：' + c.how + '</span>' : '') + '</li>';
-    }).join('') + '</ul>' + keyGamesHtml(fav) + cheerGuideHtml(fav) + '<p>' + l3 + '</p>' +
+    }).join('') + '</ul>' + keyGamesHtml(fav) + '<p>' + l3 + '</p>' +
       '<div class="share"><button type="button" class="sbtn" id="shareBtn">分享這隊給朋友</button><span class="smsg" id="shareMsg" role="status"></span></div>';
     animatePercentEl(box.querySelector(".big-pct"), o.playoff, 750);
     box.querySelector(".big-pct-sr").textContent = fmtProb(o.playoff);
@@ -1304,7 +1336,7 @@ function aboutP(p) {
       pk.appendChild(b);
     });
   }
-  renderPicker(); renderMyCard();
+  renderPicker(); renderMyCard(); renderAllGuides();
   teamNames.slice().sort(function (u, v) { return (ODDS[v].playoff - ODDS[u].playoff) || (ODDS[v].direct - ODDS[u].direct); }).forEach(function (n) {
     var o = ODDS[n], row = document.createElement("div");
     row.className = "odds-row";
