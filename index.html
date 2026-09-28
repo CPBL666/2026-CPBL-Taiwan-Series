@@ -1305,7 +1305,7 @@ function aboutP(p) {
     if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
     if (!pr.same && t.n === pr.opp) chips += chipInfo("wild", "目前外卡", "半季冠軍以外，全年勝率最高的球隊，會打季後挑戰賽爭取晉級台灣大賽。");
     if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) chips += '<span class="chip elim">已淘汰</span>';
-    var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
+    var rec = t.w + " 勝 " + t.t + " 和 " + t.l + " 敗";
     var gbTxt = idx === 0 ? "全年第一" : '落後 <span class="cup-gb"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
       '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
@@ -1322,7 +1322,7 @@ function aboutP(p) {
     function buildDetail() {
       var h2rec = pr.byHalf.filter(function (x) { return x.n === t.n; })[0];
       var h2Rank = pr.byHalf.map(function (x) { return x.n; }).indexOf(t.n) + 1;
-      detail.innerHTML = "<p>下半季第 " + h2Rank + " 名：" + h2rec.w + " 勝 " + h2rec.l + " 敗" + (h2rec.t ? " " + h2rec.t + " 和" : "") + "</p><p>" + oppBreakdown(t.n) + "</p>";
+      detail.innerHTML = "<p>下半季第 " + h2Rank + " 名：" + h2rec.w + " 勝 " + h2rec.t + " 和 " + h2rec.l + " 敗</p><p>" + oppBreakdown(t.n) + "</p>";
       built = true;
     }
     function toggle() {
@@ -1356,7 +1356,7 @@ function aboutP(p) {
     }
     if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
     if (idx > 0 && elim[t.n] <= 0) chips += '<span class="chip elim">已淘汰</span>';
-    var rec = t.w + " 勝 " + t.l + " 敗" + (t.t ? " " + t.t + " 和" : "");
+    var rec = t.w + " 勝 " + t.t + " 和 " + t.l + " 敗";
     var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
       '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
@@ -1373,7 +1373,7 @@ function aboutP(p) {
     function buildDetail2() {
       var fRec = pr.full(t.n);
       var fRank = pr.byFull.map(function (x) { return x.n; }).indexOf(t.n) + 1;
-      detail2.innerHTML = "<p>全年度第 " + fRank + " 名：" + fRec.w + " 勝 " + fRec.l + " 敗" + (fRec.t ? " " + fRec.t + " 和" : "") + "</p><p>" + oppBreakdown(t.n) + "</p>";
+      detail2.innerHTML = "<p>全年度第 " + fRank + " 名：" + fRec.w + " 勝 " + fRec.t + " 和 " + fRec.l + " 敗</p><p>" + oppBreakdown(t.n) + "</p>";
       built2 = true;
     }
     function toggle2() {
