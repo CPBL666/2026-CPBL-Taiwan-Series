@@ -113,6 +113,21 @@ h3 { margin: 18px 0 2px; font-family: var(--round); font-weight: 400; font-size:
 .proj-note { display: block; margin-top: 6px; font-size: .86rem; color: var(--muted); line-height: 1.6; }
 .race { margin: 0; padding: 0 0 8px; list-style: none; font-size: .9rem; color: var(--muted); }
 .race li { padding: 3px 0; }
+.mg-title { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-size: .92rem; font-weight: 700; }
+.mg-title .badge { --s: 26px; }
+.mg-title span.vs { font-weight: 400; color: var(--muted); font-size: .8rem; }
+.mg-note { margin: 0 0 8px; font-size: .78rem; color: var(--muted); }
+.mg-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.mg-table { border-collapse: collapse; font-size: .72rem; }
+.mg-table th, .mg-table td { padding: 5px 4px; text-align: center; border: 1px solid var(--line); min-width: 28px; }
+.mg-table thead th, .mg-table tbody th { background: var(--tile); font-weight: 700; color: var(--muted); }
+.mg-a { background: #c9e4ff; color: #0c3a63; font-weight: 700; }
+.mg-b { background: #ffd7d7; color: #6b1414; font-weight: 700; }
+.mg-tie { background: var(--gold); color: #2a1a1e; font-weight: 700; }
+.mg-na { background: var(--surface); color: var(--muted); }
+.mg-legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 0; font-size: .74rem; color: var(--muted); }
+.mg-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.mg-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--line); }
 
 /* Odds */
 .picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin: 2px -4px 12px; }
@@ -442,6 +457,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
     <div id="proj"></div>
     <h3>仍在爭奪</h3>
     <ul class="race" id="race"></ul>
+  </section>
+  <section class="reg-only" aria-labelledby="h-mg">
+    <h2 id="h-mg">關鍵對決矩陣</h2>
+    <p class="sub">兩隊接下來各贏幾場，會決定誰拿下這個名額——每天資料更新後這裡也會自動跟著換算</p>
+    <div id="mgWild"></div>
+    <div id="mgHalf" style="margin-top:16px"></div>
   </section>
   <section class="reg-only" aria-labelledby="h-odds">
     <h2 id="h-odds">各隊晉級機率</h2>
@@ -996,6 +1017,87 @@ function aboutP(p) {
   var ODDS = SIM.odds;
   var poolAll = pr.same ? pr.byFull.filter(function (t) { return t.n !== pr.h1; }) : pr.pool;
   var slots = pr.same ? 2 : 1;
+
+  // ---- 關鍵對決矩陣：窮舉兩隊剩餘賽程所有可能結果，正確處理「雙方還會互打」的重疊場次 ----
+  function remainGamesFor(n, mode) {
+    var list = [];
+    DATA.schedule.forEach(function (g) {
+      if (g[1] !== n && g[2] !== n) return;
+      if (mode === "half2" && g[3] === "fh") return;
+      list.push(g[1] === n ? g[2] : g[1]);
+    });
+    return list;
+  }
+  function popcount(x) { var c = 0; while (x) { c += x & 1; x >>= 1; } return c; }
+  function buildMatchupGrid(a, b, mode) {
+    var gamesA = remainGamesFor(a, mode), gamesB = remainGamesFor(b, mode);
+    var nA = gamesA.length, nB = gamesB.length;
+    if (!nA || !nB) return null;
+    var shared = gamesA.filter(function (o) { return o === b; }).length;
+    var otherA = nA - shared, otherB = nB - shared;
+    var recA = (mode === "half2" ? DATA.half2 : DATA.full).filter(function (t) { return t.n === a; })[0];
+    var recB = (mode === "half2" ? DATA.half2 : DATA.full).filter(function (t) { return t.n === b; })[0];
+    var reachable = {};
+    for (var oa = 0; oa < (1 << otherA); oa++) {
+      var oaw = popcount(oa);
+      for (var ob = 0; ob < (1 << otherB); ob++) {
+        var obw = popcount(ob);
+        for (var sh = 0; sh < (1 << shared); sh++) {
+          var shw = popcount(sh);
+          reachable[(oaw + shw) + "," + (obw + (shared - shw))] = true;
+        }
+      }
+    }
+    var rows = [];
+    for (var i = 0; i <= nA; i++) {
+      var row = [];
+      for (var j = 0; j <= nB; j++) {
+        if (!reachable[i + "," + j]) { row.push(null); continue; }
+        var aw = recA.w + i, al = recA.l + (nA - i), bw = recB.w + j, bl = recB.l + (nB - j);
+        var ap = aw / (aw + al), bp = bw / (bw + bl);
+        row.push(ap > bp ? a : (bp > ap ? b : "tie"));
+      }
+      rows.push(row);
+    }
+    return { a: a, b: b, nA: nA, nB: nB, rows: rows, shared: shared };
+  }
+  function matchupHtml(g, title, crossNote) {
+    if (!g) return "";
+    var html = '<div class="mg-title">' + badge(g.a) + '<span>' + TEAMS[g.a].s + '</span><span class="vs">vs</span>' + badge(g.b) + '<span>' + TEAMS[g.b].s + '</span></div>';
+    html += '<p class="mg-note">' + title + '，剩餘賽程各 ' + g.nA + ' 場、' + g.nB + ' 場' + (g.shared ? '（含彼此互打 ' + g.shared + ' 場）' : '（接下來沒有直接對戰）') + '</p>';
+    html += '<div class="mg-wrap"><table class="mg-table"><thead><tr><th>' + TEAMS[g.a].s + '＼' + TEAMS[g.b].s + '</th>';
+    for (var j = 0; j <= g.nB; j++) html += "<th>" + j + "勝</th>";
+    html += "</tr></thead><tbody>";
+    for (var i = 0; i <= g.nA; i++) {
+      html += "<tr><th>" + i + "勝</th>";
+      for (var jj = 0; jj <= g.nB; jj++) {
+        var v = g.rows[i][jj];
+        var cls = v === null ? "mg-na" : (v === g.a ? "mg-a" : (v === g.b ? "mg-b" : "mg-tie"));
+        var label = v === null ? "—" : (v === "tie" ? "同" : TEAMS[v].s.slice(0, 1));
+        html += '<td class="' + cls + '">' + label + "</td>";
+      }
+      html += "</tr>";
+    }
+    html += "</tbody></table></div>";
+    html += '<div class="mg-legend"><span><i style="background:#c9e4ff"></i>' + TEAMS[g.a].s + '晉級</span><span><i style="background:#ffd7d7"></i>' + TEAMS[g.b].s + '晉級</span><span><i style="background:var(--gold)"></i>同戰績</span><span><i style="background:var(--surface)"></i>不可能出現</span></div>';
+    html += '<p class="mg-note">「同戰績」只代表兩隊算出來的勝率一樣，真的打成平手時要怎麼判誰晉級（加賽一場、看對戰成績，或其他規則），要以聯盟公告為準，這裡沒有模擬那個過程。</p>';
+    if (crossNote) html += '<p class="mg-note">' + crossNote + '</p>';
+    return html;
+  }
+  (function () {
+    var wildBox = $("mgWild"), halfBox = $("mgHalf");
+    if (wildBox && poolAll.length >= 2) {
+      wildBox.innerHTML = matchupHtml(buildMatchupGrid(poolAll[0].n, poolAll[1].n, "full"), "全年勝率擠外卡",
+        "這張只比較目前外卡池前兩名，沒算進「如果下半季冠軍換人，原本的下半季冠軍隊也會掉進外卡池一起搶」這種交叉情況，完整交叉計算要看下面「各隊晉級機率」。");
+    }
+    if (halfBox && pr.byHalf.length >= 2) {
+      var h2a = pr.byHalf[0].n, h2b = pr.byHalf[1].n;
+      if (h2a !== DATA.firstHalfChamp && h2b !== DATA.firstHalfChamp) {
+        halfBox.innerHTML = matchupHtml(buildMatchupGrid(h2a, h2b, "half2"), "下半季冠軍",
+          "這張只看誰拿下半季冠軍，沒贏的那隊不是就此出局，會掉進外卡池跟統一、富邦那些隊伍繼續搶第 3 個名額，完整交叉計算要看下面「各隊晉級機率」。");
+      }
+    }
+  })();
   function rankIn(list, n) { return list.map(function (t) { return t.n; }).indexOf(n) + 1; }
   // ---- 「怎麼贏」門檻：假設對手照預期打（實力 × 剩餘場數），算出自己至少要贏幾場 ----
   function short(n) { return TEAMS[n].s; }
