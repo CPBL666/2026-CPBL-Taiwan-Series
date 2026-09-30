@@ -585,24 +585,23 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
 <script>
 /* ===== 每次更新只需要改這一區 ===== */
 const DATA = {
-  asOf: "2026/09/28",   // 「截至 ○○ 賽後結算」的日期
+  asOf: "2026/09/30",   // 「截至 ○○ 賽後結算」的日期
   reportUrl: "",        // 回報連結（例如 GitHub Issues 或 mailto:...），留空就不顯示
   playoffs: null,       // 季後賽開打後才填，格式見下方範例
   // playoffs 範例：
   // { direct: "味全龍",
   //   challenge: { teams: ["中信兄弟", "富邦悍將"], first: "中信兄弟", games: [{ d: "10/9", w: "中信兄弟", s: "5:3" }] },
   //   final: { teams: ["味全龍", "中信兄弟"], first: null, games: [] } }
-  updated: "2026/09/28 晚間（依中華職棒官網戰績與賽程）",
-  magic: 1,        // 目前魔術數字
+  updated: "2026/09/30 晚間（味全對樂天已完賽，統一對富邦、中信對台鋼仍在進行中，尚未計入）",
+  magic: 0,        // 目前魔術數字（0＝已鎖定全年度勝率第一）
   start: 6,        // 點亮鱗片的起算值（2026/09/20 為 M6）
-  lowerHalf: "下半季由中信兄弟領先（33 勝 24 敗，領先樂天 1.5 場），味全下半季排第 4；全年度味全 64 勝 51 敗（.557）居首，第二名統一落後 4.5 場。",
+  lowerHalf: "全年度勝率第一已經鎖定：味全 65 勝 51 敗（.560）居首，第二名統一已經追不上。下半季由中信兄弟領先（33 勝 24 敗，領先樂天 1 場），味全下半季排第 4。",
   recent: [
+    { d: "9/30", opp: "樂天桃猿", us: 5, them: 3, note: "樂天桃園" },
     { d: "9/28", opp: "富邦悍將", us: 4, them: 2, note: "新莊" },
-    { d: "9/27", opp: "樂天桃猿", us: 2, them: 4, note: "天母" },
-    { d: "9/26", opp: "樂天桃猿", us: 3, them: 5, note: "天母" }
+    { d: "9/27", opp: "樂天桃猿", us: 2, them: 4, note: "天母" }
   ],
   upcoming: [
-    { d: "9/30", opp: "樂天桃猿", time: "18:35", note: "桃園・補賽", makeup: true },
     { d: "10/1", opp: "統一7-ELEVEn獅", time: "18:35", note: "天母・補賽（保留）", makeup: true },
     { d: "10/2", opp: "富邦悍將", time: "18:35", note: "新莊・補賽", makeup: true },
     { d: "10/3", opp: "統一7-ELEVEn獅", time: "17:05", note: "亞太・補賽", makeup: true },
@@ -618,7 +617,7 @@ const DATA = {
   firstHalfChamp: "味全龍",
   // 全部剩餘賽程（中華職棒 App，共 33 場）：[日期, 隊伍A, 隊伍B, "fh"=上半季補賽（只計入全年戰績）]
   schedule: [
-    ["9/30","味全龍","樂天桃猿"], ["9/30","統一7-ELEVEn獅","富邦悍將"], ["9/30","中信兄弟","台鋼雄鷹"],
+    ["9/30","統一7-ELEVEn獅","富邦悍將"], ["9/30","中信兄弟","台鋼雄鷹"],
     ["10/1","樂天桃猿","台鋼雄鷹"], ["10/1","統一7-ELEVEn獅","味全龍"],
     ["10/2","味全龍","富邦悍將"], ["10/2","樂天桃猿","台鋼雄鷹"],
     ["10/3","味全龍","統一7-ELEVEn獅"], ["10/3","中信兄弟","富邦悍將"], ["10/3","台鋼雄鷹","樂天桃猿"],
@@ -627,19 +626,19 @@ const DATA = {
   ],
   // 全年度戰績（官網）：w 勝、l 敗、t 和
   full: [
-    { n: "味全龍", w: 64, l: 51, t: 0 },
+    { n: "味全龍", w: 65, l: 51, t: 0 },
     { n: "統一7-ELEVEn獅", w: 59, l: 55, t: 1 },
     { n: "富邦悍將", w: 58, l: 57, t: 0 },
-    { n: "樂天桃猿", w: 55, l: 57, t: 2 },
+    { n: "樂天桃猿", w: 55, l: 58, t: 2 },
     { n: "台鋼雄鷹", w: 53, l: 61, t: 1 },
     { n: "中信兄弟", w: 53, l: 61, t: 2 }
   ],
   // 下半季戰績（官網）
   half2: [
     { n: "中信兄弟", w: 33, l: 24, t: 0 },
-    { n: "樂天桃猿", w: 31, l: 23, t: 0 },
+    { n: "樂天桃猿", w: 31, l: 24, t: 0 },
     { n: "統一7-ELEVEn獅", w: 30, l: 26, t: 0 },
-    { n: "味全龍", w: 25, l: 30, t: 0 },
+    { n: "味全龍", w: 26, l: 30, t: 0 },
     { n: "富邦悍將", w: 24, l: 31, t: 0 },
     { n: "台鋼雄鷹", w: 23, l: 32, t: 0 }
   ],
@@ -828,13 +827,14 @@ function simulateOdds(D, N, seed, opts) {
 function fmtProb(p) {
   if (p < 0.0005) return "<0.1%";
   if (p < 0.01) return (p * 100).toFixed(1) + "%";
+  if (p >= 0.99999) return "100%";
   if (p > 0.9995) return ">99.9%";
   if (p >= 0.99) return (p * 100).toFixed(1) + "%";
   return Math.round(p * 100) + "%";
 }
 function aboutP(p) {
   var t = fmtProb(p);
-  return /^[<>]/.test(t) ? t : "約 " + t;
+  return (/^[<>]/.test(t) || t === "100%") ? t : "約 " + t;
 }
 
 (function () {
@@ -980,10 +980,11 @@ function aboutP(p) {
   var directNote = pr.same
     ? "上、下半季雙料冠軍，全年勝率 " + fmtPct(pr.direct) + "，七戰四勝先取 1 勝"
     : (pr.direct === pr.h1 ? "上半季冠軍" : "下半季冠軍") + "，全年勝率 " + fmtPct(pr.direct) + "，兩位半季冠軍中較高者";
+  var directLocked = pr.direct === DATA.firstHalfChamp && magic <= 0;
   if (pr.direct === DATA.firstHalfChamp && magic > 0) {
     directNote += "。全年勝率第一魔術數字 M" + magic;
   }
-  addRow("direct", "台灣大賽", side(pr.direct), directNote + "（預估直接晉級）");
+  addRow("direct", "台灣大賽", side(pr.direct), directNote + (directLocked ? "（已鎖定直接晉級）" : "（預估直接晉級）"));
   if (pr.same) {
     addRow("", "季後挑戰賽", side(pr.a) + '<span class="proj-vs">VS</span>' + side(pr.b), "全年勝率第 2、3 名對決，五戰三勝，勝者晉級台灣大賽");
   } else {
@@ -1317,6 +1318,11 @@ function aboutP(p) {
       }
     }
     if (isH1) {
+      if (magic <= 0) {
+        html += '<span class="safe-badge ok">保送晉級台灣大賽 100%</span>';
+        html += '<p class="ks">全年度勝率第一已經數學上鎖定，直接晉級台灣大賽篤定，接下來不管怎麼打都不會變了。</p>';
+        return html;
+      }
       html += '<span class="safe-badge ok">保送晉級台灣大賽 100%</span>';
       html += '<p class="ks">但「直接晉級」還是「先打季後挑戰賽」還有一點變數：贏 ' + Math.max(1, safeIdx) + ' 場（含）以上，直接晉級篤定；萬一 ' + ta.remain + ' 場全輸，直接晉級仍有 ' + fmtProb(bestProb === null ? 1 : ta.tiers[0].prob) + '，只有極端情況才會被迫改打挑戰賽。</p>';
       return html;
@@ -1856,7 +1862,7 @@ function aboutP(p) {
   function startConfetti() {
     var wrap = document.createElement("div");
     wrap.className = "confetti";
-    var colors = ["#ffc93c", "#ffffff", "#ffe08a", "#757d85", "#a9d0ff"];
+    var colors = ["#ffc93c", "#ffffff", "#ffe08a", "#ff5c72", "#a9d0ff"];
     for (var i = 0; i < 44; i++) {
       var s = document.createElement("i");
       s.style.left = Math.random() * 100 + "%";
