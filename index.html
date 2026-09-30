@@ -342,8 +342,11 @@ footer p { margin: 0 auto; max-width: 672px; opacity: .95; }
 footer p + p { margin-top: 6px; }
 
 .confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.confetti i { position: absolute; top: -12px; width: 9px; height: 14px; border-radius: 3px; opacity: 0; animation: drop 3.2s ease-in forwards; }
-@keyframes drop { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(560px) rotate(540deg); opacity: 0; } }
+.confetti i { position: absolute; top: -12px; width: 9px; height: 14px; border-radius: 3px; opacity: 0; animation: drop 3.2s ease-in infinite; }
+.confetti i.dot { width: 8px; height: 8px; border-radius: 50%; }
+.confetti i.spark { top: auto; width: 7px; height: 7px; border-radius: 50%; box-shadow: 0 0 7px 2px currentColor; animation: twinkle 1.4s ease-in-out infinite; }
+@keyframes drop { 0% { transform: translate(0,0) rotate(0); opacity: 1; } 30% { transform: translate(14px,170px) rotate(160deg); opacity: 1; } 60% { transform: translate(-14px,360px) rotate(340deg); opacity: 1; } 100% { transform: translate(6px,560px) rotate(540deg); opacity: 0; } }
+@keyframes twinkle { 0%, 100% { transform: scale(0); opacity: 0; } 50% { transform: scale(1); opacity: 1; } }
 a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 
 /* ---- Motion：數字跳動、清單淡入、龍鱗逐片點亮、機率條填滿、翻牌、緩慢流動背景 ---- */
@@ -1889,12 +1892,26 @@ function aboutP(p) {
     var wrap = document.createElement("div");
     wrap.className = "confetti";
     var colors = ["#ffc93c", "#ffffff", "#ffe08a", "#ff5c72", "#a9d0ff"];
-    for (var i = 0; i < 44; i++) {
+    for (var i = 0; i < 70; i++) {
       var s = document.createElement("i");
+      if (i % 3 === 2) s.className = "dot";
       s.style.left = Math.random() * 100 + "%";
       s.style.background = colors[i % colors.length];
-      s.style.animationDelay = (Math.random() * 1.6) + "s";
+      s.style.animationDelay = (Math.random() * 3.2) + "s";
+      var scale = .7 + Math.random() * .7;
+      s.style.width = (9 * scale).toFixed(1) + "px";
+      s.style.height = ((i % 3 === 2 ? 8 : 14) * scale).toFixed(1) + "px";
       wrap.appendChild(s);
+    }
+    for (var k = 0; k < 14; k++) {
+      var p = document.createElement("i");
+      p.className = "spark";
+      p.style.left = Math.random() * 100 + "%";
+      p.style.top = Math.random() * 85 + "%";
+      p.style.background = colors[k % colors.length];
+      p.style.color = colors[k % colors.length];
+      p.style.animationDelay = (Math.random() * 1.4) + "s";
+      wrap.appendChild(p);
     }
     $("hero").appendChild(wrap);
   }
