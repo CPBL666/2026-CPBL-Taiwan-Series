@@ -1237,8 +1237,12 @@ function aboutP(p) {
     var hr = rankIn(pr.byHalf, n);
     if (n === pr.h2 && !pr.same) {
       var c2 = pr.byHalf[1];
-      out.push({ tag: "下半季冠軍", text: "目前第 1 名，領先第 2 名" + c2.n + " " + pr.gb(leadH, c2) + " 場，封王魔術數字 M" + half2M + "。守住就進季後挑戰賽，並先取 1 勝。", prob: o.half2, how: howHalf(n) });
-      out.push({ tag: "全年外卡", text: "若沒守住下半季第一，全年勝率 " + fmtPct(n) + "（第 " + fr + " 名），靠外卡的機會很小。", prob: o.wild });
+      if (half2M <= 0) {
+        out.push({ tag: "下半季冠軍", text: "已經數學上鎖定（" + leadH.w + " 勝 " + leadH.l + " 敗），確定進季後挑戰賽，並先取 1 勝。", prob: o.half2, how: howHalf(n) });
+      } else {
+        out.push({ tag: "下半季冠軍", text: "目前第 1 名，領先第 2 名" + c2.n + " " + pr.gb(leadH, c2) + " 場，封王魔術數字 M" + half2M + "。守住就進季後挑戰賽，並先取 1 勝。", prob: o.half2, how: howHalf(n) });
+        out.push({ tag: "全年外卡", text: "若沒守住下半季第一，全年勝率 " + fmtPct(n) + "（第 " + fr + " 名），靠外卡的機會很小。", prob: o.wild });
+      }
       return out;
     }
     var e = elim[n];
@@ -1246,16 +1250,17 @@ function aboutP(p) {
       (e > 0 ? "淘汰指數 " + e + "（算法比照官網）：" + leadH.n + "再贏球加上" + TEAMS[n].s + "再輸球，合計 " + e + " 場就無緣。" : "已無緣下半季冠軍。"), prob: o.half2, how: e > 0 ? howHalf(n) : "" });
     var pk = rankIn(poolAll, n);
     if (pk > 0) {
-      var me = poolAll[pk - 1], txt;
+      var me = poolAll[pk - 1], txt, wildGone = false;
       if (pk <= slots) {
         var nxt = poolAll[slots];
         txt = "半季冠軍以外全年勝率最高" + (pr.same ? "的前 2 名" : "的球隊") + "。目前排第 " + pk + "（" + fmtPct(n) + "），領先第 " + (slots + 1) + " 名" + nxt.n + " " + pr.gb(me, nxt) + " 場。";
       } else {
         var top = poolAll[slots - 1];
-        txt = "半季冠軍以外全年勝率最高" + (pr.same ? "的前 2 名" : "的球隊") + "。目前排第 " + pk + "（" + fmtPct(n) + "），落後第 " + slots + " 名" + top.n + " " + pr.gb(top, me) + " 場。";
+        wildGone = (me.w + leftFull(n)) <= top.w;
+        txt = "半季冠軍以外全年勝率最高" + (pr.same ? "的前 2 名" : "的球隊") + "。目前排第 " + pk + "（" + fmtPct(n) + "），落後第 " + slots + " 名" + top.n + " " + pr.gb(top, me) + " 場" + (wildGone ? "，已經數學上追不上" : "") + "。";
       }
-      if (!pr.same) txt += "（以目前下半季第 1 名" + pr.h2 + "為半季冠軍計算）";
-      out.push({ tag: "全年外卡", text: txt, prob: o.wild, how: howWild(n, pk) });
+      if (!pr.same) txt += half2M <= 0 ? "（下半季冠軍" + pr.h2 + "已經確定）" : "（以目前下半季第 1 名" + pr.h2 + "為半季冠軍計算）";
+      out.push({ tag: "全年外卡", text: txt, prob: o.wild, how: wildGone ? "" : howWild(n, pk) });
     }
     return out;
   }
