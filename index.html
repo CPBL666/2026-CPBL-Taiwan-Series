@@ -1581,8 +1581,13 @@ function aboutP(p) {
     }
     var vs = '<span class="flow-vs">VS</span>', html;
     if (!pr.same) {
-      html = row("① 季後賽三個名額（目前預估）",
-          ft(pr.h1, "上半季冠軍") + ft(pr.h2, "下半季冠軍（目前領先）") + ft(pr.opp, "外卡：半季冠軍以外全年勝率最高")) +
+      var h1Tag = pr.direct === pr.h1 ? "上半季冠軍・全年勝率第一" : "上半季冠軍";
+      var h2Tag = half2M <= 0 ? "下半季冠軍（已鎖定）" : "下半季冠軍（目前領先）";
+      var oppSettled = pr.pool[1] && (pr.pool[1].w + leftFull(pr.pool[1].n)) <= pr.pool[0].w;
+      var oppTag = "外卡：半季冠軍以外全年勝率最高" + (oppSettled ? "（已鎖定）" : "");
+      var slotTitle = (half2M <= 0 && oppSettled) ? "① 季後賽三個名額（已確定）" : "① 季後賽三個名額（目前預估）";
+      html = row(slotTitle,
+          ft(pr.h1, h1Tag) + ft(pr.h2, h2Tag) + ft(pr.opp, oppTag)) +
         '<div class="flow-arrow">兩位半季冠軍中，全年勝率較高者直接晉級台灣大賽；另一位進季後挑戰賽</div>' +
         row("② 季後挑戰賽・五戰三勝", ft(pr.other, "半季冠軍，先取 1 勝") + vs + ft(pr.opp, "外卡"), "stack",
           "<b>" + short(pr.other) + "</b>先拿 1 勝，主場採 1-1-2 形式（實際最多打 4 場）" + hg("HAHH") + "，先到 3 勝晉級。") +
