@@ -1229,7 +1229,7 @@ function aboutP(p) {
         out.push({ tag: "直接晉級", text: "上、下半季雙料冠軍，直接晉級台灣大賽並先取 1 勝。", prob: null });
       } else {
         var sec = pr.byFull[1];
-        out.push({ tag: "直接晉級", text: "全年勝率要高過下半季冠軍。目前全年第 " + fr + " 名（" + fmtPct(n) + "）" +
+        out.push({ tag: "直接晉級", text: "全年勝率要高過下半季冠軍。" + (magic <= 0 ? "已經確定全年第 " : "目前全年第 ") + fr + " 名（" + fmtPct(n) + "）" +
           (fr === 1 ? "，領先第 2 名" + sec.n + " " + pr.gb(pr.byFull[0], sec) + " 場" + (magic > 0 ? "，全年第一魔術數字 M" + magic : "") : "") + "。", prob: o.direct, how: howDirect(n) });
       }
       return out;
@@ -1506,7 +1506,7 @@ function aboutP(p) {
     var fr = pr.byFull.map(function (t) { return t.n; }).indexOf(fav) + 1;
     var hr = pr.byHalf.map(function (t) { return t.n; }).indexOf(fav) + 1;
     var big = '<div class="big-pct" aria-hidden="true"></div><span class="sr-only big-pct-sr"></span>';
-    var l1 = "全年第 " + fr + " 名（勝率 " + fmtPct(fav) + "）・下半季第 " + hr + " 名（" + (hr === 1 ? "領先中" : "落後第 1 名 " + pr.gb(pr.byHalf[0], pr.byHalf[hr - 1]) + " 場") + "）";
+    var l1 = "全年第 " + fr + " 名（勝率 " + fmtPct(fav) + "）・下半季第 " + hr + " 名（" + (hr === 1 ? (half2M <= 0 ? "已鎖定" : "領先中") : "落後第 1 名 " + pr.gb(pr.byHalf[0], pr.byHalf[hr - 1]) + " 場") + "）";
     var l3 = oppBreakdown(fav);
     box.innerHTML = '<div class="mycard-head">' + badge(fav, 56) + '<div class="mycard-name">' + nameHtml(fav) + '<small>進季後賽機率</small></div>' + big + '</div><p>' + l1 + '</p><ul class="conds">' + condsFor(fav).map(function (c) {
       return '<li><span class="ct">' + c.tag + '</span>' + c.text + (c.prob === null ? '' : '<span class="cp">機率<span class="cup-p" data-p="' + c.prob + '" aria-hidden="true"></span><span class="sr-only cup-p-sr" data-p="' + c.prob + '"></span></span>') + (c.how ? '<span class="cw">怎麼贏：' + c.how + '</span>' : '') + '</li>';
@@ -1595,8 +1595,10 @@ function aboutP(p) {
         row("③ 台灣大賽・七戰四勝", ft(pr.direct, "直接晉級") + vs + qt("挑戰賽勝者"), "",
           "沒有保送勝，全年勝率較高的<b>" + short(pr.direct) + "</b>拿 4 場主場" + hg("HHAAAHH") + "，先到 4 勝奪冠。");
     } else {
-      html = row("① 季後賽三個名額（目前預估）",
-          ft(pr.h1, "上、下半季雙料冠軍") + ft(pr.a, "全年勝率第 2 名") + ft(pr.b, "全年勝率第 3 名")) +
+      var sameSettled = (pr.b.w + leftFull(pr.b.n)) <= pr.a.w;
+      var sameTitle = sameSettled ? "① 季後賽三個名額（已確定）" : "① 季後賽三個名額（目前預估）";
+      html = row(sameTitle,
+          ft(pr.h1, "上、下半季雙料冠軍") + ft(pr.a, "全年勝率第 2 名" + (sameSettled ? "（已鎖定）" : "")) + ft(pr.b, "全年勝率第 3 名")) +
         '<div class="flow-arrow">雙料冠軍直接晉級台灣大賽；全年勝率第 2、3 名打季後挑戰賽</div>' +
         row("② 季後挑戰賽・五戰三勝", ft(pr.a, "全年第 2 名") + vs + ft(pr.b, "全年第 3 名"), "stack",
           "沒有保送勝，全年第 2 名的<b>" + short(pr.a) + "</b>拿 3 場主場" + hg("HHAAH") + "，先到 3 勝晉級。") +
@@ -1633,9 +1635,14 @@ function aboutP(p) {
     var chips = "";
     rowTips = [];
     if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
-    if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">下半季領先</span>';
-    if (!pr.same && t.n === pr.opp) chips += chipInfo("wild", "目前外卡", "半季冠軍以外，全年勝率最高的球隊，會打季後挑戰賽爭取晉級台灣大賽。");
-    if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) chips += '<span class="chip elim">已淘汰</span>';
+    if (t.n === pr.h2 && pr.h2 !== pr.h1) chips += '<span class="chip blue">' + (half2M <= 0 ? "下半季冠軍（已鎖定）" : "下半季領先") + '</span>';
+    if (!pr.same && t.n === pr.opp) {
+      var oppLocked = pr.pool[1] && (pr.pool[1].w + leftFull(pr.pool[1].n)) <= pr.pool[0].w;
+      chips += chipInfo("wild", oppLocked ? "外卡（已鎖定）" : "目前外卡", "半季冠軍以外，全年勝率最高的球隊，會打季後挑戰賽爭取晉級台灣大賽。");
+    }
+    if (idx > 0 && (t.w + (120 - t.w - t.l - t.t)) < leaderF.w) {
+      chips += isFullyOut(t.n) ? '<span class="chip elim">已淘汰</span>' : '<span class="chip elim">全年度非第一</span>';
+    }
     var rec = t.w + " 勝 " + t.t + " 和 " + t.l + " 敗";
     var gbTxt = idx === 0 ? "全年第一" : '落後 <span class="cup-gb"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
@@ -1685,12 +1692,14 @@ function aboutP(p) {
       var destTip = h2Dest === "直接晉級"
         ? "全年勝率也是最高，兩位半季冠軍中較高者直接晉級台灣大賽。"
         : "全年勝率不如另一位半季冠軍，要先打季後挑戰賽贏了才能晉級台灣大賽。";
-      chips += chipInfo("blue", "下半季領先", destTip) + '<small class="chip-dest">→' + h2Dest + '</small>';
+      chips += chipInfo("blue", half2M <= 0 ? "下半季冠軍（已鎖定）" : "下半季領先", destTip) + '<small class="chip-dest">→' + h2Dest + '</small>';
     }
     if (t.n === pr.h1) chips += chipInfo("", "上半季冠軍", "上半季戰績最好的球隊。兩位半季冠軍（上半季、下半季）中，全年勝率較高者直接晉級台灣大賽，較低者要先打季後挑戰賽。");
-    if (idx > 0 && elim[t.n] <= 0) chips += '<span class="chip elim">已淘汰</span>';
+    if (idx > 0 && elim[t.n] <= 0) {
+      chips += isFullyOut(t.n) ? '<span class="chip elim">已淘汰</span>' : '<span class="chip elim">無緣下半季冠軍</span>';
+    }
     var rec = t.w + " 勝 " + t.t + " 和 " + t.l + " 敗";
-    var gbTxt = idx === 0 ? "暫居第一" : '落後 <span class="cup-gb2"></span> 場';
+    var gbTxt = idx === 0 ? (half2M <= 0 ? "確定第一" : "暫居第一") : '落後 <span class="cup-gb2"></span> 場';
     row.innerHTML = '<span class="rk">' + (idx + 1) + '</span>' + badge(t.n, 42) +
       '<div class="rank-main"><span class="nm">' + nameHtml(t.n) + '</span>' + chips + '</div>' +
       '<div class="rank-side"><small class="pc-lbl">下半季勝率</small><span class="pc2"></span>' + rec + '<br>' + gbTxt + '</div>' +
