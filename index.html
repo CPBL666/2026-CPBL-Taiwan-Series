@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>味全龍 晉級台灣大賽倒數</title>
+<title>2026 中華職棒</title>
 <meta name="description" content="味全龍晉級台灣大賽魔術數字、倒數計時、預估晉級隊伍與各隊晉級機率。球迷自製，非官方。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="味全龍 晉級台灣大賽倒數">
+<meta property="og:title" content="2026 中華職棒">
 <meta property="og:description" content="魔術數字、倒數計時、預估晉級隊伍與各隊晉級機率。球迷自製，非官方。">
 <meta property="og:url" content="https://YOUR-NAME.github.io/YOUR-REPO/">
 <meta property="og:image" content="https://YOUR-NAME.github.io/YOUR-REPO/og.png">
@@ -1481,8 +1481,9 @@ function aboutP(p) {
       } catch (e) {}
       legacyCopy();
     }
+    var shareTitle = fav + " 晉級機率｜味全龍晉級台灣大賽倒數";
     if (navigator.share) {
-      navigator.share({ title: document.title, text: text, url: url }).catch(function (e) { if (!e || e.name !== "AbortError") copyIt(); });
+      navigator.share({ title: shareTitle, text: text, url: url }).catch(function (e) { if (!e || e.name !== "AbortError") copyIt(); });
     } else { copyIt(); }
   }
 
