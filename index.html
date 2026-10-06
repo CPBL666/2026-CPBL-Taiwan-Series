@@ -542,13 +542,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-
       <div class="scn">
         <span class="scn-t">上、下半季冠軍是不同球隊</span>
         <div class="teams"><span class="badge2 ea"><svg><use href="#ico-A"/></svg></span><span class="tn">A 隊<small>直接晉級</small></span><span class="vs2">VS</span><span class="badge2 eq"><svg><use href="#ico-Q"/></svg></span><span class="tn">挑戰賽勝隊</span></div>
-        <p class="scn-note">沒有保送勝，<b>A 隊</b>主場採 2-3-2 形式（主・主・客・客・客・主・主）</p>
+        <p class="scn-note">沒有保送勝，<b>A 隊</b>主場採 2-2-3 形式（主・主・客・客・主・主・主）</p>
         <div class="games">
           <div class="g"><span class="glbl">G1</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
           <div class="g"><span class="glbl">G2</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
           <div class="g"><span class="glbl">G3</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
           <div class="g"><span class="glbl">G4</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
-          <div class="g"><span class="glbl">G5</span><span class="mchip cq">?</span><span class="ghome">對方主場</span></div>
+          <div class="g"><span class="glbl">G5</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
           <div class="g"><span class="glbl">G6</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
           <div class="g"><span class="glbl">G7</span><span class="mchip ca">A</span><span class="ghome">A 主場</span></div>
         </div>
@@ -1602,7 +1602,7 @@ function aboutP(p) {
           "<b>" + short(pr.other) + "</b>先拿 1 勝，主場採 1-1-2 形式（實際最多打 4 場）" + hg("HAHH") + "，先到 3 勝晉級。") +
         '<div class="flow-arrow">勝者晉級台灣大賽</div>' +
         row("③ 台灣大賽・七戰四勝", ft(pr.direct, "直接晉級") + vs + qt("挑戰賽勝者"), "",
-          "沒有保送勝，全年勝率較高的<b>" + short(pr.direct) + "</b>拿 4 場主場" + hg("HHAAAHH") + "，先到 4 勝奪冠。");
+          "沒有保送勝，全年勝率較高的<b>" + short(pr.direct) + "</b>拿 4 場主場" + hg("HHAAHHH") + "，先到 4 勝奪冠。");
     } else {
       var sameSettled = (pr.b.w + leftFull(pr.b.n)) <= pr.a.w;
       var sameTitle = sameSettled ? "① 季後賽三個名額（已確定）" : "① 季後賽三個名額（目前預估）";
