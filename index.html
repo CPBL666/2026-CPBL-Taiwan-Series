@@ -179,6 +179,15 @@ body.po .reg-only { display: none; }
 .hero.po .magic, .hero.po .explain, .hero.po .scales, .hero.po .scale-caption, .hero.po .asof { display: none; }
 .series { margin: 0 0 16px; padding: 12px 14px; background: var(--tile); border: 3px solid var(--edge); border-radius: 18px; }
 .series-tag { display: inline-block; margin-bottom: 8px; padding: 0 10px; border: 2px solid var(--edge); border-radius: 99px; background: var(--surface); color: var(--ink); font-size: .78rem; line-height: 1.6; }
+.tug-wrap { margin: 6px 0 2px; }
+.tug-svg { width: 100%; height: auto; display: block; }
+.tug-knot { animation: tugsway 1.6s ease-in-out infinite; }
+.tug-hand-a { animation: tugpull-a 1.6s ease-in-out infinite; transform-origin: 48px 45px; }
+.tug-hand-b { animation: tugpull-b 1.6s ease-in-out infinite; transform-origin: 252px 45px; }
+@keyframes tugsway { 0%, 100% { transform: translateX(-3px) rotate(-2deg); } 50% { transform: translateX(3px) rotate(2deg); } }
+@keyframes tugpull-a { 0%, 100% { transform: translateX(-2px); } 50% { transform: translateX(1px); } }
+@keyframes tugpull-b { 0%, 100% { transform: translateX(2px); } 50% { transform: translateX(-1px); } }
+@media (prefers-reduced-motion: reduce) { .tug-knot, .tug-hand-a, .tug-hand-b { animation: none; } }
 .sb-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
 .sb-row .nm { flex: 1; font-size: 1.1rem; }
 .sb-score { font-family: "Noto Sans TC", system-ui, sans-serif; font-weight: 800; font-size: 2rem; line-height: 1; min-width: 1.2em; text-align: right; }
@@ -607,7 +616,8 @@ const DATA = {
       teams: ["中信兄弟", "統一7-ELEVEn獅"],
       first: "中信兄弟",
       games: [
-        { d: "10/9", w: "中信兄弟", s: "4:1" }
+        { d: "10/9", w: "中信兄弟", s: "4:1" },
+        { d: "10/10", w: "統一7-ELEVEn獅", s: "1:0" }
       ]
     },
     final: null
@@ -616,7 +626,7 @@ const DATA = {
   // { direct: "味全龍",
   //   challenge: { teams: ["中信兄弟", "富邦悍將"], first: "中信兄弟", games: [{ d: "10/9", w: "中信兄弟", s: "5:3" }] },
   //   final: { teams: ["味全龍", "中信兄弟"], first: null, games: [] } }
-  updated: "2026/10/09 晚間（依中華職棒官網戰績與賽程）",
+  updated: "2026/10/10 晚間（依中華職棒官網戰績與賽程）",
   magic: 0,        // 目前魔術數字（0＝已鎖定全年度勝率第一）
   start: 6,        // 點亮鱗片的起算值（2026/09/20 為 M6）
   lowerHalf: "全年度勝率第一已經鎖定：味全 67 勝 53 敗（.558）居首，第二名統一已經追不上。下半季冠軍也確定了：中信兄弟以 36 勝 24 敗（.600）鎖定。例行賽（含補賽）全部打完：10/5 上半季補賽（統一vs中信）、10/6 下半季延賽（富邦vs樂天）都已計入最終戰績。",
@@ -1935,8 +1945,63 @@ function aboutP(p) {
     teams.forEach(function (t) { if (t && wins[t] >= need) winner = t; });
     return { wins: wins, need: need, winner: winner };
   }
+  function tugHtml(teams, st) {
+    var a = teams[0], b = teams[1];
+    if (!a || !b || !TEAMS[a] || !TEAMS[b]) return "";
+    var need = st.need, wa = st.wins[a] || 0, wb = st.wins[b] || 0;
+    var diff = Math.max(-need, Math.min(need, wa - wb));
+    var x0 = 36, x1 = 264, cx = x0 + (need - diff) / (need * 2) * (x1 - x0);
+    var ticks = "";
+    for (var i = -need; i <= need; i++) {
+      var tx = x0 + (need - i) / (need * 2) * (x1 - x0);
+      ticks += '<line x1="' + tx.toFixed(1) + '" y1="37" x2="' + tx.toFixed(1) + '" y2="53" stroke="rgba(0,0,0,.25)" stroke-width="' + (i === 0 ? 3 : 2) + '"/>';
+    }
+    var twists = "";
+    for (var tw = x0 + 3; tw < x1 - 3; tw += 7) {
+      twists += '<line x1="' + tw.toFixed(1) + '" y1="40.5" x2="' + (tw + 4).toFixed(1) + '" y2="49.5" stroke="#8a6436" stroke-width="1.6" stroke-linecap="round"/>';
+    }
+    function hand(team, hx, flip) {
+      var s = flip ? -1 : 1, k = TEAMS[team] && TEAMS[team].k;
+      var g = '<g transform="translate(' + hx + ',45) scale(' + s + ',1)">';
+      if (k === "cb") {   // 中信兄弟：象掌，灰色圓厚掌墊 + 3 個圓鈍腳趾
+        g += '<ellipse cx="0" cy="2" rx="13" ry="11" fill="#9aa5ab" stroke="#2a1a1e" stroke-width="1.8"/>' +
+          '<circle cx="-7" cy="-9" r="4.2" fill="#9aa5ab" stroke="#2a1a1e" stroke-width="1.5"/>' +
+          '<circle cx="1" cy="-11.5" r="4.2" fill="#9aa5ab" stroke="#2a1a1e" stroke-width="1.5"/>' +
+          '<circle cx="9" cy="-9" r="4.2" fill="#9aa5ab" stroke="#2a1a1e" stroke-width="1.5"/>';
+      } else if (k === "uni") {   // 統一獅：獅掌，金黃色掌墊 + 3 個尖爪
+        g += '<ellipse cx="0" cy="2" rx="12" ry="10" fill="#d99a4e" stroke="#2a1a1e" stroke-width="1.8"/>' +
+          '<path d="M -9,-8 L -11,-16 L -5,-9 Z" fill="#2a1a1e"/>' +
+          '<path d="M -1,-10 L -1,-18 L 3,-10 Z" fill="#2a1a1e"/>' +
+          '<path d="M 7,-8 L 11,-15 L 4,-9 Z" fill="#2a1a1e"/>' +
+          '<circle cx="-7" cy="-6" r="3.6" fill="#d99a4e" stroke="#2a1a1e" stroke-width="1.3"/>' +
+          '<circle cx="0" cy="-8" r="3.6" fill="#d99a4e" stroke="#2a1a1e" stroke-width="1.3"/>' +
+          '<circle cx="7" cy="-6" r="3.6" fill="#d99a4e" stroke="#2a1a1e" stroke-width="1.3"/>';
+      } else {   // 其他隊伍：一般人手
+        g += '<ellipse cx="0" cy="0" rx="12" ry="10" fill="#f0c491" stroke="#2a1a1e" stroke-width="1.8"/>' +
+          '<rect x="-4" y="-13" width="9" height="10" rx="3.5" fill="#f0c491" stroke="#2a1a1e" stroke-width="1.5"/>' +
+          '<rect x="-4" y="4" width="9" height="9" rx="3.5" fill="#f0c491" stroke="#2a1a1e" stroke-width="1.5"/>';
+      }
+      return g + '</g>';
+    }
+    return '<div class="tug-wrap"><svg viewBox="0 0 300 90" class="tug-svg" role="img" aria-label="' + short(a) + ' ' + wa + ' 比 ' + wb + ' ' + short(b) + '，先拿 ' + need + ' 勝晉級，目前比分差距偏向' + (diff >= 0 ? short(a) : short(b)) + '">' +
+      '<line x1="' + x0 + '" y1="45" x2="' + x1 + '" y2="45" stroke="#c2996b" stroke-width="9" stroke-linecap="round"/>' +
+      '<line x1="' + x0 + '" y1="45" x2="' + x1 + '" y2="45" stroke="#000" stroke-opacity=".12" stroke-width="9" stroke-linecap="round" stroke-dasharray="1,6"/>' +
+      twists +
+      ticks +
+      '<use href="#ico-' + TEAMS[a].k + '" x="0" y="12" width="58" height="58"/>' +
+      '<use href="#ico-' + TEAMS[b].k + '" x="242" y="12" width="58" height="58"/>' +
+      '<g class="tug-hand tug-hand-a">' + hand(a, 48, false) + '</g>' +
+      '<g class="tug-hand tug-hand-b">' + hand(b, 252, true) + '</g>' +
+      '<g class="tug-knot" style="transform-origin:' + cx.toFixed(1) + 'px 45px">' +
+      '<rect x="' + (cx - 33).toFixed(1) + '" y="30" width="66" height="30" rx="5" fill="#ffc93c" stroke="#2a1a1e" stroke-width="2"/>' +
+      '<line x1="' + (cx - 18).toFixed(1) + '" y1="30" x2="' + (cx - 18).toFixed(1) + '" y2="60" stroke="#2a1a1e" stroke-width="1.3" stroke-dasharray="2,2"/>' +
+      '<text x="' + (cx - 25.5).toFixed(1) + '" y="49.5" text-anchor="middle" font-size="11">🎟</text>' +
+      '<text x="' + (cx + 6).toFixed(1) + '" y="49.5" text-anchor="middle" font-size="9.5" font-weight="800" fill="#2a1a1e">台灣大賽</text>' +
+      '</g></svg></div>';
+  }
   function seriesHtml(title, teams, first, games, bestOf) {
     var st = seriesState(teams, first, games, bestOf);
+    var tug = tugHtml(teams, st);
     var rows = teams.map(function (t) {
       if (!t) return '<div class="sb-row"><span class="badge q" style="--s:40px">?</span><span class="nm">' + (title.indexOf("台灣大賽") === 0 ? "挑戰賽勝者" : "待定") + '</span><span class="sb-score">-</span></div>';
       return '<div class="sb-row">' + badge(t, 40) + '<span class="nm">' + nameHtml(t) + '</span>' + (st.winner === t ? '<span class="sb-win">' + (title.indexOf("台灣大賽") === 0 ? "冠軍" : "晉級") + '</span>' : '') +
@@ -1946,7 +2011,7 @@ function aboutP(p) {
     var list = (games || []).length ? '<ul class="key">' + games.map(function (g) {
       return '<li><span class="kt">' + g.d + "　" + (g.w ? short(g.w) + "勝" : "") + '</span>' + (g.s ? '<span class="ks">' + g.s + '</span>' : '') + '</li>';
     }).join('') + '</ul>' : '';
-    return '<div class="series"><span class="series-tag">' + title + '</span>' + rows + '<p class="series-note">' + note + '</p>' + list + '</div>';
+    return '<div class="series"><span class="series-tag">' + title + '</span>' + tug + rows + '<p class="series-note">' + note + '</p>' + list + '</div>';
   }
   if (PO) {
     document.body.classList.add("po"); $("hero").classList.add("po");
